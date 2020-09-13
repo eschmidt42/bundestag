@@ -2,7 +2,7 @@ pandas
 numpy
 tqdm
 re
-plotly==4.10.0
+plotly
 ipywidgets
 numpy
 pickle
