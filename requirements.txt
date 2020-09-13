@@ -1,9 +1,6 @@
 pandas
 numpy
 tqdm
-re
-plotly
+plotly==4.10.0
 ipywidgets
 numpy
-pickle
-typing
