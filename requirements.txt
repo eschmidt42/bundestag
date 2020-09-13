@@ -1,0 +1,9 @@
+pandas
+numpy
+tqdm
+re
+plotly=4.10.0
+ipywidgets
+numpy
+pickle
+typing
