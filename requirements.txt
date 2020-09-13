@@ -5,3 +5,4 @@ plotly==4.10.0
 ipywidgets
 numpy
 pyarrow
+voila
