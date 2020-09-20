@@ -1,0 +1,7 @@
+the raw repo:
+https://mybinder.org/v2/gh/eschmidt42/bundestag/master?urlpath=voila%2Frender%2Fnbs%2F04_gui_clean.ipynb
+https://mybinder.org/v2/gh/eschmidt42/bundestag/master?filepath=voila%2Frender%2Fnbs%2F04_gui_clean.ipynb
+https://mybinder.org/v2/gh/eschmidt42/bundestag/master?urlpath=%2Fvoila%2Frender%2Fnbs%2F04_gui_clean.ipynb
+
+the voila rendered notebook:
+https://hub.gke.mybinder.org/user/eschmidt42-bundestag-2zfabozt/voila/render/nbs/04_gui_clean.ipynb?token=plB0Uq95Q8SyvC981jcv0Q

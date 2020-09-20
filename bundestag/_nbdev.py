@@ -13,6 +13,7 @@ index = {"get_file_paths": "01_html_parsing.ipynb",
          "get_agreements_painfully_slow": "02_member_similarity.ipynb",
          "get_dummy": "02_member_similarity.ipynb",
          "scan_all_agreements": "02_member_similarity.ipynb",
+         "path": "03_gui.ipynb",
          "df": "03_gui.ipynb",
          "GUI": "03_gui.ipynb"}
 

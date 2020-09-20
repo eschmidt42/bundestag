@@ -2,6 +2,8 @@
 > Ever wondered, given an MdB, which are the most similar MdBs based on their voting behavior? This is what this repo does.
 
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eschmidt42/bundestag/binder0?urlpath=%2Fvoila%2Frender%2Fnbs%2F04_gui_clean.ipynb)
+
 ## How to use
 
 ### Downloading the data
