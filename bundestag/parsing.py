@@ -15,7 +15,6 @@ import tqdm
 import time
 import pandas as pd
 import itertools
-from loguru import logger
 from fastcore.all import *
 
 # Cell
