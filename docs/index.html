@@ -1,13 +1,13 @@
 ---
 
-title: Finding matches for MdBs
+title: "Namentliche Abstimmungen"  in the Bundestag
 
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Ever wondered, given an MdB, which are the most similar MdBs based on their voting behavior? This is what this repo does."
-description: "Ever wondered, given an MdB, which are the most similar MdBs based on their voting behavior? This is what this repo does."
+summary: "Parse and inspect "Namentliche Abstimmungen" (roll call votes) in the Bundestag (the federal German parliament)"
+description: "Parse and inspect "Namentliche Abstimmungen" (roll call votes) in the Bundestag (the federal German parliament)"
 nb_path: "nbs/index.ipynb"
 ---
 <!--
@@ -38,19 +38,238 @@ nb_path: "nbs/index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Purpose-of-this-repo">Purpose of this repo<a class="anchor-link" href="#Purpose-of-this-repo"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The German Parliament is so friendly to put all votes of all members into readable XLSX / XLS files (and PDFs ¯\_(ツ)_/¯ ). Those files  can be found here: <a href="https://www.bundestag.de/parlament/plenum/abstimmung/liste">https://www.bundestag.de/parlament/plenum/abstimmung/liste</a>.</p>
+<p>So the purpose of this repo is to help collect those roll call votes into one dataframe to enable analysis. This may be particularly interesting for the upcoming election in 2021. E.g., if you want to see what your local member of the parliament has been up to in terms of public roll call votes relative to the parties, or how individual parties agree in their votes, this dataset may be interesting for you. At this point I'd also like to point out the excellent resource <a href="https://www.abgeordnetenwatch.de/">abgeordnetenwatch</a>.</p>
+<p>Since the files on the bundestag website are stored in a way making it tricky to automatically crawl them, a bit of manual work is required to generate the dataset. But don't fret! Quite a few recent roll call votes (as of the publishing of this repo) are already prepared for you. But if older or more recent roll call votes are missing, convenience tools to reduce your manual effort are demonstrated below.</p>
+<p>An example analysis on how similar parties voted / how similar to parties individual MdBs votes, for inspiration, is also provided 😁.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="How-to-use">How to use<a class="anchor-link" href="#How-to-use"> </a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Downloading-the-data">Downloading the data<a class="anchor-link" href="#Downloading-the-data"> </a></h3>
+<p>First let's look at what the processed data looks like and then how to parse it from the XLS / XLSX files.</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The German Parliament is so friendly to put all votes of all members into readable XLSX / XLS files, which can be found here: <a href="https://www.bundestag.de/parlament/plenum/abstimmung/liste">https://www.bundestag.de/parlament/plenum/abstimmung/liste</a>.</p>
+<h3 id="Inspecting-the-prepared-data">Inspecting the prepared data<a class="anchor-link" href="#Inspecting-the-prepared-data"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you have cloned the repo you should already have a <code>votes.parquet</code> file in the root directory of the repo. If not feel free to download the <code>votes.parquet</code> file directly.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../roll_call_votes.parquet&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Counting-how-parties-voted">Counting how parties voted<a class="anchor-link" href="#Counting-how-parties-voted"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">party_votes</span><span class="p">,</span> <span class="n">df_plot</span> <span class="o">=</span> <span class="n">similarity</span><span class="o">.</span><span class="n">get_votes_by_party</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">party_votes</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_plot</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Visualizing-similarities-of-parties-over-time">Visualizing similarities of parties over time<a class="anchor-link" href="#Visualizing-similarities-of-parties-over-time"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">party</span> <span class="o">=</span> <span class="s1">&#39;SPD&#39;</span>
+<span class="n">similarity_party_party</span> <span class="o">=</span> <span class="p">(</span><span class="n">similarity</span><span class="o">.</span><span class="n">align_party_with_all_parties</span><span class="p">(</span><span class="n">party_votes</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+                          <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">similarity</span><span class="o">.</span><span class="n">compute_similarity</span><span class="p">,</span> <span class="n">lsuffix</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">rsuffix</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">))</span>
+<span class="n">similarity_party_party</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">similarity</span><span class="o">.</span><span class="n">plot_similarity_over_time</span><span class="p">(</span><span class="n">similarity_party_party</span><span class="p">,</span> 
+                                     <span class="s1">&#39;Fraktion/Gruppe_b&#39;</span><span class="p">,</span>
+                                     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s1"> vs time&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Running-the-GUI">Running the GUI<a class="anchor-link" href="#Running-the-GUI"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">GUI</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Downloading-&amp;-parsing-the-data-into-a-useful-format">Downloading &amp; parsing the data into a useful format<a class="anchor-link" href="#Downloading-&amp;-parsing-the-data-into-a-useful-format"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In order to collect the data and produce a dataframe like the one stored in <code>roll_call_votes.parquet</code> we need to open <a href="https://www.bundestag.de/parlament/plenum/abstimmung/liste">https://www.bundestag.de/parlament/plenum/abstimmung/liste</a> and <strong>manually download all the pages of interest into one location</strong>. Then we can automatically query the html documents for the XLS / XLSX documents, download and clean those.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's first define the source dir with the html data and and the target dir for the downloaded XLSX / XLS files</p>
 
 </div>
@@ -63,8 +282,8 @@ nb_path: "nbs/index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">html_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../raw_data&#39;</span><span class="p">)</span>
-<span class="n">xlsx_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../xlsx_data&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">html_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../website_data&#39;</span><span class="p">)</span>   <span class="c1"># location where the html files were &gt;manually&lt; downloaded to</span>
+<span class="n">sheet_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../sheets&#39;</span><span class="p">)</span> <span class="c1"># location to automatically download the xlsx and xls files</span>
 </pre></div>
 
     </div>
@@ -76,7 +295,7 @@ nb_path: "nbs/index.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now let's collect the relevant URIs from the html documents</p>
+<p>Now let's download all sheet uris found in the files in <code>html_path</code> to <code>sheet_path</code></p>
 
 </div>
 </div>
@@ -88,9 +307,8 @@ nb_path: "nbs/index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
-<span class="n">html_file_paths</span> <span class="o">=</span> <span class="n">parsing</span><span class="o">.</span><span class="n">get_file_paths</span><span class="p">(</span><span class="n">html_data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.htm&#39;</span><span class="p">)</span>
-<span class="n">xlsx_uris</span> <span class="o">=</span> <span class="n">parsing</span><span class="o">.</span><span class="n">collect_xlsx_uris</span><span class="p">(</span><span class="n">html_file_paths</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nmax</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># number of sheets to download (set to None to download all)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">parsing</span><span class="o">.</span><span class="n">get_multiple_sheets</span><span class="p">(</span><span class="n">html_path</span><span class="p">,</span> <span class="n">sheet_path</span><span class="p">,</span> <span class="n">nmax</span><span class="o">=</span><span class="n">nmax</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -102,7 +320,7 @@ nb_path: "nbs/index.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>With the URIs we can now download the XLSX / XLS files</p>
+<p>Done</p>
 
 </div>
 </div>
@@ -114,172 +332,7 @@ nb_path: "nbs/index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
-<span class="n">xlsx_file_title_maps</span> <span class="o">=</span> <span class="n">parsing</span><span class="o">.</span><span class="n">download_multiple_xlsx_files</span><span class="p">(</span><span class="n">xlsx_uris</span><span class="p">,</span> <span class="n">xlsx_dir</span><span class="o">=</span><span class="n">xlsx_data_dir</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>and store them in a <code>pd.DataFrame</code></p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xlsx_files</span> <span class="o">=</span> <span class="n">parsing</span><span class="o">.</span><span class="n">get_file_paths</span><span class="p">(</span><span class="n">xlsx_data_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(\.xlsx?)&#39;</span><span class="p">))</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">parsing</span><span class="o">.</span><span class="n">collect_xlsxs_as_dict</span><span class="p">(</span><span class="n">xlsx_files</span><span class="p">,</span> <span class="n">xlsx_file_title_maps</span><span class="o">=</span><span class="n">xlsx_file_title_maps</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Calculating-Similarities-between-MdBs-(Mitglied-des-Bundestages)">Calculating Similarities between MdBs (Mitglied des Bundestages)<a class="anchor-link" href="#Calculating-Similarities-between-MdBs-(Mitglied-des-Bundestages)"> </a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Before we can process the similarities / agreements between the MdBs let's reshape <a href="/bundestag/gui.html#df"><code>df</code></a></p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_squished</span> <span class="o">=</span> <span class="n">similarity</span><span class="o">.</span><span class="n">get_squished_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>and now for the agreements between the MdBs</p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements</span> <span class="o">=</span> <span class="n">similarity</span><span class="o">.</span><span class="n">scan_all_agreements</span><span class="p">(</span><span class="n">df_squished</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>With agreement between two MdBs we here use 1 - <a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard distance</a> times 100. This is the intersection of the issues pairs of MdBs have voted on in the same way divided by the total number of issues the pairs have voted on this way. So if two MdBs have voted on all the same issues and voted always the same way their agreement is 100%.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Running-the-GUI">Running the GUI<a class="anchor-link" href="#Running-the-GUI"> </a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Using just calculated <a href="/bundestag/gui.html#df"><code>df</code></a> and <code>agreements</code></p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_gui</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">GUI</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agreements</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Using pre-computed <a href="/bundestag/gui.html#df"><code>df</code></a> and <code>agreements</code></p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_gui</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">GUI</span><span class="p">(</span><span class="n">gui</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">gui</span><span class="o">.</span><span class="n">agreements</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Running the GUI</p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_gui</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
