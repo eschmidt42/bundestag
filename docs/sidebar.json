@@ -1,10 +1,8 @@
 {
   "bundestag": {
     "Overview": "/",
-    "Scraping the Bundestag page": "browser_thingies.html",
     "Parsing votes": "html_parsing.html",
-    "Member similarity": "member_similarity.html",
-    "Displaying member similarity": "gui.html",
-    "MdBs matching 2012-12-13 to 2020-09-10": "gui_clean.html"
+    "Similarities": "similarities.html",
+    "Displaying member similarity": "gui.html"
   }
 }

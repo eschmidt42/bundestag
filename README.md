@@ -1,76 +1,95 @@
-# Finding matches for MdBs
-> Ever wondered, given an MdB, which are the most similar MdBs based on their voting behavior? This is what this repo does.
+# "Namentliche Abstimmungen"  in the Bundestag
+> Parse and inspect "Namentliche Abstimmungen" (roll call votes) in the Bundestag (the federal German parliament)
 
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eschmidt42/bundestag/binder0?urlpath=%2Fvoila%2Frender%2Fnbs%2F04_gui_clean.ipynb)
 
+## Purpose of this repo
+
+The German Parliament is so friendly to put all votes of all members into readable XLSX / XLS files (and PDFs ¯\\\_(ツ)\_/¯ ). Those files  can be found here: https://www.bundestag.de/parlament/plenum/abstimmung/liste. 
+
+So the purpose of this repo is to help collect those roll call votes into one dataframe to enable analysis. This may be particularly interesting for the upcoming election in 2021. E.g., if you want to see what your local member of the parliament has been up to in terms of public roll call votes relative to the parties, or how individual parties agree in their votes, this dataset may be interesting for you. At this point I'd also like to point out the excellent resource [abgeordnetenwatch](https://www.abgeordnetenwatch.de/).
+
+Since the files on the bundestag website are stored in a way making it tricky to automatically crawl them, a bit of manual work is required to generate the dataset. But don't fret! Quite a few recent roll call votes (as of the publishing of this repo) are already prepared for you. But if older or more recent roll call votes are missing, convenience tools to reduce your manual effort are demonstrated below.
+
+An example analysis on how similar parties voted / how similar to parties individual MdBs votes, for inspiration, is also provided 😁.
+
 ## How to use
 
-### Downloading the data
+First let's look at what the processed data looks like and then how to parse it from the XLS / XLSX files.
 
-The German Parliament is so friendly to put all votes of all members into readable XLSX / XLS files, which can be found here: https://www.bundestag.de/parlament/plenum/abstimmung/liste.
+### Inspecting the prepared data
 
-Let's first define the source dir with the html data and and the target dir for the downloaded XLSX / XLS files 
+If you have cloned the repo you should already have a `votes.parquet` file in the root directory of the repo. If not feel free to download the `votes.parquet` file directly.
 
-```python
-html_data_dir = Path('../raw_data')
-xlsx_data_dir = Path('../xlsx_data')
+```
+fname = Path('../roll_call_votes.parquet')
 ```
 
-Now let's collect the relevant URIs from the html documents
-
-```python
-%%time
-html_file_paths = parsing.get_file_paths(html_data_dir, suffix='.htm')
-xlsx_uris = parsing.collect_xlsx_uris(html_file_paths)
+```
+df = pd.read_parquet(fname)
+df.head()
 ```
 
-With the URIs we can now download the XLSX / XLS files
+### Counting how parties voted
 
-```python
-%%time
-xlsx_file_title_maps = parsing.download_multiple_xlsx_files(xlsx_uris, xlsx_dir=xlsx_data_dir)
+```
+party_votes, df_plot = similarity.get_votes_by_party(df)
 ```
 
-and store them in a `pd.DataFrame`
-
-```python
-xlsx_files = parsing.get_file_paths(xlsx_data_dir, pattern=re.compile('(\.xlsx?)'))
-df = parsing.collect_xlsxs_as_dict(xlsx_files, xlsx_file_title_maps=xlsx_file_title_maps)
+```
+party_votes.head()
 ```
 
-### Calculating Similarities between MdBs (Mitglied des Bundestages)
-
-Before we can process the similarities / agreements between the MdBs let's reshape `df`
-
-```python
-df_squished = similarity.get_squished_dataframe(df)
+```
+df_plot.head()
 ```
 
-and now for the agreements between the MdBs
+### Visualizing similarities of parties over time
 
-```python
-agreements = similarity.scan_all_agreements(df_squished)
+```
+party = 'SPD'
+similarity_party_party = (similarity.align_party_with_all_parties(party_votes, party)
+                          .pipe(similarity.compute_similarity, lsuffix='a', rsuffix='b'))
+similarity_party_party.head()
 ```
 
-With agreement between two MdBs we here use 1 - [Jaccard distance](https://en.wikipedia.org/wiki/Jaccard_index) times 100. This is the intersection of the issues pairs of MdBs have voted on in the same way divided by the total number of issues the pairs have voted on this way. So if two MdBs have voted on all the same issues and voted always the same way their agreement is 100%. 
+```
+similarity.plot_similarity_over_time(similarity_party_party, 
+                                     'Fraktion/Gruppe_b',
+                                     title=f'{party} vs time')
+```
 
 ### Running the GUI
 
-Using just calculated `df` and `agreements`
-
-```python
-_gui = gui.GUI(df, agreements)
+```
+g = gui.GUI(df)
 ```
 
-Using pre-computed `df` and `agreements`
-
-```python
-_gui = gui.GUI(gui.df, gui.agreements)
+```
+# g.render()
 ```
 
-Running the GUI
+### Downloading & parsing the data into a useful format
 
-```python
-_gui.run()
+In order to collect the data and produce a dataframe like the one stored in `roll_call_votes.parquet` we need to open https://www.bundestag.de/parlament/plenum/abstimmung/liste and **manually download all the pages of interest into one location**. Then we can automatically query the html documents for the XLS / XLSX documents, download and clean those.
+
+Let's first define the source dir with the html data and and the target dir for the downloaded XLSX / XLS files 
+
+```
+html_path = Path('../website_data')   # location where the html files were >manually< downloaded to
+sheet_path = Path('../sheets') # location to automatically download the xlsx and xls files
+```
+
+Now let's download all sheet uris found in the files in `html_path` to `sheet_path`
+
+```
+nmax = 3 # number of sheets to download (set to None to download all)
+df = parsing.get_multiple_sheets(html_path, sheet_path, nmax=nmax)
+```
+
+Done
+
+```
+# df.to_parquet("../new_roll_call_votes.parquet")
 ```
