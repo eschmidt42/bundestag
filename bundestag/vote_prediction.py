@@ -19,9 +19,7 @@ import plotly.express as px
 from sklearn import decomposition
 
 logger.remove()
-logger.add(sys.stderr, level='DEBUG'); # default level for this module should be INFO
-
-# python -m spacy download de_core_news_sm
+logger.add(sys.stderr, level='INFO'); # default level for this module should be INFO
 
 # Cell
 def get_politician_names(df:pd.DataFrame, col='mandate'):
@@ -59,8 +57,6 @@ def poll_splitter(df:pd.DataFrame, poll_col:str='poll_id', valid_pct:float=.2,
 def test_poll_split(split):
     assert isinstance(split, tuple)
     assert len(split) == 2
-
-test_poll_split(poll_splitter(df_all_votes))
 
 # Cell
 def plot_predictions(learn:TabularLearner, df_all_votes:pd.DataFrame, df_mandates:pd.DataFrame,
@@ -160,11 +156,11 @@ def plot_poll_embeddings(df_all_votes:pd.DataFrame, df_polls:pd.DataFrame, embed
 
     col = 'poll_id'
 
-    tmp = (df_all_votes.iloc[splits[1]]
-     .drop_duplicates(subset='poll_id')
-     .join(df_polls[['poll_id', 'poll_title']]
-           .set_index('poll_id'), on='poll_id')
-     .join(embeddings[col].set_index(col), on=col))
+    tmp = (df_all_votes
+           .drop_duplicates(subset='poll_id')
+           .join(df_polls[['poll_id', 'poll_title']]
+                 .set_index('poll_id'), on='poll_id')
+           .join(embeddings[col].set_index(col), on=col))
 
     if df_mandates is not None:
         proponents = get_poll_proponents(df_all_votes, df_mandates)
@@ -178,12 +174,12 @@ def plot_politician_embeddings(df_all_votes:pd.DataFrame, df_mandates:pd.DataFra
 
     col = 'politician name'
 
-    tmp = (df_all_votes.iloc[splits[1]]
-     .drop_duplicates(subset='mandate_id')
-     .join(df_mandates[['mandate_id', 'party']]
-           .set_index('mandate_id'), on='mandate_id')
-     .join(embeddings[col].set_index(col), on=col)
-    )
+    tmp = (df_all_votes
+           .drop_duplicates(subset='mandate_id')
+           .join(df_mandates[['mandate_id', 'party']]
+                 .set_index('mandate_id'), on='mandate_id')
+           .join(embeddings[col].set_index(col), on=col)
+          )
 
     return px.scatter(data_frame=tmp,
                       x=f'{col}__emb_component_0', y=f'{col}__emb_component_1',
