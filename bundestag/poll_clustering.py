@@ -15,13 +15,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-logger.remove()
-logger.add(sys.stderr, level='DEBUG'); # default level for this module should be INFO
-
-# python -m spacy download de_core_news_sm
-
 import gensim.corpora as corpora
-
 import gensim
 
 import sklearn
@@ -30,6 +24,9 @@ from sklearn import decomposition
 import pprint
 
 from fastcore.all import *
+
+logger.remove()
+logger.add(sys.stderr, level='INFO'); # default level for this module should be INFO
 
 # Cell
 class SpacyTransformer:
