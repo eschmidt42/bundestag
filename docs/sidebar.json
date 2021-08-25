@@ -1,8 +1,0 @@
-{
-  "bundestag": {
-    "Overview": "/",
-    "Parsing votes": "html_parsing.html",
-    "Similarities": "similarities.html",
-    "Displaying member similarity": "gui.html"
-  }
-}
