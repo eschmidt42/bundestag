@@ -20,7 +20,7 @@ class TestHTMLParsing(unittest.TestCase):
     def test_sheet_uris(self):
         hp.test_sheet_uris(self.sheet_uris)
     def test_file_title_maps(self):
-        hp.test_file_title_maps(self.file_title_maps)
+        hp.test_file_title_maps(self.file_title_maps, self.sheet_uris)
     def test_get_sheet_df(self):
         hp.test_get_sheet_df(self.df)
     def test_squished_df(self):
