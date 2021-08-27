@@ -201,11 +201,11 @@ party_votes = sim.get_votes_by_party(df)
 sim.test_party_votes(party_votes)
 ```
 
-    2021-08-26 23:35:00.015 | INFO     | bundestag.similarity:get_votes_by_party:16 - Computing votes by party and poll
+    2021-08-27 06:53:37.585 | INFO     | bundestag.similarity:get_votes_by_party:17 - Computing votes by party and poll
 
 
-    CPU times: user 5.04 s, sys: 15.3 ms, total: 5.06 s
-    Wall time: 5.01 s
+    CPU times: user 5.4 s, sys: 0 ns, total: 5.4 s
+    Wall time: 5.38 s
 
 
 Re-arranging `party_votes`
@@ -218,8 +218,8 @@ sim.test_party_votes_pivoted(party_votes_pivoted)
 party_votes_pivoted.head()
 ```
 
-    CPU times: user 17.8 s, sys: 445 ms, total: 18.2 s
-    Wall time: 18.3 s
+    CPU times: user 19 s, sys: 504 ms, total: 19.5 s
+    Wall time: 19.5 s
 
 
 
@@ -328,8 +328,8 @@ sim.test_votes_of_mdb(mdb_votes)
 mdb_votes.head()
 ```
 
-    CPU times: user 61.8 ms, sys: 0 ns, total: 61.8 ms
-    Wall time: 63.4 ms
+    CPU times: user 62.9 ms, sys: 249 µs, total: 63.2 ms
+    Wall time: 61.7 ms
 
 
 
@@ -430,11 +430,11 @@ sim.test_mdb_vs_parties(mdb_vs_parties)
 mdb_vs_parties.head(3).T
 ```
 
-    2021-08-26 23:35:23.542 | INFO     | bundestag.similarity:compute_similarity:91 - Computing similarities using `lsuffix` = "mdb", `rsuffix` = "party" and metric = <function cosine_similarity at 0x7fb3fbad0040>
+    2021-08-27 06:54:02.682 | INFO     | bundestag.similarity:compute_similarity:110 - Computing similarities using `lsuffix` = "mdb", `rsuffix` = "party" and metric = <function cosine_similarity at 0x7fb7e220e0d0>
 
 
-    CPU times: user 78.6 ms, sys: 783 µs, total: 79.4 ms
-    Wall time: 76.3 ms
+    CPU times: user 81.3 ms, sys: 1.03 ms, total: 82.4 ms
+    Wall time: 77.5 ms
 
 
 
@@ -580,11 +580,11 @@ sim.test_partyA_vs_partyB(partyA_vs_rest)
 partyA_vs_rest.head(3).T
 ```
 
-    2021-08-26 23:35:23.699 | INFO     | bundestag.similarity:compute_similarity:91 - Computing similarities using `lsuffix` = "a", `rsuffix` = "b" and metric = <function cosine_similarity at 0x7fb3fbad0040>
+    2021-08-27 06:54:02.842 | INFO     | bundestag.similarity:compute_similarity:110 - Computing similarities using `lsuffix` = "a", `rsuffix` = "b" and metric = <function cosine_similarity at 0x7fb7e220e0d0>
 
 
-    CPU times: user 124 ms, sys: 2.22 ms, total: 126 ms
-    Wall time: 108 ms
+    CPU times: user 119 ms, sys: 768 µs, total: 120 ms
+    Wall time: 109 ms
 
 
 
@@ -861,35 +861,35 @@ display(df_polls_lda.head(3).T)
     </tr>
     <tr>
       <th>nlp_dim0</th>
-      <td>0.066675</td>
-      <td>0.050011</td>
-      <td>0.033576</td>
+      <td>0.730206</td>
+      <td>0.050009</td>
+      <td>0.034305</td>
     </tr>
     <tr>
       <th>nlp_dim1</th>
-      <td>0.066877</td>
-      <td>0.050016</td>
-      <td>0.033337</td>
+      <td>0.067006</td>
+      <td>0.050014</td>
+      <td>0.03356</td>
     </tr>
     <tr>
       <th>nlp_dim2</th>
-      <td>0.066675</td>
+      <td>0.067219</td>
       <td>0.050011</td>
-      <td>0.034296</td>
+      <td>0.033626</td>
     </tr>
     <tr>
       <th>nlp_dim3</th>
-      <td>0.068006</td>
-      <td>0.799948</td>
-      <td>0.865416</td>
+      <td>0.068889</td>
+      <td>0.050011</td>
+      <td>0.033718</td>
     </tr>
   </tbody>
 </table>
 </div>
 
 
-    CPU times: user 1.75 s, sys: 90.7 ms, total: 1.85 s
-    Wall time: 1.86 s
+    CPU times: user 1.83 s, sys: 111 ms, total: 1.94 s
+    Wall time: 1.94 s
 
 
 
@@ -943,313 +943,6 @@ Inspecting the predictions of the neural net over the validation set.
 vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
                     n_worst_politicians=5)
 ```
-
-
-
-
-
-
-<style type="text/css">
-#T_5090a_row0_col0, #T_5090a_row1_col1, #T_5090a_row2_col1, #T_5090a_row3_col3 {
-  background-color: #023858;
-  color: #f1f1f1;
-}
-#T_5090a_row0_col1, #T_5090a_row0_col2, #T_5090a_row1_col0, #T_5090a_row2_col0, #T_5090a_row3_col0 {
-  background-color: #fff7fb;
-  color: #000000;
-}
-#T_5090a_row0_col3 {
-  background-color: #faf3f9;
-  color: #000000;
-}
-#T_5090a_row1_col2, #T_5090a_row3_col2 {
-  background-color: #fdf5fa;
-  color: #000000;
-}
-#T_5090a_row1_col3 {
-  background-color: #fef6fa;
-  color: #000000;
-}
-#T_5090a_row2_col2 {
-  background-color: #91b5d6;
-  color: #000000;
-}
-#T_5090a_row2_col3 {
-  background-color: #034a74;
-  color: #f1f1f1;
-}
-#T_5090a_row3_col1 {
-  background-color: #fef6fb;
-  color: #000000;
-}
-</style>
-<table id="T_5090a_">
-  <thead>
-    <tr>
-      <th class="index_name level0" >vote_pred</th>
-      <th class="col_heading level0 col0" >abstain</th>
-      <th class="col_heading level0 col1" >no</th>
-      <th class="col_heading level0 col2" >no_show</th>
-      <th class="col_heading level0 col3" >yes</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >vote</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-      <th class="blank col2" >&nbsp;</th>
-      <th class="blank col3" >&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_5090a_level0_row0" class="row_heading level0 row0" >abstain</th>
-      <td id="T_5090a_row0_col0" class="data row0 col0" >762</td>
-      <td id="T_5090a_row0_col1" class="data row0 col1" >43</td>
-      <td id="T_5090a_row0_col2" class="data row0 col2" >41</td>
-      <td id="T_5090a_row0_col3" class="data row0 col3" >64</td>
-    </tr>
-    <tr>
-      <th id="T_5090a_level0_row1" class="row_heading level0 row1" >no</th>
-      <td id="T_5090a_row1_col0" class="data row1 col0" >28</td>
-      <td id="T_5090a_row1_col1" class="data row1 col1" >9381</td>
-      <td id="T_5090a_row1_col2" class="data row1 col2" >179</td>
-      <td id="T_5090a_row1_col3" class="data row1 col3" >128</td>
-    </tr>
-    <tr>
-      <th id="T_5090a_level0_row2" class="row_heading level0 row2" >no_show</th>
-      <td id="T_5090a_row2_col0" class="data row2 col0" >109</td>
-      <td id="T_5090a_row2_col1" class="data row2 col1" >982</td>
-      <td id="T_5090a_row2_col2" class="data row2 col2" >484</td>
-      <td id="T_5090a_row2_col3" class="data row2 col3" >923</td>
-    </tr>
-    <tr>
-      <th id="T_5090a_level0_row3" class="row_heading level0 row3" >yes</th>
-      <td id="T_5090a_row3_col0" class="data row3 col0" >23</td>
-      <td id="T_5090a_row3_col1" class="data row3 col1" >74</td>
-      <td id="T_5090a_row3_col2" class="data row3 col2" >187</td>
-      <td id="T_5090a_row3_col3" class="data row3 col3" >11073</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-
-<style type="text/css">
-#T_de8ce_row0_col0, #T_de8ce_row1_col1, #T_de8ce_row2_col1, #T_de8ce_row3_col3 {
-  background-color: #023858;
-  color: #f1f1f1;
-}
-#T_de8ce_row0_col1, #T_de8ce_row0_col2, #T_de8ce_row1_col0, #T_de8ce_row2_col0, #T_de8ce_row3_col0 {
-  background-color: #fff7fb;
-  color: #000000;
-}
-#T_de8ce_row0_col3 {
-  background-color: #faf3f9;
-  color: #000000;
-}
-#T_de8ce_row1_col2, #T_de8ce_row3_col2 {
-  background-color: #fdf5fa;
-  color: #000000;
-}
-#T_de8ce_row1_col3 {
-  background-color: #fef6fa;
-  color: #000000;
-}
-#T_de8ce_row2_col2 {
-  background-color: #91b5d6;
-  color: #000000;
-}
-#T_de8ce_row2_col3 {
-  background-color: #034a74;
-  color: #f1f1f1;
-}
-#T_de8ce_row3_col1 {
-  background-color: #fef6fb;
-  color: #000000;
-}
-</style>
-<table id="T_de8ce_">
-  <thead>
-    <tr>
-      <th class="index_name level0" >vote_pred</th>
-      <th class="col_heading level0 col0" >abstain</th>
-      <th class="col_heading level0 col1" >no</th>
-      <th class="col_heading level0 col2" >no_show</th>
-      <th class="col_heading level0 col3" >yes</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >vote</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-      <th class="blank col2" >&nbsp;</th>
-      <th class="blank col3" >&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_de8ce_level0_row0" class="row_heading level0 row0" >abstain</th>
-      <td id="T_de8ce_row0_col0" class="data row0 col0" >0.837363</td>
-      <td id="T_de8ce_row0_col1" class="data row0 col1" >0.047253</td>
-      <td id="T_de8ce_row0_col2" class="data row0 col2" >0.045055</td>
-      <td id="T_de8ce_row0_col3" class="data row0 col3" >0.070330</td>
-    </tr>
-    <tr>
-      <th id="T_de8ce_level0_row1" class="row_heading level0 row1" >no</th>
-      <td id="T_de8ce_row1_col0" class="data row1 col0" >0.002882</td>
-      <td id="T_de8ce_row1_col1" class="data row1 col1" >0.965521</td>
-      <td id="T_de8ce_row1_col2" class="data row1 col2" >0.018423</td>
-      <td id="T_de8ce_row1_col3" class="data row1 col3" >0.013174</td>
-    </tr>
-    <tr>
-      <th id="T_de8ce_level0_row2" class="row_heading level0 row2" >no_show</th>
-      <td id="T_de8ce_row2_col0" class="data row2 col0" >0.043635</td>
-      <td id="T_de8ce_row2_col1" class="data row2 col1" >0.393114</td>
-      <td id="T_de8ce_row2_col2" class="data row2 col2" >0.193755</td>
-      <td id="T_de8ce_row2_col3" class="data row2 col3" >0.369496</td>
-    </tr>
-    <tr>
-      <th id="T_de8ce_level0_row3" class="row_heading level0 row3" >yes</th>
-      <td id="T_de8ce_row3_col0" class="data row3 col0" >0.002025</td>
-      <td id="T_de8ce_row3_col1" class="data row3 col1" >0.006516</td>
-      <td id="T_de8ce_row3_col2" class="data row3 col2" >0.016466</td>
-      <td id="T_de8ce_row3_col3" class="data row3 col3" >0.974993</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-    2021-08-26 23:35:53.413 | INFO     | bundestag.vote_prediction:plot_predictions:80 - Overall accuracy = 88.64 %
-
-
-    
-    5 most inaccurately predicted politicians:
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>politician name</th>
-      <th>party</th>
-      <th>prediction_correct</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Michael Leutert</td>
-      <td>unknown</td>
-      <td>0.375000</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Axel Troost</td>
-      <td>DIE LINKE</td>
-      <td>0.400000</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Mario Mieruch</td>
-      <td>fraktionslos</td>
-      <td>0.414634</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Heiko Heßenkemper</td>
-      <td>fraktionslos</td>
-      <td>0.444444</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Bernd Siebert</td>
-      <td>CDU/CSU</td>
-      <td>0.454545</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-    
-    5 most inaccurately predicted polls:
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>poll_id</th>
-      <th>poll_title</th>
-      <th>prediction_correct</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1761</td>
-      <td>Organspenden-Reform: Zustimmungslösung</td>
-      <td>0.579710</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1758</td>
-      <td>Organspenden-Reform: Widerspruchslösung</td>
-      <td>0.656051</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1683</td>
-      <td>BDS-Bewegung entgegentreten - Antisemitismus bekämpfen</td>
-      <td>0.706667</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4088</td>
-      <td>Transparenzregelungen für Abgeordnete</td>
-      <td>0.730496</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3947</td>
-      <td>Änderung der Abgabenordnung</td>
-      <td>0.750000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
 
 Splitting our dataset randomly leads to a surprisingly good accuracy of ~88% over the validation set. The most reasonable explanation is that the model encountered polls and how most politicians voted for them already during training. 
 
