@@ -1,2 +1,10 @@
 .ipynb_checkpoints
 __pycache__
+old
+dist
+sheets
+website_data
+MdB-Stammdaten*
+README_files/README*.png
+abgeordnetenwatch_data/
+abgeordnetenwatch_data_test/
