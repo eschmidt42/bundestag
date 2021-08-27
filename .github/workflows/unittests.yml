@@ -19,5 +19,7 @@ jobs:
       uses: Gr1N/setup-poetry@v7
     - name: Install dependencies
       run: poetry install
+    - name: Get spacy language model
+      run: poetry run python -m spacy download de_core_news_sm
     - name: Run tests
       run: poetry run python -m unittest
