@@ -1,0 +1,23 @@
+# This job sets up poetry and runs unittests on every push
+name: Tests
+
+on:
+  push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install poetry
+      uses: Gr1N/setup-poetry@v7
+    - name: Install dependencies
+      run: poetry install
+    - name: Run tests
+      run: poetry python -m unittest bundestag
