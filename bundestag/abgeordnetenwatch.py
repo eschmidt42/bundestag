@@ -1,5 +1,5 @@
 import sys
-import requests, json
+import requests, json, re
 from pathlib import Path
 from loguru import logger
 import pandas as pd
@@ -15,12 +15,21 @@ API_ENCODING = "ISO-8859-1"
 ABGEORDNETENWATCH_PATH = Path("../abgeordnetenwatch_data")  # location for data storage
 
 
-def get_poll_info(legislature_id: int, dry=False):
+def get_location(fname: str, path: Path = None, dry: bool = False, mkdir: bool = False):
+    if path is None:
+        path = ABGEORDNETENWATCH_PATH
+    file = path / fname
+    if (not dry) and mkdir:
+        file.parent.mkdir(exist_ok=True)
+    return file
+
+
+def get_poll_info(legislature_id: int, dry=False, num_polls: int = 999):
 
     url = "https://www.abgeordnetenwatch.de/api/v2/polls"
     params = {
         "field_legislature": legislature_id,  # Bundestag period 2017-2021 = 111
-        "range_end": 999,  # setting a high limit to include all polls in one go
+        "range_end": num_polls,  # setting a high limit to include all polls in one go
     }
 
     if dry:
@@ -32,24 +41,28 @@ def get_poll_info(legislature_id: int, dry=False):
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
-    return r.json(encoding=API_ENCODING)
+    return r.json()  # encoding=API_ENCODING
 
 
-def store_polls_json(polls: dict, legislature_id: int, dry=False):
-    polls_path = ABGEORDNETENWATCH_PATH / f"polls_legislature_{legislature_id}.json"
+def polls_file(legislature_id: int):
+    return f"polls_legislature_{legislature_id}.json"
+
+
+def store_polls_json(polls: dict, legislature_id: int, dry=False, path: Path = None):
+    file = get_location(polls_file(legislature_id), path=path)
 
     if dry:
-        logger.debug(f"Dry mode - Writing poll info to {polls_path}")
+        logger.debug(f"Dry mode - Writing poll info to {file}")
         return
-    logger.debug(f"Writing poll info to {polls_path}")
-    with open(polls_path, "w", encoding="utf8") as f:
+    logger.debug(f"Writing poll info to {file}")
+    with open(file, "w", encoding="utf8") as f:
         json.dump(polls, f)
 
 
-def load_polls_json(legislature_id: int):
-    polls_path = ABGEORDNETENWATCH_PATH / f"polls_legislature_{legislature_id}.json"
-    logger.debug(f"Reading poll info from {polls_path}")
-    with open(polls_path, "r", encoding="utf8") as f:
+def load_polls_json(legislature_id: int, path: Path = None):
+    file = get_location(polls_file(legislature_id), path=path)
+    logger.debug(f"Reading poll info from {file}")
+    with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
     return info
 
@@ -75,9 +88,9 @@ def parse_poll_data(poll):
     return d
 
 
-def get_polls_df(legislature_id: int):
+def get_polls_df(legislature_id: int, path: Path = None):
     "Parses info from poll json files for `legislature_id`"
-    info = load_polls_json(legislature_id)
+    info = load_polls_json(legislature_id, path=path)
     return pd.DataFrame([parse_poll_data(v) for v in info["data"]])
 
 
@@ -99,11 +112,11 @@ def test_poll_data(df: pd.DataFrame):
     ), f'Surprisingly found duplicated poll_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
 
 
-def get_mandates_info(legislature_id: int, dry=False):
+def get_mandates_info(legislature_id: int, dry=False, num_mandates: int = 999):
     url = f"https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates"
     params = {
         "parliament_period": legislature_id,  # collecting parlamentarians' votes
-        "range_end": 999,  # setting a high limit to include all mandates in one go
+        "range_end": num_mandates,  # setting a high limit to include all mandates in one go
     }
     if dry:
         logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
@@ -113,28 +126,39 @@ def get_mandates_info(legislature_id: int, dry=False):
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
-    return r.json(encoding=API_ENCODING)
+    return r.json()  # encoding=API_ENCODING
 
 
-def store_mandates_info(mandates: dict, legislature_id: int, dry=False):
-    mandates_path = (
-        ABGEORDNETENWATCH_PATH / f"mandates_legislature_{legislature_id}.json"
-    )
+def mandates_file(legislature_id: int):
+    return f"mandates_legislature_{legislature_id}.json"
+
+
+def store_mandates_info(
+    mandates: dict, legislature_id: int, dry: bool = False, path: Path = None
+):
+    file = get_location(mandates_file(legislature_id), path=path, dry=dry)
+    # if path is None:
+    #     path = ABGEORDNETENWATCH_PATH
+    # file = (
+    #     path / f"mandates_legislature_{legislature_id}.json"
+    # )
 
     if dry:
-        logger.debug(f"Dry mode - Writing mandates info to {mandates_path}")
+        logger.debug(f"Dry mode - Writing mandates info to {file}")
         return
-    logger.debug(f"Writing mandates info to {mandates_path}")
-    with open(mandates_path, "w", encoding="utf8") as f:
+    logger.debug(f"Writing mandates info to {file}")
+    with open(file, "w", encoding="utf8") as f:
         json.dump(mandates, f)
 
 
-def load_mandate_json(legislature_id: int):
-    mandates_path = (
-        ABGEORDNETENWATCH_PATH / f"mandates_legislature_{legislature_id}.json"
-    )
-    logger.debug(f"Reading mandates info from {mandates_path}")
-    with open(mandates_path, "r", encoding="utf8") as f:
+def load_mandate_json(legislature_id: int, path: Path = None):
+    file = get_location(mandates_file(legislature_id), path=path)
+    # if mandates_path is None:
+    #     mandates_path = (
+    #         ABGEORDNETENWATCH_PATH / f"mandates_legislature_{legislature_id}.json"
+    #     )
+    logger.debug(f"Reading mandates info from {file}")
+    with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
     return info
 
@@ -203,9 +227,9 @@ def test_mandate_data(df: pd.DataFrame):
         ), f"Surprisingly found duplicated {c} values: {df.loc[mask,c].unique()} \nexamples: \n{df.loc[mask].head()}"
 
 
-def get_mandates_df(legislature_id: int, test: bool = True):
+def get_mandates_df(legislature_id: int, test: bool = True, path: Path = None):
     "Parses info from mandate json file(s) for `legislature_id`"
-    info = load_mandate_json(legislature_id)
+    info = load_mandate_json(legislature_id, path=path)
     df = pd.DataFrame([parse_mandate_data(v) for v in info["data"]])
     if test:
         test_mandate_data(df)
@@ -225,65 +249,48 @@ def get_vote_info(poll_id: int, dry=False):
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
-    return r.json(encoding=API_ENCODING)
+    return r.json()  # encoding=API_ENCODING
 
 
-def store_vote_info(votes: dict, poll_id: int, dry=False):
+def votes_file(legislature_id: int, poll_id: int):
+    return f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
+
+
+def store_vote_info(votes: dict, poll_id: int, dry=False, path: Path = None):
+
     if dry:
-        logger.debug("Dry mode - Writing votes info ")
+        logger.debug(
+            f"Dry mode - Writing votes info to {get_location(votes_file(None, poll_id), path=path, dry=dry, mkdir=True)}"
+        )
         return
 
     legislature_id = votes["data"]["field_legislature"]["id"]
-    votes_path = ABGEORDNETENWATCH_PATH / f"votes_legislature_{legislature_id}"
-    votes_path.mkdir(exist_ok=True)
-    votes_path = votes_path / f"poll_{poll_id}_votes.json"
+    file = get_location(
+        votes_file(legislature_id, poll_id), path=path, dry=dry, mkdir=True
+    )
 
-    logger.debug(f"Writing votes info to {votes_path}")
+    # if votes_path is None:
+    #     votes_path = ABGEORDNETENWATCH_PATH / f"votes_legislature_{legislature_id}"
+    # votes_path.mkdir(exist_ok=True)
+    # votes_path = votes_path / f"poll_{poll_id}_votes.json"
 
-    with open(votes_path, "w", encoding="utf8") as f:
+    logger.debug(f"Writing votes info to {file}")
+
+    with open(file, "w", encoding="utf8") as f:
         json.dump(votes, f)
 
 
-def check_stored_vote_ids(legislature_id: int = None):
-
-    dir2int = lambda x: int(str(x).split("_")[-1])
-    legislature_ids = {
-        dir2int(v): v for v in ABGEORDNETENWATCH_PATH.glob("votes_legislature_*")
-    }
-
-    file2int = lambda x: int(str(x).split("_")[-2])
-    id_unknown = legislature_id is not None and legislature_id not in legislature_ids
-
-    if id_unknown:
-        logger.error(
-            f"Given legislature_id {legislature_id} is unknown. Known ids: {sorted(list(legislature_ids.keys()))}"
-        )
-
-    elif legislature_id is not None:
-        vote_ids = {
-            file2int(v): v
-            for v in (
-                ABGEORDNETENWATCH_PATH / f"votes_legislature_{legislature_id}"
-            ).glob("poll_*_votes.json")
-        }
-        return {legislature_id: vote_ids}
-
-    else:
-        all_ids = {}
-        for leg_id, leg_path in legislature_ids.items():
-            all_ids[leg_id] = {
-                file2int(v): v for v in leg_path.glob("poll_*_votes.json")
-            }
-        return all_ids
-
-
-def load_vote_json(legislature_id: int, poll_id: int):
-    votes_path = (
-        ABGEORDNETENWATCH_PATH
-        / f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
+def load_vote_json(legislature_id: int, poll_id: int, path: Path = None):
+    # legislature_id = votes["data"]["field_legislature"]["id"]
+    file = get_location(
+        votes_file(legislature_id, poll_id), path=path, dry=False, mkdir=False
     )
-    logger.debug(f"Reading vote info from {votes_path}")
-    with open(votes_path, "r", encoding="utf8") as f:
+    # votes_path = (
+    #     ABGEORDNETENWATCH_PATH
+    #     / f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
+    # )
+    logger.debug(f"Reading vote info from {file}")
+    with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
     return info
 
@@ -323,9 +330,11 @@ def test_vote_data(df):
     ), f'Surprisingly found duplicated mandate_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
 
 
-def get_votes_df(legislature_id: int, poll_id: int, test: bool = True):
+def get_votes_df(
+    legislature_id: int, poll_id: int, test: bool = True, path: Path = None
+):
     "Parses info from vote json files for `legislature_id` and `poll_id`"
-    info = load_vote_json(legislature_id, poll_id)
+    info = load_vote_json(legislature_id, poll_id, path=path)
     df = pd.DataFrame(
         [parse_vote_data(v) for v in info["data"]["related_data"]["votes"]]
     )
@@ -334,20 +343,64 @@ def get_votes_df(legislature_id: int, poll_id: int, test: bool = True):
     return df
 
 
+def check_stored_vote_ids(legislature_id: int = None, path: Path = None):
+    if path is None:
+        path = ABGEORDNETENWATCH_PATH
+    dir2int = lambda x: int(str(x).split("_")[-1])
+    legislature_ids = {dir2int(v): v for v in path.glob("votes_legislature_*")}
+
+    file2int = lambda x: int(str(x).split("_")[-2])
+    id_unknown = legislature_id is not None and legislature_id not in legislature_ids
+
+    if id_unknown:
+        logger.error(
+            f"Given legislature_id {legislature_id} is unknown. Known ids: {sorted(list(legislature_ids.keys()))}"
+        )
+
+    elif legislature_id is not None:
+        vote_ids = {
+            file2int(v): v
+            for v in (path / f"votes_legislature_{legislature_id}").glob(
+                "poll_*_votes.json"
+            )
+        }
+        return {legislature_id: vote_ids}
+
+    else:
+        all_ids = {}
+        for leg_id, leg_path in legislature_ids.items():
+            all_ids[leg_id] = {
+                file2int(v): v for v in leg_path.glob("poll_*_votes.json")
+            }
+        return all_ids
+
+
+def test_stored_vote_ids_check(path: Path = None):
+    tmp = check_stored_vote_ids(path=path)
+    assert isinstance(tmp, dict), "Sanity check for dict type of `tmp` failed"
+    assert all(
+        [isinstance(v, dict) for v in tmp.values()]
+    ), "Sanity check for dict type of values of `tmp` failed"
+    assert all(
+        [isinstance(p, Path) for d in tmp.values() for p in d.values()]
+    ), "Sanity check of lowest level values failed, expect all to be of type pathlib.Path"
+
+
 def get_all_remaining_vote_info(
     legislature_id: int,
     dry: bool = False,
     t_sleep: float = 1,
     dt_rv_scale: float = 0.1,
     test: bool = True,
+    path: Path = None,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
 
     # Get known legislature_id / poll_id combinations
-    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id)
+    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
 
     # Get polls info for legislative period
-    df_period = get_polls_df(legislature_id, test=test)
+    df_period = get_polls_df(legislature_id, test=test, path=path)
 
     # remaining poll ids to collect
     remaining_poll_ids = [
@@ -368,27 +421,16 @@ def get_all_remaining_vote_info(
         if not dry:
             time.sleep(_t)
         info = get_vote_info(poll_id, dry=dry)
-        store_vote_info(info, poll_id, dry=dry)
+        store_vote_info(info, poll_id, dry=dry, path=path)
     logger.debug(
         f"vote collection for legislature_id {legislature_id} complete (dry = {dry})"
     )
 
 
-def test_stored_vote_ids_check():
-    tmp = check_stored_vote_ids()
-    assert isinstance(tmp, dict), "Sanity check for dict type of `tmp` failed"
-    assert all(
-        [isinstance(v, dict) for v in tmp.values()]
-    ), "Sanity check for dict type of values of `tmp` failed"
-    assert all(
-        [isinstance(p, Path) for d in tmp.values() for p in d.values()]
-    ), "Sanity check of lowest level values failed, expect all to be of type pathlib.Path"
-
-
-def compile_votes_data(legislature_id: int):
+def compile_votes_data(legislature_id: int, path: Path = None):
     "Compiles the individual politicians' votes for a specific legislature period"
 
-    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id)
+    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
 
     # TODO: figure out why some mandate_id entries are duplicate in vote_json files
 
@@ -398,7 +440,7 @@ def compile_votes_data(legislature_id: int):
         total=len(known_id_combos[legislature_id]),
         desc="poll_id",
     ):
-        df = get_votes_df(legislature_id, poll_id, test=False)
+        df = get_votes_df(legislature_id, poll_id, test=False, path=path)
 
         ids = df.loc[df.duplicated(subset=["mandate_id"]), "mandate_id"].unique()
         if len(ids) > 0:
@@ -411,3 +453,22 @@ def compile_votes_data(legislature_id: int):
         df_all_votes.append(df)
 
     return pd.concat(df_all_votes, ignore_index=True)
+
+
+PARTY_PATTERN = re.compile("(.+)\sseit")
+
+
+def get_party_from_fraction_string(row, col="fraction_names"):
+    x = row[col]
+    if not isinstance(x, list):
+        return "unknown"
+    elif len(x) > 0 and "seit" not in x[0]:
+        return x[0]
+    else:
+        return PARTY_PATTERN.search(x[0]).groups()[0]
+
+
+def get_politician_names(df: pd.DataFrame, col="mandate"):
+    names = df[col].str.split(" ").str[:-4].str.join(" ")
+    logger.debug(f"Parsing `{col}` to names. Found {names.nunique()} names")
+    return names

@@ -1,4 +1,3 @@
-import re
 import pandas as pd
 from loguru import logger
 import sys
@@ -13,25 +12,6 @@ from sklearn import decomposition
 logger.remove()
 logger.add(sys.stderr, level="INFO")
 # default level for this module should be INFO
-
-
-def get_politician_names(df: pd.DataFrame, col="mandate"):
-    names = df[col].str.split(" ").str[:-4].str.join(" ")
-    logger.debug(f"Parsing `{col}` to names. Found {names.nunique()} names")
-    return names
-
-
-PARTY_PATTERN = re.compile("(.+)\sseit")
-
-
-def get_party_from_fraction_string(row, col="fraction_names"):
-    x = row[col]
-    if not isinstance(x, list):
-        return "unknown"
-    elif len(x) > 0 and "seit" not in x[0]:
-        return x[0]
-    else:
-        return PARTY_PATTERN.search(x[0]).groups()[0]
 
 
 def poll_splitter(
