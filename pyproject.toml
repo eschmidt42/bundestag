@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bundestag"
-version = "0.0.2"
+version = "0.0.3"
 description = "Download, parse and analyse votes in the german federal parliament, aka 'Bundestag'"
 authors = ["eschmidt42 <11818904+eschmidt42@users.noreply.github.com>"]
 

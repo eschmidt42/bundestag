@@ -26,7 +26,7 @@ For your inspiration, I have also included an analysis on how similar parties vo
 
 For detailed explanations see:
 - parse data from bundestag.de $\rightarrow$ `nbs/00_html_parsing.ipynb`
-- parse data from abgeordnetenwatch $\rightarrow$ `nbs/03_abgeordnetenwatch.ipynb`
+- parse data from abgeordnetenwatch.de $\rightarrow$ `nbs/03_abgeordnetenwatch.ipynb`
 - analyze party / abgeordneten similarity $\rightarrow$ `nbs/01_similarities.ipynb`
 - cluster polls $\rightarrow$ `nbs/04_poll_clustering.ipynb`
 - predict politician votes $\rightarrow$ `nbs/05_predicting_votes.ipynb`
@@ -45,7 +45,7 @@ For a short overview of the highlights see below.
 ```python
 from bundestag import html_parsing as hp
 from bundestag import similarity as sim
-from bundestag.gui import GUI
+from bundestag.gui import MdBGUI, PartyGUI
 from bundestag import abgeordnetenwatch as aw
 from bundestag import poll_clustering as pc
 from bundestag import vote_prediction as vp
@@ -59,13 +59,13 @@ from fastai.tabular.all import *
 
 **Loading the data**
 
-If you have cloned the repo you should already have a `roll_call_votes.parquet` file in the root directory of the repo. If not feel free to download the `roll_call_votes.parquet` file directly.
+If you have cloned the repo you should already have a `bundestag.de_votes.parquet` file in the root directory of the repo. If not feel free to download that file directly.
 
 If you want to have a closer look at the preprocessing please check out `nbs/00_html_parsing.ipynb`.
 
 
 ```python
-df = pd.read_parquet(path='roll_call_votes.parquet')
+df = pd.read_parquet(path='bundestag.de_votes.parquet')
 df.head(3).T
 ```
 
@@ -192,116 +192,34 @@ df.head(3).T
 
 
 
-#### Counting party votes
-
-
-```python
-party_votes, _ = sim.get_votes_by_party(df)
-party_votes.head()
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>vote</th>
-      <th>Enthaltung</th>
-      <th>ja</th>
-      <th>nein</th>
-      <th>nichtabgegeben</th>
-      <th>ungültig</th>
-    </tr>
-    <tr>
-      <th>Fraktion/Gruppe</th>
-      <th>date</th>
-      <th>title</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="5" valign="top">AfD</th>
-      <th rowspan="5" valign="top">2017-12-12</th>
-      <th>Bundeswehreinsatz gegen die Terrororganisation IS</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.967391</td>
-      <td>0.032609</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>Bundeswehreinsatz im Irak</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.978261</td>
-      <td>0.021739</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>Bundeswehreinsatz im Mittelmeer (SEA GUARDIAN)</th>
-      <td>0.021739</td>
-      <td>0.913043</td>
-      <td>0.021739</td>
-      <td>0.043478</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>Bundeswehreinsatz in Afghanistan (Resolute Support)</th>
-      <td>0.010870</td>
-      <td>0.000000</td>
-      <td>0.956522</td>
-      <td>0.032609</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>Bundeswehreinsatz in Mali (MINUSMA)</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.967391</td>
-      <td>0.032609</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-#### Visualizing similarities of `party` with all other parties over time
+Votes by party
 
 
 ```python
 %%time
-party = 'SPD'
-similarity_party_party = (sim.align_party_with_all_parties(party_votes, party)
-                          .pipe(sim.compute_similarity, lsuffix='a', rsuffix='b'))
-similarity_party_party.head(3).T
+party_votes = sim.get_votes_by_party(df)
+sim.test_party_votes(party_votes)
 ```
 
-    CPU times: user 89.9 ms, sys: 0 ns, total: 89.9 ms
-    Wall time: 87.8 ms
+    2021-08-26 23:35:00.015 | INFO     | bundestag.similarity:get_votes_by_party:16 - Computing votes by party and poll
+
+
+    CPU times: user 5.04 s, sys: 15.3 ms, total: 5.06 s
+    Wall time: 5.01 s
+
+
+Re-arranging `party_votes`
+
+
+```python
+%%time
+party_votes_pivoted = sim.pivot_party_votes_df(party_votes)
+sim.test_party_votes_pivoted(party_votes_pivoted)
+party_votes_pivoted.head()
+```
+
+    CPU times: user 17.8 s, sys: 445 ms, total: 18.2 s
+    Wall time: 18.3 s
 
 
 
@@ -325,12 +243,20 @@ similarity_party_party.head(3).T
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>273</th>
-      <th>274</th>
-      <th>275</th>
+      <th>vote</th>
+      <th>Fraktion/Gruppe</th>
+      <th>ja</th>
+      <th>nein</th>
+      <th>Enthaltung</th>
+      <th>ungültig</th>
+      <th>nichtabgegeben</th>
     </tr>
     <tr>
-      <th>vote</th>
+      <th>date</th>
+      <th>title</th>
+      <th></th>
+      <th></th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -338,94 +264,50 @@ similarity_party_party.head(3).T
   </thead>
   <tbody>
     <tr>
-      <th>date</th>
-      <td>2017-12-12 00:00:00</td>
-      <td>2017-12-12 00:00:00</td>
-      <td>2017-12-12 00:00:00</td>
-    </tr>
-    <tr>
-      <th>title</th>
-      <td>Bundeswehreinsatz gegen die Terrororganisation IS</td>
-      <td>Bundeswehreinsatz im Irak</td>
-      <td>Bundeswehreinsatz im Mittelmeer (SEA GUARDIAN)</td>
-    </tr>
-    <tr>
-      <th>Fraktion/Gruppe_a</th>
-      <td>SPD</td>
-      <td>SPD</td>
-      <td>SPD</td>
-    </tr>
-    <tr>
-      <th>Enthaltung_a</th>
-      <td>0.013072</td>
-      <td>0.013072</td>
-      <td>0.006536</td>
-    </tr>
-    <tr>
-      <th>ja_a</th>
-      <td>0.810458</td>
-      <td>0.843137</td>
-      <td>0.869281</td>
-    </tr>
-    <tr>
-      <th>nein_a</th>
-      <td>0.098039</td>
-      <td>0.065359</td>
-      <td>0.039216</td>
-    </tr>
-    <tr>
-      <th>nichtabgegeben_a</th>
-      <td>0.078431</td>
-      <td>0.078431</td>
-      <td>0.084967</td>
-    </tr>
-    <tr>
-      <th>ungültig_a</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>Fraktion/Gruppe_b</th>
+      <th rowspan="5" valign="top">2017-12-12</th>
+      <th>Bundeswehreinsatz gegen die Terrororganisation IS</th>
       <td>AfD</td>
-      <td>AfD</td>
-      <td>AfD</td>
-    </tr>
-    <tr>
-      <th>Enthaltung_b</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.021739</td>
-    </tr>
-    <tr>
-      <th>ja_b</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.913043</td>
-    </tr>
-    <tr>
-      <th>nein_b</th>
+      <td>0.000000</td>
       <td>0.967391</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0.032609</td>
+    </tr>
+    <tr>
+      <th>Bundeswehreinsatz im Irak</th>
+      <td>AfD</td>
+      <td>0.000000</td>
       <td>0.978261</td>
+      <td>0.000000</td>
+      <td>0</td>
       <td>0.021739</td>
     </tr>
     <tr>
-      <th>nichtabgegeben_b</th>
-      <td>0.032609</td>
+      <th>Bundeswehreinsatz im Mittelmeer (SEA GUARDIAN)</th>
+      <td>AfD</td>
+      <td>0.913043</td>
       <td>0.021739</td>
+      <td>0.021739</td>
+      <td>0</td>
       <td>0.043478</td>
     </tr>
     <tr>
-      <th>ungültig_b</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <th>Bundeswehreinsatz in Afghanistan (Resolute Support)</th>
+      <td>AfD</td>
+      <td>0.000000</td>
+      <td>0.956522</td>
+      <td>0.010870</td>
+      <td>0</td>
+      <td>0.032609</td>
     </tr>
     <tr>
-      <th>similarity</th>
-      <td>0.12268</td>
-      <td>0.078981</td>
-      <td>0.998405</td>
+      <th>Bundeswehreinsatz in Mali (MINUSMA)</th>
+      <td>AfD</td>
+      <td>0.000000</td>
+      <td>0.967391</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0.032609</td>
     </tr>
   </tbody>
 </table>
@@ -433,33 +315,126 @@ similarity_party_party.head(3).T
 
 
 
-Visualize as a time series
+**Similarity of a single politician with the parties**
 
-
-```python
-sim.plot_similarity_over_time(similarity_party_party, 
-                              'Fraktion/Gruppe_b',
-                              title=f'{party} vs time')
-```
-
-![party similarity](./README_files/party_similarity_vs_time.png)
-
-Politicians (MdB = Mitglied des Bundestages $\rightarrow$ `mdb`) can also be compared agains party votes
+Collecting the politicians votes
 
 
 ```python
 %%time
 mdb = 'Peter Altmaier'
-similarity_mdb_party = (df
-                        .pipe(sim.prepare_votes_of_mdb, mdb=mdb)
-                        .pipe(sim.align_mdb_with_parties, party_votes=party_votes)
-                        .pipe(sim.compute_similarity, lsuffix='mdb', rsuffix='party')
-                       )
-similarity_mdb_party.head(3).T
+mdb_votes = sim.prepare_votes_of_mdb(df, mdb)
+sim.test_votes_of_mdb(mdb_votes)
+mdb_votes.head()
 ```
 
-    CPU times: user 111 ms, sys: 19.2 ms, total: 130 ms
-    Wall time: 129 ms
+    CPU times: user 61.8 ms, sys: 0 ns, total: 61.8 ms
+    Wall time: 63.4 ms
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>title</th>
+      <th>ja</th>
+      <th>nein</th>
+      <th>Enthaltung</th>
+      <th>ungültig</th>
+      <th>nichtabgegeben</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>2012-10-18</td>
+      <td>Gesetzentwurf 17/9852 und 17/11053 (8. Änderung des Gesetzes gegen Wettbewerbsbeschränkungen)</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>621</th>
+      <td>2012-10-25</td>
+      <td>17/10059 und 17/11093, Abkommen zwischen Deutschland und der Schweiz</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1241</th>
+      <td>2012-10-25</td>
+      <td>17/11172, Änderungsantrag zum Gesetzentwurf zur Stärkung der deutschen Finanzaufsicht</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1861</th>
+      <td>2012-10-25</td>
+      <td>17/11193, Änderungsantrag zum Jahressteuergesetz 2013</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2481</th>
+      <td>2012-10-25</td>
+      <td>17/11196, Änderungsantrag zum Jahressteuergesetz 2013</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+Comparing the politician against the parties
+
+
+```python
+%%time
+mdb_vs_parties = (sim.align_mdb_with_parties(mdb_votes, party_votes_pivoted)
+                  .pipe(sim.compute_similarity, lsuffix='mdb', rsuffix='party'))
+sim.test_mdb_vs_parties(mdb_vs_parties)
+mdb_vs_parties.head(3).T
+```
+
+    2021-08-26 23:35:23.542 | INFO     | bundestag.similarity:compute_similarity:91 - Computing similarities using `lsuffix` = "mdb", `rsuffix` = "party" and metric = <function cosine_similarity at 0x7fb3fbad0040>
+
+
+    CPU times: user 78.6 ms, sys: 783 µs, total: 79.4 ms
+    Wall time: 76.3 ms
 
 
 
@@ -538,12 +513,6 @@ similarity_mdb_party.head(3).T
       <td>DIE LINKE.</td>
     </tr>
     <tr>
-      <th>Enthaltung_party</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
       <th>ja_party</th>
       <td>0.0</td>
       <td>0.915612</td>
@@ -556,16 +525,22 @@ similarity_mdb_party.head(3).T
       <td>0.789474</td>
     </tr>
     <tr>
+      <th>Enthaltung_party</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>ungültig_party</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
       <th>nichtabgegeben_party</th>
       <td>0.132353</td>
       <td>0.084388</td>
       <td>0.210526</td>
-    </tr>
-    <tr>
-      <th>ungültig_party</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
     </tr>
     <tr>
       <th>similarity</th>
@@ -579,22 +554,202 @@ similarity_mdb_party.head(3).T
 
 
 
+Plotting
+
 
 ```python
-sim.plot_similarity_over_time(similarity_mdb_party, 
-                              'Fraktion/Gruppe',
-                              title=f'{mdb} vs time')
+sim.plot(mdb_vs_parties, title_overall=f'Overall similarity of {mdb} with all parties',
+         title_over_time=f'{mdb} vs time')
+plt.tight_layout()
+plt.show()
 ```
 
 ![mdb similarity](./README_files/mdb_similarity_vs_time.png)
 
-**GUI to inspect similarities**
+**Comparing one specific party against all others**
 
-To make this exploration more convenient, the class `GUI` was implemented to quickly go through the different parties and politicians
+Collecting party votes
 
 
 ```python
-GUI(df).render()
+%%time
+party = 'SPD'
+partyA_vs_rest = (sim.align_party_with_all_parties(party_votes_pivoted, party)
+                  .pipe(sim.compute_similarity, lsuffix='a', rsuffix='b'))
+sim.test_partyA_vs_partyB(partyA_vs_rest)
+partyA_vs_rest.head(3).T
+```
+
+    2021-08-26 23:35:23.699 | INFO     | bundestag.similarity:compute_similarity:91 - Computing similarities using `lsuffix` = "a", `rsuffix` = "b" and metric = <function cosine_similarity at 0x7fb3fbad0040>
+
+
+    CPU times: user 124 ms, sys: 2.22 ms, total: 126 ms
+    Wall time: 108 ms
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>273</th>
+      <th>274</th>
+      <th>275</th>
+    </tr>
+    <tr>
+      <th>vote</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>date</th>
+      <td>2017-12-12 00:00:00</td>
+      <td>2017-12-12 00:00:00</td>
+      <td>2017-12-12 00:00:00</td>
+    </tr>
+    <tr>
+      <th>title</th>
+      <td>Bundeswehreinsatz gegen die Terrororganisation IS</td>
+      <td>Bundeswehreinsatz im Irak</td>
+      <td>Bundeswehreinsatz im Mittelmeer (SEA GUARDIAN)</td>
+    </tr>
+    <tr>
+      <th>Fraktion/Gruppe_a</th>
+      <td>SPD</td>
+      <td>SPD</td>
+      <td>SPD</td>
+    </tr>
+    <tr>
+      <th>ja_a</th>
+      <td>0.810458</td>
+      <td>0.843137</td>
+      <td>0.869281</td>
+    </tr>
+    <tr>
+      <th>nein_a</th>
+      <td>0.098039</td>
+      <td>0.065359</td>
+      <td>0.039216</td>
+    </tr>
+    <tr>
+      <th>Enthaltung_a</th>
+      <td>0.013072</td>
+      <td>0.013072</td>
+      <td>0.006536</td>
+    </tr>
+    <tr>
+      <th>ungültig_a</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>nichtabgegeben_a</th>
+      <td>0.078431</td>
+      <td>0.078431</td>
+      <td>0.084967</td>
+    </tr>
+    <tr>
+      <th>Fraktion/Gruppe_b</th>
+      <td>AfD</td>
+      <td>AfD</td>
+      <td>AfD</td>
+    </tr>
+    <tr>
+      <th>ja_b</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.913043</td>
+    </tr>
+    <tr>
+      <th>nein_b</th>
+      <td>0.967391</td>
+      <td>0.978261</td>
+      <td>0.021739</td>
+    </tr>
+    <tr>
+      <th>Enthaltung_b</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.021739</td>
+    </tr>
+    <tr>
+      <th>ungültig_b</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>nichtabgegeben_b</th>
+      <td>0.032609</td>
+      <td>0.021739</td>
+      <td>0.043478</td>
+    </tr>
+    <tr>
+      <th>similarity</th>
+      <td>0.12268</td>
+      <td>0.078981</td>
+      <td>0.998405</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+Plotting
+
+
+```python
+sim.plot(partyA_vs_rest, title_overall=f'Overall similarity of {party} with all parties',
+         title_over_time=f'{party} vs time', party_col='Fraktion/Gruppe_b')
+plt.tight_layout()
+plt.show()
+```
+
+![party similarity](./README_files/party_similarity_vs_time.png)
+
+**GUI to inspect similarities**
+
+To make the above exploration more interactive, the class `MdBGUI` and `PartyGUI` was implemented to quickly go through the different parties and politicians
+
+
+```python
+mdb = MdBGUI(df)
+```
+
+
+```python
+mdb.render()
+```
+
+
+```python
+party = PartyGUI(df)
+```
+
+
+```python
+party.render()
 ```
 
 ### Part 2 - predicting politician votes using abgeordnetenwatch data
@@ -603,8 +758,7 @@ The data used below was processed using `nbs/03_abgeordnetenwatch.ipynb`.
 
 
 ```python
-legislature_id = 111
-aw.ABGEORDNETENWATCH_PATH = Path('./abgeordnetenwatch_data')
+path = Path('./abgeordnetenwatch_data')
 ```
 
 #### Clustering polls using Latent Dirichlet Allocation (LDA)
@@ -619,7 +773,7 @@ num_topics = 5 # number of topics / clusters to identify
 st = pc.SpacyTransformer()
 
 # load data and prepare text for modelling
-df_polls_lda = (aw.get_polls_df(legislature_id)
+df_polls_lda = (pd.read_parquet(path=path/'df_polls.parquet')
                 .assign(**{nlp_col: lambda x: st.clean_text(x, col=source_col)}))
 
 # modelling clusters
@@ -707,35 +861,35 @@ display(df_polls_lda.head(3).T)
     </tr>
     <tr>
       <th>nlp_dim0</th>
-      <td>0.066793</td>
-      <td>0.050012</td>
-      <td>0.033369</td>
+      <td>0.066675</td>
+      <td>0.050011</td>
+      <td>0.033576</td>
     </tr>
     <tr>
       <th>nlp_dim1</th>
-      <td>0.06668</td>
-      <td>0.799959</td>
-      <td>0.033362</td>
+      <td>0.066877</td>
+      <td>0.050016</td>
+      <td>0.033337</td>
     </tr>
     <tr>
       <th>nlp_dim2</th>
-      <td>0.066783</td>
+      <td>0.066675</td>
       <td>0.050011</td>
-      <td>0.033492</td>
+      <td>0.034296</td>
     </tr>
     <tr>
       <th>nlp_dim3</th>
-      <td>0.733067</td>
-      <td>0.050008</td>
-      <td>0.034484</td>
+      <td>0.068006</td>
+      <td>0.799948</td>
+      <td>0.865416</td>
     </tr>
   </tbody>
 </table>
 </div>
 
 
-    CPU times: user 2.05 s, sys: 175 ms, total: 2.23 s
-    Wall time: 2.23 s
+    CPU times: user 1.75 s, sys: 90.7 ms, total: 1.85 s
+    Wall time: 1.86 s
 
 
 
@@ -749,18 +903,9 @@ Loading data
 
 
 ```python
-all_votes_path = aw.ABGEORDNETENWATCH_PATH / f'compiled_votes_legislature_{legislature_id}.csv'
-
-# reading data frame with vote data from disk which was generated by aw.compile_votes_data
-df_all_votes = pd.read_csv(all_votes_path) 
-
-# minor pre-processing
-df_all_votes = df_all_votes.assign(**{'politician name':vp.get_politician_names})
-
-# loading info on mandates (party association) and polls (titles and descriptions)
-df_mandates = aw.get_mandates_df(legislature_id)
-df_mandates['party'] = df_mandates.apply(vp.get_party_from_fraction_string, axis=1)
-df_polls = aw.get_polls_df(legislature_id)
+df_all_votes = pd.read_parquet(path=path / 'df_all_votes.parquet')
+df_mandates = pd.read_parquet(path=path / 'df_mandates.parquet')
+df_polls = pd.read_parquet(path=path / 'df_polls.parquet')
 ```
 
 Splitting data set into training and validation set. Splitting randomly here because it leads to an interesting result, albeit not very realistic for production.
@@ -805,36 +950,40 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
 
 
 <style type="text/css">
-#T_1f33c_row0_col0, #T_1f33c_row1_col1, #T_1f33c_row2_col1, #T_1f33c_row3_col3 {
+#T_5090a_row0_col0, #T_5090a_row1_col1, #T_5090a_row2_col1, #T_5090a_row3_col3 {
   background-color: #023858;
   color: #f1f1f1;
 }
-#T_1f33c_row0_col1, #T_1f33c_row1_col0, #T_1f33c_row2_col0, #T_1f33c_row3_col0 {
+#T_5090a_row0_col1, #T_5090a_row0_col2, #T_5090a_row1_col0, #T_5090a_row2_col0, #T_5090a_row3_col0 {
   background-color: #fff7fb;
   color: #000000;
 }
-#T_1f33c_row0_col2 {
-  background-color: #fef6fa;
+#T_5090a_row0_col3 {
+  background-color: #faf3f9;
   color: #000000;
 }
-#T_1f33c_row0_col3, #T_1f33c_row1_col2, #T_1f33c_row1_col3, #T_1f33c_row3_col2 {
+#T_5090a_row1_col2, #T_5090a_row3_col2 {
   background-color: #fdf5fa;
   color: #000000;
 }
-#T_1f33c_row2_col2 {
-  background-color: #71a8ce;
-  color: #f1f1f1;
+#T_5090a_row1_col3 {
+  background-color: #fef6fa;
+  color: #000000;
 }
-#T_1f33c_row2_col3 {
+#T_5090a_row2_col2 {
+  background-color: #91b5d6;
+  color: #000000;
+}
+#T_5090a_row2_col3 {
   background-color: #034a74;
   color: #f1f1f1;
 }
-#T_1f33c_row3_col1 {
+#T_5090a_row3_col1 {
   background-color: #fef6fb;
   color: #000000;
 }
 </style>
-<table id="T_1f33c_">
+<table id="T_5090a_">
   <thead>
     <tr>
       <th class="index_name level0" >vote_pred</th>
@@ -853,32 +1002,32 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
   </thead>
   <tbody>
     <tr>
-      <th id="T_1f33c_level0_row0" class="row_heading level0 row0" >abstain</th>
-      <td id="T_1f33c_row0_col0" class="data row0 col0" >803</td>
-      <td id="T_1f33c_row0_col1" class="data row0 col1" >50</td>
-      <td id="T_1f33c_row0_col2" class="data row0 col2" >58</td>
-      <td id="T_1f33c_row0_col3" class="data row0 col3" >64</td>
+      <th id="T_5090a_level0_row0" class="row_heading level0 row0" >abstain</th>
+      <td id="T_5090a_row0_col0" class="data row0 col0" >762</td>
+      <td id="T_5090a_row0_col1" class="data row0 col1" >43</td>
+      <td id="T_5090a_row0_col2" class="data row0 col2" >41</td>
+      <td id="T_5090a_row0_col3" class="data row0 col3" >64</td>
     </tr>
     <tr>
-      <th id="T_1f33c_level0_row1" class="row_heading level0 row1" >no</th>
-      <td id="T_1f33c_row1_col0" class="data row1 col0" >24</td>
-      <td id="T_1f33c_row1_col1" class="data row1 col1" >9405</td>
-      <td id="T_1f33c_row1_col2" class="data row1 col2" >190</td>
-      <td id="T_1f33c_row1_col3" class="data row1 col3" >138</td>
+      <th id="T_5090a_level0_row1" class="row_heading level0 row1" >no</th>
+      <td id="T_5090a_row1_col0" class="data row1 col0" >28</td>
+      <td id="T_5090a_row1_col1" class="data row1 col1" >9381</td>
+      <td id="T_5090a_row1_col2" class="data row1 col2" >179</td>
+      <td id="T_5090a_row1_col3" class="data row1 col3" >128</td>
     </tr>
     <tr>
-      <th id="T_1f33c_level0_row2" class="row_heading level0 row2" >no_show</th>
-      <td id="T_1f33c_row2_col0" class="data row2 col0" >103</td>
-      <td id="T_1f33c_row2_col1" class="data row2 col1" >978</td>
-      <td id="T_1f33c_row2_col2" class="data row2 col2" >546</td>
-      <td id="T_1f33c_row2_col3" class="data row2 col3" >917</td>
+      <th id="T_5090a_level0_row2" class="row_heading level0 row2" >no_show</th>
+      <td id="T_5090a_row2_col0" class="data row2 col0" >109</td>
+      <td id="T_5090a_row2_col1" class="data row2 col1" >982</td>
+      <td id="T_5090a_row2_col2" class="data row2 col2" >484</td>
+      <td id="T_5090a_row2_col3" class="data row2 col3" >923</td>
     </tr>
     <tr>
-      <th id="T_1f33c_level0_row3" class="row_heading level0 row3" >yes</th>
-      <td id="T_1f33c_row3_col0" class="data row3 col0" >15</td>
-      <td id="T_1f33c_row3_col1" class="data row3 col1" >68</td>
-      <td id="T_1f33c_row3_col2" class="data row3 col2" >168</td>
-      <td id="T_1f33c_row3_col3" class="data row3 col3" >10954</td>
+      <th id="T_5090a_level0_row3" class="row_heading level0 row3" >yes</th>
+      <td id="T_5090a_row3_col0" class="data row3 col0" >23</td>
+      <td id="T_5090a_row3_col1" class="data row3 col1" >74</td>
+      <td id="T_5090a_row3_col2" class="data row3 col2" >187</td>
+      <td id="T_5090a_row3_col3" class="data row3 col3" >11073</td>
     </tr>
   </tbody>
 </table>
@@ -887,36 +1036,40 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
 
 
 <style type="text/css">
-#T_e56fd_row0_col0, #T_e56fd_row1_col1, #T_e56fd_row2_col1, #T_e56fd_row3_col3 {
+#T_de8ce_row0_col0, #T_de8ce_row1_col1, #T_de8ce_row2_col1, #T_de8ce_row3_col3 {
   background-color: #023858;
   color: #f1f1f1;
 }
-#T_e56fd_row0_col1, #T_e56fd_row1_col0, #T_e56fd_row2_col0, #T_e56fd_row3_col0 {
+#T_de8ce_row0_col1, #T_de8ce_row0_col2, #T_de8ce_row1_col0, #T_de8ce_row2_col0, #T_de8ce_row3_col0 {
   background-color: #fff7fb;
   color: #000000;
 }
-#T_e56fd_row0_col2 {
-  background-color: #fef6fa;
+#T_de8ce_row0_col3 {
+  background-color: #faf3f9;
   color: #000000;
 }
-#T_e56fd_row0_col3, #T_e56fd_row1_col2, #T_e56fd_row1_col3, #T_e56fd_row3_col2 {
+#T_de8ce_row1_col2, #T_de8ce_row3_col2 {
   background-color: #fdf5fa;
   color: #000000;
 }
-#T_e56fd_row2_col2 {
-  background-color: #71a8ce;
-  color: #f1f1f1;
+#T_de8ce_row1_col3 {
+  background-color: #fef6fa;
+  color: #000000;
 }
-#T_e56fd_row2_col3 {
+#T_de8ce_row2_col2 {
+  background-color: #91b5d6;
+  color: #000000;
+}
+#T_de8ce_row2_col3 {
   background-color: #034a74;
   color: #f1f1f1;
 }
-#T_e56fd_row3_col1 {
+#T_de8ce_row3_col1 {
   background-color: #fef6fb;
   color: #000000;
 }
 </style>
-<table id="T_e56fd_">
+<table id="T_de8ce_">
   <thead>
     <tr>
       <th class="index_name level0" >vote_pred</th>
@@ -935,39 +1088,39 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
   </thead>
   <tbody>
     <tr>
-      <th id="T_e56fd_level0_row0" class="row_heading level0 row0" >abstain</th>
-      <td id="T_e56fd_row0_col0" class="data row0 col0" >0.823590</td>
-      <td id="T_e56fd_row0_col1" class="data row0 col1" >0.051282</td>
-      <td id="T_e56fd_row0_col2" class="data row0 col2" >0.059487</td>
-      <td id="T_e56fd_row0_col3" class="data row0 col3" >0.065641</td>
+      <th id="T_de8ce_level0_row0" class="row_heading level0 row0" >abstain</th>
+      <td id="T_de8ce_row0_col0" class="data row0 col0" >0.837363</td>
+      <td id="T_de8ce_row0_col1" class="data row0 col1" >0.047253</td>
+      <td id="T_de8ce_row0_col2" class="data row0 col2" >0.045055</td>
+      <td id="T_de8ce_row0_col3" class="data row0 col3" >0.070330</td>
     </tr>
     <tr>
-      <th id="T_e56fd_level0_row1" class="row_heading level0 row1" >no</th>
-      <td id="T_e56fd_row1_col0" class="data row1 col0" >0.002460</td>
-      <td id="T_e56fd_row1_col1" class="data row1 col1" >0.963923</td>
-      <td id="T_e56fd_row1_col2" class="data row1 col2" >0.019473</td>
-      <td id="T_e56fd_row1_col3" class="data row1 col3" >0.014144</td>
+      <th id="T_de8ce_level0_row1" class="row_heading level0 row1" >no</th>
+      <td id="T_de8ce_row1_col0" class="data row1 col0" >0.002882</td>
+      <td id="T_de8ce_row1_col1" class="data row1 col1" >0.965521</td>
+      <td id="T_de8ce_row1_col2" class="data row1 col2" >0.018423</td>
+      <td id="T_de8ce_row1_col3" class="data row1 col3" >0.013174</td>
     </tr>
     <tr>
-      <th id="T_e56fd_level0_row2" class="row_heading level0 row2" >no_show</th>
-      <td id="T_e56fd_row2_col0" class="data row2 col0" >0.040487</td>
-      <td id="T_e56fd_row2_col1" class="data row2 col1" >0.384434</td>
-      <td id="T_e56fd_row2_col2" class="data row2 col2" >0.214623</td>
-      <td id="T_e56fd_row2_col3" class="data row2 col3" >0.360456</td>
+      <th id="T_de8ce_level0_row2" class="row_heading level0 row2" >no_show</th>
+      <td id="T_de8ce_row2_col0" class="data row2 col0" >0.043635</td>
+      <td id="T_de8ce_row2_col1" class="data row2 col1" >0.393114</td>
+      <td id="T_de8ce_row2_col2" class="data row2 col2" >0.193755</td>
+      <td id="T_de8ce_row2_col3" class="data row2 col3" >0.369496</td>
     </tr>
     <tr>
-      <th id="T_e56fd_level0_row3" class="row_heading level0 row3" >yes</th>
-      <td id="T_e56fd_row3_col0" class="data row3 col0" >0.001339</td>
-      <td id="T_e56fd_row3_col1" class="data row3 col1" >0.006069</td>
-      <td id="T_e56fd_row3_col2" class="data row3 col2" >0.014993</td>
-      <td id="T_e56fd_row3_col3" class="data row3 col3" >0.977599</td>
+      <th id="T_de8ce_level0_row3" class="row_heading level0 row3" >yes</th>
+      <td id="T_de8ce_row3_col0" class="data row3 col0" >0.002025</td>
+      <td id="T_de8ce_row3_col1" class="data row3 col1" >0.006516</td>
+      <td id="T_de8ce_row3_col2" class="data row3 col2" >0.016466</td>
+      <td id="T_de8ce_row3_col3" class="data row3 col3" >0.974993</td>
     </tr>
   </tbody>
 </table>
 
 
 
-    2021-08-25 16:36:02.574 | INFO     | bundestag.vote_prediction:plot_predictions:100 - Overall accuracy = 88.67 %
+    2021-08-26 23:35:53.413 | INFO     | bundestag.vote_prediction:plot_predictions:80 - Overall accuracy = 88.64 %
 
 
     
@@ -1001,33 +1154,33 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
   <tbody>
     <tr>
       <th>0</th>
-      <td>Mario Mieruch</td>
-      <td>fraktionslos</td>
-      <td>0.333333</td>
+      <td>Michael Leutert</td>
+      <td>unknown</td>
+      <td>0.375000</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Heiko Heßenkemper</td>
-      <td>fraktionslos</td>
-      <td>0.450000</td>
+      <td>Axel Troost</td>
+      <td>DIE LINKE</td>
+      <td>0.400000</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Thomas Nord</td>
-      <td>DIE LINKE</td>
-      <td>0.463415</td>
+      <td>Mario Mieruch</td>
+      <td>fraktionslos</td>
+      <td>0.414634</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Axel Troost</td>
-      <td>DIE LINKE</td>
-      <td>0.500000</td>
+      <td>Heiko Heßenkemper</td>
+      <td>fraktionslos</td>
+      <td>0.444444</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Katarina Barley</td>
-      <td>SPD</td>
-      <td>0.500000</td>
+      <td>Bernd Siebert</td>
+      <td>CDU/CSU</td>
+      <td>0.454545</td>
     </tr>
   </tbody>
 </table>
@@ -1067,31 +1220,31 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
       <th>0</th>
       <td>1761</td>
       <td>Organspenden-Reform: Zustimmungslösung</td>
-      <td>0.593750</td>
+      <td>0.579710</td>
     </tr>
     <tr>
       <th>1</th>
       <td>1758</td>
       <td>Organspenden-Reform: Widerspruchslösung</td>
-      <td>0.596899</td>
+      <td>0.656051</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>3572</td>
-      <td>Corona-Maßnahmen: Aussetzung der Schuldenbremse - erster Nachtragshaushalt</td>
-      <td>0.726708</td>
+      <td>1683</td>
+      <td>BDS-Bewegung entgegentreten - Antisemitismus bekämpfen</td>
+      <td>0.706667</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>1683</td>
-      <td>BDS-Bewegung entgegentreten - Antisemitismus bekämpfen</td>
-      <td>0.745342</td>
+      <td>4088</td>
+      <td>Transparenzregelungen für Abgeordnete</td>
+      <td>0.730496</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>3571</td>
-      <td>Fortsetzung des Bundeswehreinsatzes in Afghanistan</td>
-      <td>0.753623</td>
+      <td>3947</td>
+      <td>Änderung der Abgabenordnung</td>
+      <td>0.750000</td>
     </tr>
   </tbody>
 </table>
