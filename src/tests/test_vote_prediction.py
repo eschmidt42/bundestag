@@ -1,15 +1,22 @@
+import unittest
+from pathlib import Path
+
+import pandas as pd
+from fastai.tabular.all import (
+    Categorify,
+    CategoryBlock,
+    RandomSplitter,
+    TabularPandas,
+    tabular_learner,
+)
+
 from bundestag import abgeordnetenwatch as aw
 from bundestag import vote_prediction as vp
-import unittest
-import pandas as pd
-from pathlib import Path
-from fastai.tabular.all import *
 
 
 class TestPredictions(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-
         path = Path("./abgeordnetenwatch_data")
 
         self.df_all_votes = pd.read_parquet(path=path / "df_all_votes.parquet")
@@ -40,7 +47,9 @@ class TestPredictions(unittest.TestCase):
         vp.test_embeddings(embeddings)
 
     def test_proponents(self):
-        proponents = vp.get_poll_proponents(self.df_all_votes, self.df_mandates)
+        proponents = vp.get_poll_proponents(
+            self.df_all_votes, self.df_mandates
+        )
         vp.test_poll_proponents(proponents)
 
     def test_learn_val_score(self):

@@ -20,8 +20,7 @@ dependencies = [
     "ipywidgets",
     "xlrd",
     "openpyxl",
-    "fastparquet",
-    "loguru"
+    "fastparquet"
 ]
 
 authors = [
@@ -31,10 +30,12 @@ description = "Download, parse and analyse votes in the german federal parliamen
 
 [project.optional-dependencies]
 dev = [
-    "nbdev",
     "jupyterlab",
     "black",
-    "isort"
+    "isort",
+    "pytest",
+    "pre-commit",
+    "coverage"
 ]
 
 [tool.black]
@@ -47,7 +48,15 @@ include_trailing_comma = true
 profile = "black"
 
 [tool.setuptools.packages.find]
-where = ["."]  # list of folders that contain the packages (["."] by default)
+where = ["src"]  # list of folders that contain the packages (["."] by default)
 include = ["bundestag"]  # package names should match these glob patterns (["*"] by default)
 exclude = ["tests"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["src/tests"]
+python_files = ["test_*.py"]
+markers = [
+    "slow" # mark test as slow
+]

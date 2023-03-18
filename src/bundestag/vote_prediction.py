@@ -1,17 +1,15 @@
-import pandas as pd
-from loguru import logger
 import sys
 
 import numpy as np
+import pandas as pd
 import plotly.express as px
-from fastcore.all import *
 import torch
-
+from fastcore.all import *
 from sklearn import decomposition
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")
-# default level for this module should be INFO
+import bundestag.logging as logging
+
+logger = logging.logger
 
 
 def poll_splitter(
@@ -56,7 +54,9 @@ def plot_predictions(
     make_numpy = lambda x: x.detach().numpy()
     y_pred = make_numpy(y_pred)
 
-    make_pred_readable = lambda x: [learn.dls.vocab[i] for i in x.argmax(axis=1)]
+    make_pred_readable = lambda x: [
+        learn.dls.vocab[i] for i in x.argmax(axis=1)
+    ]
 
     pred_col = f"{y_col}_pred"
     df_valid = df_all_votes.iloc[splits[1], :].assign(
@@ -82,7 +82,9 @@ def plot_predictions(
     df_valid = df_valid.join(
         df_mandates[["politician", "party"]].set_index("politician"),
         on="politician name",
-    ).join(df_polls[["poll_id", "poll_title"]].set_index("poll_id"), on="poll_id")
+    ).join(
+        df_polls[["poll_id", "poll_title"]].set_index("poll_id"), on="poll_id"
+    )
 
     print(f"\n{n_worst_politicians} most inaccurately predicted politicians:")
     tmp = (
@@ -115,11 +117,16 @@ def get_embeddings(
     via `transform_func` (e.g. sklearn.decomposition.PCA)"""
     embeddings = {}
     for i, name in enumerate(learn.dls.classes):
-        emb = learn.model.embeds[i](torch.tensor(range(len(learn.dls.classes[name]))))
+        emb = learn.model.embeds[i](
+            torch.tensor(range(len(learn.dls.classes[name])))
+        )
         if callable(transform_func):
             emb = transform_func(emb)
         embeddings[name] = pd.DataFrame(
-            emb, columns=[f"{name}__emb_component_{i}" for i in range(emb.shape[1])]
+            emb,
+            columns=[
+                f"{name}__emb_component_{i}" for i in range(emb.shape[1])
+            ],
         ).assign(**{name: learn.dls.classes[name]})
 
     return embeddings
@@ -170,12 +177,14 @@ def plot_poll_embeddings(
     embeddings: dict,
     df_mandates: pd.DataFrame = None,
 ):
-
     col = "poll_id"
 
     tmp = (
         df_all_votes.drop_duplicates(subset="poll_id")
-        .join(df_polls[["poll_id", "poll_title"]].set_index("poll_id"), on="poll_id")
+        .join(
+            df_polls[["poll_id", "poll_title"]].set_index("poll_id"),
+            on="poll_id",
+        )
         .join(embeddings[col].set_index(col), on=col)
     )
 
@@ -195,7 +204,6 @@ def plot_poll_embeddings(
 def plot_politician_embeddings(
     df_all_votes: pd.DataFrame, df_mandates: pd.DataFrame, embeddings: dict
 ):
-
     col = "politician name"
 
     tmp = (

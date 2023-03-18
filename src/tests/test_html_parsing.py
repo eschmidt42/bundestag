@@ -1,12 +1,12 @@
-from bundestag import html_parsing as hp
-from pathlib import Path
 import unittest
+from pathlib import Path
+
+from bundestag import html_parsing as hp
 
 
 class TestHTMLParsing(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-
         self.read_path = Path("./bundestag.de_data")
         self.write_path = Path("./bundestag.de_data_test")
         self.write_path.mkdir(exist_ok=True)
@@ -37,7 +37,9 @@ class TestHTMLParsing(unittest.TestCase):
         )
 
         self.df = (
-            hp.get_sheet_df(self.sheet_files[0], file_title_maps=self.file_title_maps)
+            hp.get_sheet_df(
+                self.sheet_files[0], file_title_maps=self.file_title_maps
+            )
             if len(self.sheet_files) > 0
             else None
         )

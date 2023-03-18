@@ -20,13 +20,11 @@ argon2-cffi-bindings==21.2.0
 arrow==1.2.3
     # via isoduration
 asttokens==2.2.1
-    # via
-    #   nbdev
-    #   stack-data
-astunparse==1.6.3
-    # via nbdev
+    # via stack-data
 attrs==22.2.0
-    # via jsonschema
+    # via
+    #   jsonschema
+    #   pytest
 babel==2.12.1
     # via jupyterlab-server
 backcall==0.2.0
@@ -50,6 +48,8 @@ certifi==2022.12.7
     # via requests
 cffi==1.15.1
     # via argon2-cffi-bindings
+cfgv==3.3.1
+    # via pre-commit
 charset-normalizer==3.1.0
     # via requests
 click==8.1.3
@@ -62,6 +62,8 @@ confection==0.0.4
     # via thinc
 contourpy==1.0.7
     # via matplotlib
+coverage==7.2.2
+    # via bundestag (pyproject.toml)
 cramjam==2.6.2
     # via fastparquet
 cycler==0.11.0
@@ -77,10 +79,12 @@ decorator==5.1.1
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
+distlib==0.3.6
+    # via virtualenv
 et-xmlfile==1.1.0
     # via openpyxl
-execnb==0.1.5
-    # via nbdev
+exceptiongroup==1.1.1
+    # via pytest
 executing==1.2.0
     # via stack-data
 fastai==2.7.11
@@ -88,11 +92,8 @@ fastai==2.7.11
 fastcore==1.5.28
     # via
     #   bundestag (pyproject.toml)
-    #   execnb
     #   fastai
     #   fastdownload
-    #   ghapi
-    #   nbdev
 fastdownload==0.0.7
     # via fastai
 fastjsonschema==2.16.3
@@ -103,6 +104,8 @@ fastprogress==1.0.3
     # via
     #   fastai
     #   fastdownload
+filelock==3.10.0
+    # via virtualenv
 fonttools==4.39.2
     # via matplotlib
 fqdn==1.5.1
@@ -111,8 +114,8 @@ fsspec==2023.3.0
     # via fastparquet
 gensim==4.3.1
     # via bundestag (pyproject.toml)
-ghapi==1.0.3
-    # via nbdev
+identify==2.5.21
+    # via pre-commit
 idna==3.4
     # via
     #   anyio
@@ -126,6 +129,8 @@ importlib-metadata==6.0.0
     #   nbconvert
 importlib-resources==5.12.0
     # via matplotlib
+iniconfig==2.0.0
+    # via pytest
 ipykernel==6.21.3
     # via
     #   ipywidgets
@@ -133,7 +138,6 @@ ipykernel==6.21.3
     #   notebook
 ipython==8.11.0
     # via
-    #   execnb
     #   ipykernel
     #   ipywidgets
     #   jupyterlab
@@ -220,8 +224,6 @@ kiwisolver==1.4.4
     # via matplotlib
 langcodes==3.3.0
     # via spacy
-loguru==0.6.0
-    # via bundestag (pyproject.toml)
 markdown-it-py==2.2.0
     # via rich
 markupsafe==2.1.2
@@ -259,8 +261,6 @@ nbconvert==7.2.10
     #   jupyter-server
     #   nbclassic
     #   notebook
-nbdev==2.3.12
-    # via bundestag (pyproject.toml)
 nbformat==5.7.3
     # via
     #   jupyter-server
@@ -273,6 +273,8 @@ nest-asyncio==1.5.6
     #   ipykernel
     #   nbclassic
     #   notebook
+nodeenv==1.7.0
+    # via pre-commit
 notebook==6.5.3
     # via jupyterlab
 notebook-shim==0.2.2
@@ -309,13 +311,13 @@ packaging==23.0
     #   fastai
     #   fastcore
     #   fastparquet
-    #   ghapi
     #   ipykernel
     #   jupyter-server
     #   jupyterlab
     #   jupyterlab-server
     #   matplotlib
     #   nbconvert
+    #   pytest
     #   spacy
     #   thinc
 pandas==1.5.3
@@ -345,7 +347,12 @@ platformdirs==3.1.1
     # via
     #   black
     #   jupyter-core
+    #   virtualenv
 plotly==5.13.1
+    # via bundestag (pyproject.toml)
+pluggy==1.0.0
+    # via pytest
+pre-commit==3.2.0
     # via bundestag (pyproject.toml)
 preshed==3.0.8
     # via
@@ -382,6 +389,8 @@ pyparsing==3.0.9
     # via matplotlib
 pyrsistent==0.19.3
     # via jsonschema
+pytest==7.2.2
+    # via bundestag (pyproject.toml)
 python-dateutil==2.8.2
     # via
     #   arrow
@@ -396,7 +405,7 @@ pyyaml==6.0
     # via
     #   fastai
     #   jupyter-events
-    #   nbdev
+    #   pre-commit
 pyzmq==25.0.1
     # via
     #   ipykernel
@@ -439,7 +448,6 @@ send2trash==1.8.0
 six==1.16.0
     # via
     #   asttokens
-    #   astunparse
     #   bleach
     #   python-dateutil
     #   rfc3339-validator
@@ -485,6 +493,7 @@ tomli==2.0.1
     # via
     #   black
     #   jupyterlab
+    #   pytest
 torch==1.13.1
     # via
     #   fastai
@@ -532,12 +541,12 @@ uri-template==1.2.0
     # via jsonschema
 urllib3==1.26.15
     # via requests
+virtualenv==20.21.0
+    # via pre-commit
 wasabi==1.1.1
     # via
     #   spacy
     #   thinc
-watchdog==2.3.1
-    # via nbdev
 wcwidth==0.2.6
     # via prompt-toolkit
 webcolors==1.12
@@ -550,7 +559,6 @@ websocket-client==1.5.1
     # via jupyter-server
 wheel==0.40.0
     # via
-    #   astunparse
     #   nvidia-cublas-cu11
     #   nvidia-cuda-runtime-cu11
 widgetsnbextension==4.0.5

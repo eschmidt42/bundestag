@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+
 from bundestag import abgeordnetenwatch as aw
 
 
@@ -13,7 +14,9 @@ class TestDataCollection(unittest.TestCase):
         self.legislature_id = 111
         self.poll_id = 4217
         self.num_polls = 3  # number of polls to collect if `self.dry = False`
-        self.num_mandates = 4  # number of mandates to collect if `self.dry = False`
+        self.num_mandates = (
+            4  # number of mandates to collect if `self.dry = False`
+        )
         self.dry = False
 
     @classmethod
@@ -30,7 +33,9 @@ class TestDataCollection(unittest.TestCase):
             polls, self.legislature_id, dry=self.dry, path=self.write_path
         )
         if not self.dry:
-            polls = aw.load_polls_json(self.legislature_id, path=self.write_path)
+            polls = aw.load_polls_json(
+                self.legislature_id, path=self.write_path
+            )
 
     def test_1_poll_data(self):
         df = aw.get_polls_df(self.legislature_id, path=self.write_path)
@@ -44,7 +49,9 @@ class TestDataCollection(unittest.TestCase):
             mandates, self.legislature_id, dry=self.dry, path=self.write_path
         )
         if not self.dry:
-            mandates = aw.load_mandate_json(self.legislature_id, self.write_path)
+            mandates = aw.load_mandate_json(
+                self.legislature_id, self.write_path
+            )
 
     def test_3_mandate_data(self):
         df = aw.get_mandates_df(self.legislature_id, path=self.write_path)
@@ -52,14 +59,18 @@ class TestDataCollection(unittest.TestCase):
 
     def test_4_get_vote_info(self):
         votes = aw.get_vote_info(self.poll_id, dry=self.dry)
-        aw.store_vote_info(votes, self.poll_id, dry=self.dry, path=self.write_path)
+        aw.store_vote_info(
+            votes, self.poll_id, dry=self.dry, path=self.write_path
+        )
         if not self.dry:
             votes = aw.load_vote_json(
                 self.legislature_id, self.poll_id, path=self.write_path
             )
 
     def test_5_vote_data(self):
-        df = aw.get_votes_df(self.legislature_id, self.poll_id, path=self.write_path)
+        df = aw.get_votes_df(
+            self.legislature_id, self.poll_id, path=self.write_path
+        )
         aw.test_vote_data(df)
 
     def test_6_stored_vote_ids(self):

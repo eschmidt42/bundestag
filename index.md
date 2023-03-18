@@ -6,13 +6,13 @@
 
 ## Context
 
-The German Parliament is so friendly to put all votes of all members into readable XLSX / XLS files (and PDFs ¯\\\_(ツ)\_/¯ ). Those files  can be found here: https://www.bundestag.de/parlament/plenum/abstimmung/liste. 
+The German Parliament is so friendly to put all votes of all members into readable XLSX / XLS files (and PDFs ¯\\\_(ツ)\_/¯ ). Those files  can be found here: https://www.bundestag.de/parlament/plenum/abstimmung/liste.
 
 Furthermore, the organisation [abgeordnetenwatch](https://www.abgeordnetenwatch.de/) offers a great platform to get to know the individual politicians and their behavior as well as an [open API](https://www.abgeordnetenwatch.de/api) to request data.
 
 ## Purpose of this repo
 
-The purpose of this repo is to help collect roll call votes from the parliament's site directly or via abgeordnetenwatch's API and make them available for analysis / modelling. This may be particularly interesting for the upcoming election in 2021. E.g., if you want to see what your local member of the parliament has been up to in terms of public roll call votes relative to the parties, or how individual parties agree in their votes, this dataset may be interesting for you. 
+The purpose of this repo is to help collect roll call votes from the parliament's site directly or via abgeordnetenwatch's API and make them available for analysis / modelling. This may be particularly interesting for the upcoming election in 2021. E.g., if you want to see what your local member of the parliament has been up to in terms of public roll call votes relative to the parties, or how individual parties agree in their votes, this dataset may be interesting for you.
 
 Since the files on the bundestag website are stored in a way making it tricky to automatically crawl them, a bit of manual work is required to generate that dataset. But don't fret! Quite a few recent roll call votes (as of the publishing of this repo) are already prepared for you. But if older or more recent roll call votes are missing, convenience tools to reduce your manual effort are demonstrated below. An alternative route to get the same and more data (on politicians and local parliaments as well) is via the abgeordnetenwatch route.
 
@@ -58,6 +58,11 @@ pip-sync requirements/dev-requirements.txt
 To make the package available
 ```shell
 pip install -e .
+```
+
+To make pre-commit available after each commit
+```shell
+pre-commit install
 ```
 
 ### Setup
@@ -948,12 +953,12 @@ Training a neural net to predict `vote` based on embeddings for `poll_id` and `p
 
 ```python
 %%time
-to = TabularPandas(df_all_votes, 
+to = TabularPandas(df_all_votes,
                    cat_names=['politician name', 'poll_id'], # columns in `df_all_votes` to treat as categorical
                    y_names=[y_col], # column to use as a target for the model in `learn`
                    procs=[Categorify],  # processing of features
                    y_block=CategoryBlock,  # how to treat `y_names`, here as categories
-                   splits=splits) # how to split the data 
+                   splits=splits) # how to split the data
 
 dls = to.dataloaders(bs=512)
 learn = tabular_learner(dls) # fastai function to set up a neural net for tabular data
@@ -963,7 +968,7 @@ learn.fit_one_cycle(5, lrs.valley) # performs training using one-cycle hyperpara
 
 **Predictions over unseen data**
 
-Inspecting the predictions of the neural net over the validation set. 
+Inspecting the predictions of the neural net over the validation set.
 
 
 ```python
@@ -971,7 +976,7 @@ vp.plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits,
                     n_worst_politicians=5)
 ```
 
-Splitting our dataset randomly leads to a surprisingly good accuracy of ~88% over the validation set. The most reasonable explanation is that the model encountered polls and how most politicians voted for them already during training. 
+Splitting our dataset randomly leads to a surprisingly good accuracy of ~88% over the validation set. The most reasonable explanation is that the model encountered polls and how most politicians voted for them already during training.
 
 This can be interpreted as, if it is known how most politicians will vote during a poll, then the vote of the remaining politicians is highly predictable. Splitting the data set by `poll_id`, as can be done using `vp.poll_splitter` leads to random chance predictions. Anything else would be surprising as well since the only available information provided to the model is who is voting.
 
@@ -986,7 +991,7 @@ So let's look at the learned embeddings
 embeddings = vp.get_embeddings(learn)
 ```
 
-To make sense of the embeddings for `poll_id` as well as `politician name` we apply Principal Component Analysis (so one still kind of understands what distances mean) and project down to 2d. 
+To make sense of the embeddings for `poll_id` as well as `politician name` we apply Principal Component Analysis (so one still kind of understands what distances mean) and project down to 2d.
 
 Using the information which party was most strongly (% of their votes being "yes"), so its strongest proponent, we color code the individual polls.
 
@@ -1006,14 +1011,14 @@ vp.plot_politician_embeddings(df_all_votes, df_mandates, embeddings)
 
 ![mandate embeddings](./README_files/mandate_embeddings.png)
 
-The politician embeddings may be the most surprising finding in its clarity. It seems we find for polls and politicians 2-3 clusters, but for politicians with a significant grouping of mandates associated with the government coalition. It seems we find one cluster for the government parties and one for the government opposition. 
+The politician embeddings may be the most surprising finding in its clarity. It seems we find for polls and politicians 2-3 clusters, but for politicians with a significant grouping of mandates associated with the government coalition. It seems we find one cluster for the government parties and one for the government opposition.
 
 ## To dos / contributing
 
 Any contributions welcome. In the notebooks in `./nbs/` I've listed to dos here and there things which could be done.
 
 **General to dos**:
-- Check for discrepancies between bundestag.de and abgeordnetenwatch based data 
+- Check for discrepancies between bundestag.de and abgeordnetenwatch based data
 - Make the clustering of polls and policitians interactive
 - Extend the vote prediction model: currently, if the data is split by poll (which would be the realistic case when trying to predict votes of a new poll), the model is hardly better than chance. It would be interesting to see which information would help improve beyond chance.
 - Extend the data processed from the stored json responses from abgeordnetenwatch (currently only using the bare minimum)

@@ -1,14 +1,15 @@
 import unittest
 from pathlib import Path
+
+import pandas as pd
+
 from bundestag import abgeordnetenwatch as aw
 from bundestag import poll_clustering as pc
-import pandas as pd
 
 
 class TestPollClustering(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-
         path = Path("./abgeordnetenwatch_data")
         col = "poll_title"
         nlp_col = f"{col}_nlp_processed"
