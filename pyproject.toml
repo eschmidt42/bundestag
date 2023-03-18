@@ -34,7 +34,8 @@ dev = [
     "black",
     "isort",
     "pytest",
-    "pre-commit"
+    "pre-commit",
+    "coverage"
 ]
 
 [tool.black]

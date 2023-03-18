@@ -62,6 +62,8 @@ confection==0.0.4
     # via thinc
 contourpy==1.0.7
     # via matplotlib
+coverage==7.2.2
+    # via bundestag (pyproject.toml)
 cramjam==2.6.2
     # via fastparquet
 cycler==0.11.0

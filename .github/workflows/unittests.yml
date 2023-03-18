@@ -28,8 +28,9 @@ jobs:
                   python -m pip install --upgrade pip
                   pip install pip-tools==6.12.3
                   pip-sync requirements/dev-requirements.txt
-            # - name: Run tests
-            #   run: |-
-            #       source .venv/bin/activate
-            #       coverage run -m pytest -v src/tests/
-            #       coverage report --omit="src/tests/*"
+                  python -m spacy download de_core_news_sm
+            - name: Run tests
+              run: |-
+                  source .venv/bin/activate
+                  coverage run -m pytest -v src/tests/
+                  coverage report --omit="src/tests/*"
