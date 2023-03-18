@@ -26,7 +26,9 @@ asttokens==2.2.1
 astunparse==1.6.3
     # via nbdev
 attrs==22.2.0
-    # via jsonschema
+    # via
+    #   jsonschema
+    #   pytest
 babel==2.12.1
     # via jupyterlab-server
 backcall==0.2.0
@@ -50,6 +52,8 @@ certifi==2022.12.7
     # via requests
 cffi==1.15.1
     # via argon2-cffi-bindings
+cfgv==3.3.1
+    # via pre-commit
 charset-normalizer==3.1.0
     # via requests
 click==8.1.3
@@ -77,8 +81,12 @@ decorator==5.1.1
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
+distlib==0.3.6
+    # via virtualenv
 et-xmlfile==1.1.0
     # via openpyxl
+exceptiongroup==1.1.1
+    # via pytest
 execnb==0.1.5
     # via nbdev
 executing==1.2.0
@@ -103,6 +111,8 @@ fastprogress==1.0.3
     # via
     #   fastai
     #   fastdownload
+filelock==3.10.0
+    # via virtualenv
 fonttools==4.39.2
     # via matplotlib
 fqdn==1.5.1
@@ -113,6 +123,8 @@ gensim==4.3.1
     # via bundestag (pyproject.toml)
 ghapi==1.0.3
     # via nbdev
+identify==2.5.21
+    # via pre-commit
 idna==3.4
     # via
     #   anyio
@@ -126,6 +138,8 @@ importlib-metadata==6.0.0
     #   nbconvert
 importlib-resources==5.12.0
     # via matplotlib
+iniconfig==2.0.0
+    # via pytest
 ipykernel==6.21.3
     # via
     #   ipywidgets
@@ -273,6 +287,8 @@ nest-asyncio==1.5.6
     #   ipykernel
     #   nbclassic
     #   notebook
+nodeenv==1.7.0
+    # via pre-commit
 notebook==6.5.3
     # via jupyterlab
 notebook-shim==0.2.2
@@ -316,6 +332,7 @@ packaging==23.0
     #   jupyterlab-server
     #   matplotlib
     #   nbconvert
+    #   pytest
     #   spacy
     #   thinc
 pandas==1.5.3
@@ -345,7 +362,12 @@ platformdirs==3.1.1
     # via
     #   black
     #   jupyter-core
+    #   virtualenv
 plotly==5.13.1
+    # via bundestag (pyproject.toml)
+pluggy==1.0.0
+    # via pytest
+pre-commit==3.2.0
     # via bundestag (pyproject.toml)
 preshed==3.0.8
     # via
@@ -382,6 +404,8 @@ pyparsing==3.0.9
     # via matplotlib
 pyrsistent==0.19.3
     # via jsonschema
+pytest==7.2.2
+    # via bundestag (pyproject.toml)
 python-dateutil==2.8.2
     # via
     #   arrow
@@ -397,6 +421,7 @@ pyyaml==6.0
     #   fastai
     #   jupyter-events
     #   nbdev
+    #   pre-commit
 pyzmq==25.0.1
     # via
     #   ipykernel
@@ -485,6 +510,7 @@ tomli==2.0.1
     # via
     #   black
     #   jupyterlab
+    #   pytest
 torch==1.13.1
     # via
     #   fastai
@@ -532,6 +558,8 @@ uri-template==1.2.0
     # via jsonschema
 urllib3==1.26.15
     # via requests
+virtualenv==20.21.0
+    # via pre-commit
 wasabi==1.1.1
     # via
     #   spacy

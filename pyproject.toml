@@ -34,7 +34,9 @@ dev = [
     "nbdev",
     "jupyterlab",
     "black",
-    "isort"
+    "isort",
+    "pytest",
+    "pre-commit"
 ]
 
 [tool.black]
