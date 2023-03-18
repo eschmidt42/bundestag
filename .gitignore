@@ -8,3 +8,5 @@ MdB-Stammdaten*
 README_files/README*.png
 abgeordnetenwatch_data/
 abgeordnetenwatch_data_test/
+.venv
+*.egg-info

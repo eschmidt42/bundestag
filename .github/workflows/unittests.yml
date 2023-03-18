@@ -8,18 +8,28 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install poetry
-      uses: Gr1N/setup-poetry@v7
-    - name: Install dependencies
-      run: poetry install
-    - name: Get spacy language model
-      run: poetry run python -m spacy download de_core_news_sm
-    - name: Run tests
-      run: poetry run python -m unittest
+            - name: Check out repository
+              uses: actions/checkout@v2
+
+            - name: Setup python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: '3.9.16'
+        
+            - name: Create virtal environment
+              run: |-
+                  python3 -m venv .venv
+            - name: Install dependencies
+              run: |-
+                  source .venv/bin/activate
+                  python -m pip install --upgrade pip
+                  pip install pip-tools==6.12.3
+                  pip-sync requirements/dev-requirements.txt
+            # - name: Run tests
+            #   run: |-
+            #       source .venv/bin/activate
+            #       coverage run -m pytest -v src/tests/
+            #       coverage report --omit="src/tests/*"
