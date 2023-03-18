@@ -3,7 +3,7 @@ from bundestag import vote_prediction as vp
 import unittest
 import pandas as pd
 from pathlib import Path
-from fastai.tabular.all import *
+from fastai.tabular.all import RandomSplitter, TabularPandas, Categorify, CategoryBlock, tabular_learner
 
 
 class TestPredictions(unittest.TestCase):
