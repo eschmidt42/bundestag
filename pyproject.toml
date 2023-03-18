@@ -31,7 +31,6 @@ description = "Download, parse and analyse votes in the german federal parliamen
 
 [project.optional-dependencies]
 dev = [
-    "nbdev",
     "jupyterlab",
     "black",
     "isort",

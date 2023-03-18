@@ -20,11 +20,7 @@ argon2-cffi-bindings==21.2.0
 arrow==1.2.3
     # via isoduration
 asttokens==2.2.1
-    # via
-    #   nbdev
-    #   stack-data
-astunparse==1.6.3
-    # via nbdev
+    # via stack-data
 attrs==22.2.0
     # via
     #   jsonschema
@@ -87,8 +83,6 @@ et-xmlfile==1.1.0
     # via openpyxl
 exceptiongroup==1.1.1
     # via pytest
-execnb==0.1.5
-    # via nbdev
 executing==1.2.0
     # via stack-data
 fastai==2.7.11
@@ -96,11 +90,8 @@ fastai==2.7.11
 fastcore==1.5.28
     # via
     #   bundestag (pyproject.toml)
-    #   execnb
     #   fastai
     #   fastdownload
-    #   ghapi
-    #   nbdev
 fastdownload==0.0.7
     # via fastai
 fastjsonschema==2.16.3
@@ -121,8 +112,6 @@ fsspec==2023.3.0
     # via fastparquet
 gensim==4.3.1
     # via bundestag (pyproject.toml)
-ghapi==1.0.3
-    # via nbdev
 identify==2.5.21
     # via pre-commit
 idna==3.4
@@ -147,7 +136,6 @@ ipykernel==6.21.3
     #   notebook
 ipython==8.11.0
     # via
-    #   execnb
     #   ipykernel
     #   ipywidgets
     #   jupyterlab
@@ -273,8 +261,6 @@ nbconvert==7.2.10
     #   jupyter-server
     #   nbclassic
     #   notebook
-nbdev==2.3.12
-    # via bundestag (pyproject.toml)
 nbformat==5.7.3
     # via
     #   jupyter-server
@@ -325,7 +311,6 @@ packaging==23.0
     #   fastai
     #   fastcore
     #   fastparquet
-    #   ghapi
     #   ipykernel
     #   jupyter-server
     #   jupyterlab
@@ -420,7 +405,6 @@ pyyaml==6.0
     # via
     #   fastai
     #   jupyter-events
-    #   nbdev
     #   pre-commit
 pyzmq==25.0.1
     # via
@@ -464,7 +448,6 @@ send2trash==1.8.0
 six==1.16.0
     # via
     #   asttokens
-    #   astunparse
     #   bleach
     #   python-dateutil
     #   rfc3339-validator
@@ -564,8 +547,6 @@ wasabi==1.1.1
     # via
     #   spacy
     #   thinc
-watchdog==2.3.1
-    # via nbdev
 wcwidth==0.2.6
     # via prompt-toolkit
 webcolors==1.12
@@ -578,7 +559,6 @@ websocket-client==1.5.1
     # via jupyter-server
 wheel==0.40.0
     # via
-    #   astunparse
     #   nvidia-cublas-cu11
     #   nvidia-cuda-runtime-cu11
 widgetsnbextension==4.0.5
