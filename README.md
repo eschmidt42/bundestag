@@ -24,6 +24,8 @@ For your inspiration, I have also included an analysis on how similar parties vo
 
 ## How to use
 
+### Docs
+
 For detailed explanations see:
 - parse data from bundestag.de $\rightarrow$ `nbs/00_html_parsing.ipynb`
 - parse data from abgeordnetenwatch.de $\rightarrow$ `nbs/03_abgeordnetenwatch.ipynb`
@@ -32,6 +34,31 @@ For detailed explanations see:
 - predict politician votes $\rightarrow$ `nbs/05_predicting_votes.ipynb`
 
 For a short overview of the highlights see below.
+
+### When developing
+
+Create the virtual environment
+```shell
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pip-tools==6.12.3
+```
+
+To update the requirements
+```shell
+pip-compile -o requirements/requirements.txt pyproject.toml --resolver=backtracking
+pip-compile --extra dev -o requirements/dev-requirements.txt pyproject.toml  --resolver=backtracking
+```
+
+To install the dev requirements
+```shell
+pip-sync requirements/dev-requirements.txt
+```
+
+To make the package available
+```shell
+pip install -e .
+```
 
 ### Setup
 
