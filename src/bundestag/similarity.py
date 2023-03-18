@@ -5,13 +5,12 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import seaborn as sns
-from loguru import logger
 from scipy import spatial
 
+import bundestag.logging as logging
 from bundestag import html_parsing as hp
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")
+logger = logging.logger
 
 
 def get_votes_by_party(df: pd.DataFrame):

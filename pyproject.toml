@@ -20,8 +20,7 @@ dependencies = [
     "ipywidgets",
     "xlrd",
     "openpyxl",
-    "fastparquet",
-    "loguru"
+    "fastparquet"
 ]
 
 authors = [

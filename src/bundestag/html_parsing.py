@@ -8,10 +8,11 @@ import requests
 import tqdm
 from bs4 import BeautifulSoup
 from fastcore.all import *
-from loguru import logger
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")
+import bundestag.logging as logging
+
+logger = logging.logger
+
 # default level for this module should be INFO
 
 RE_HTM = re.compile("(\.html?)")

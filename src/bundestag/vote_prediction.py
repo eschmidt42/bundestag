@@ -5,12 +5,11 @@ import pandas as pd
 import plotly.express as px
 import torch
 from fastcore.all import *
-from loguru import logger
 from sklearn import decomposition
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")
-# default level for this module should be INFO
+import bundestag.logging as logging
+
+logger = logging.logger
 
 
 def poll_splitter(

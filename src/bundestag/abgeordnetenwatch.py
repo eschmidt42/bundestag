@@ -7,12 +7,12 @@ from pathlib import Path
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from loguru import logger
 from scipy import stats
 from tqdm import tqdm
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")  # default level for this module is INFO
+import bundestag.logging as logging
+
+logger = logging.logger
 
 API_ENCODING = "ISO-8859-1"
 ABGEORDNETENWATCH_PATH = Path(

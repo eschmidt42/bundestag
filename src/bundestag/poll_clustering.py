@@ -9,14 +9,12 @@ import plotly.express as px
 import seaborn as sns
 import spacy
 from fastcore.all import *
-from loguru import logger
 from sklearn import decomposition
 
+import bundestag.logging as logging
 from bundestag import abgeordnetenwatch as aw
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")
-# default level for this module should be INFO
+logger = logging.logger
 
 
 class SpacyTransformer:

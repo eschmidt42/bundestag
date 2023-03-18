@@ -222,8 +222,6 @@ kiwisolver==1.4.4
     # via matplotlib
 langcodes==3.3.0
     # via spacy
-loguru==0.6.0
-    # via bundestag (pyproject.toml)
 markdown-it-py==2.2.0
     # via rich
 markupsafe==2.1.2
