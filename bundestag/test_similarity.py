@@ -1,8 +1,10 @@
+import unittest
+from pathlib import Path
+
+import pandas as pd
+
 from bundestag import html_parsing as hp
 from bundestag import similarity as sim
-from pathlib import Path
-import pandas as pd
-import unittest
 
 
 class TestHTMLParsing(unittest.TestCase):

@@ -1,11 +1,12 @@
-from bs4 import BeautifulSoup
-from pathlib import Path
 import re
+import time
 import typing
+from pathlib import Path
+
+import pandas as pd
 import requests
 import tqdm
-import time
-import pandas as pd
+from bs4 import BeautifulSoup
 from fastcore.all import *
 from loguru import logger
 
@@ -22,7 +23,9 @@ VOTE_COLS = ["ja", "nein", "Enthaltung", "ungültig", "nichtabgegeben"]
 # TODO: add logger debug statements
 
 
-def get_file_paths(path: typing.Union[Path, str], suffix: str = None, pattern=None):
+def get_file_paths(
+    path: typing.Union[Path, str], suffix: str = None, pattern=None
+):
     "Collecting files with a specific suffix or pattern from `path`"
     logger.info(f"Collecting using suffix = {suffix} and pattern = {pattern}")
 
@@ -40,7 +43,9 @@ def get_file_paths(path: typing.Union[Path, str], suffix: str = None, pattern=No
 def test_file_paths(html_file_paths: list, html_path: Path):
     logger.debug("Sanity checking the number of found files")
     assert len(html_file_paths) > 0
-    assert len(html_file_paths) >= len(get_file_paths(html_path, suffix=".htm"))
+    assert len(html_file_paths) >= len(
+        get_file_paths(html_path, suffix=".htm")
+    )
 
 
 def collect_sheet_uris(html_file_paths: typing.List[Path], pattern=None):
@@ -53,7 +58,6 @@ def collect_sheet_uris(html_file_paths: typing.List[Path], pattern=None):
     for file_path in tqdm.tqdm(
         html_file_paths, total=len(html_file_paths), desc="HTM(L)"
     ):
-
         with open(file_path, "r") as f:
             soup = BeautifulSoup(f, features="html.parser")
 
@@ -76,11 +80,15 @@ def test_sheet_uris(sheet_uris):
     )
 
 
-def download_sheet(uri: str, sheet_path: typing.Union[Path, str], dry: bool = False):
+def download_sheet(
+    uri: str, sheet_path: typing.Union[Path, str], dry: bool = False
+):
     "Downloads a single excel sheet given `uri` and writes to `sheet_path`"
     sheet_path.mkdir(exist_ok=True)
     file = Path(sheet_path) / uri.split("/")[-1]
-    logger.debug(f"Writing requesting excel sheet: {uri} and writing to {file}")
+    logger.debug(
+        f"Writing requesting excel sheet: {uri} and writing to {file}"
+    )
     if dry:
         return
     with open(file, "wb") as f:
@@ -106,7 +114,9 @@ def download_multiple_sheets(
     )
     known_sheets = get_file_paths(sheet_path, pattern=RE_FNAME)
 
-    for i, (_, uri) in tqdm.tqdm(enumerate(uris.items()), desc="File", total=n):
+    for i, (_, uri) in tqdm.tqdm(
+        enumerate(uris.items()), desc="File", total=n
+    ):
         if nmax is not None and i > nmax:
             break
         fname = get_sheet_fname(uri)
@@ -126,7 +136,6 @@ def get_file2poll_maps(
     known_sheets = get_file_paths(sheet_path, pattern=RE_FNAME)
     file_poll_title_maps = {}
     for poll_title, uri in uris.items():
-
         fname = get_sheet_fname(uri)
         file = Path(sheet_path) / fname
         if file in known_sheets:
@@ -149,7 +158,8 @@ def is_date(s: str, fun: typing.Callable):
 
 
 def get_sheet_df(
-    sheet_file: typing.Union[str, Path], file_title_maps: typing.Dict[str, str] = None
+    sheet_file: typing.Union[str, Path],
+    file_title_maps: typing.Dict[str, str] = None,
 ):
     "Parsing xlsx and xls files into dataframes"
 
@@ -159,7 +169,9 @@ def get_sheet_df(
 
     dfs = pd.read_excel(sheet_file, sheet_name=None)
 
-    assert len(dfs) == 1, "The sheet file has more than one page, that's unexpected."
+    assert (
+        len(dfs) == 1
+    ), "The sheet file has more than one page, that's unexpected."
 
     for name, df in dfs.items():
         df["sheet_name"] = name
@@ -235,7 +247,9 @@ def disambiguate_party(
 ):
     if party_map is None:
         party_map = PARTY_MAP
-    df[col] = df[col].apply(lambda x: x if x not in party_map else party_map[x])
+    df[col] = df[col].apply(
+        lambda x: x if x not in party_map else party_map[x]
+    )
     return df
 
 
@@ -302,7 +316,9 @@ def get_multiple_sheets_df(
     "Loads, processes and concatenates multiple vote sheets"
     logger.info("Loading processing and concatenating multiple vote sheets")
     df = []
-    for sheet_file in tqdm.tqdm(sheet_files, total=len(sheet_files), desc="Sheets"):
+    for sheet_file in tqdm.tqdm(
+        sheet_files, total=len(sheet_files), desc="Sheets"
+    ):
         df.append(
             (
                 get_sheet_df(sheet_file, file_title_maps=file_title_maps)
@@ -313,7 +329,9 @@ def get_multiple_sheets_df(
     return pd.concat(df, ignore_index=True)
 
 
-def get_multiple_sheets(html_path, sheet_path, nmax: int = None, dry: bool = False):
+def get_multiple_sheets(
+    html_path, sheet_path, nmax: int = None, dry: bool = False
+):
     "Convenience function to perform downloading, storing, excel file detection and processing of votes to pd.DataFrame"
 
     html_path, sheet_path = Path(html_path), Path(sheet_path)
@@ -322,7 +340,9 @@ def get_multiple_sheets(html_path, sheet_path, nmax: int = None, dry: bool = Fal
     # extract excel sheet uris from htm files
     sheet_uris = collect_sheet_uris(html_file_paths)
     # download excel files
-    download_multiple_sheets(sheet_uris, sheet_path=sheet_path, nmax=nmax, dry=dry)
+    download_multiple_sheets(
+        sheet_uris, sheet_path=sheet_path, nmax=nmax, dry=dry
+    )
     # locate downloaded excel files
     sheet_files = get_file_paths(sheet_path, pattern=RE_FNAME)
     # process excel files

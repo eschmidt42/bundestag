@@ -1,21 +1,28 @@
+import json
+import re
 import sys
-import requests, json, re
-from pathlib import Path
-from loguru import logger
-import pandas as pd
-from bs4 import BeautifulSoup
-from tqdm import tqdm
-from scipy import stats
 import time
+from pathlib import Path
+
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from loguru import logger
+from scipy import stats
+from tqdm import tqdm
 
 logger.remove()
 logger.add(sys.stderr, level="INFO")  # default level for this module is INFO
 
 API_ENCODING = "ISO-8859-1"
-ABGEORDNETENWATCH_PATH = Path("../abgeordnetenwatch_data")  # location for data storage
+ABGEORDNETENWATCH_PATH = Path(
+    "../abgeordnetenwatch_data"
+)  # location for data storage
 
 
-def get_location(fname: str, path: Path = None, dry: bool = False, mkdir: bool = False):
+def get_location(
+    fname: str, path: Path = None, dry: bool = False, mkdir: bool = False
+):
     if path is None:
         path = ABGEORDNETENWATCH_PATH
     file = path / fname
@@ -25,7 +32,6 @@ def get_location(fname: str, path: Path = None, dry: bool = False, mkdir: bool =
 
 
 def get_poll_info(legislature_id: int, dry=False, num_polls: int = 999):
-
     url = "https://www.abgeordnetenwatch.de/api/v2/polls"
     params = {
         "field_legislature": legislature_id,  # Bundestag period 2017-2021 = 111
@@ -33,7 +39,9 @@ def get_poll_info(legislature_id: int, dry=False, num_polls: int = 999):
     }
 
     if dry:
-        logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
+        logger.debug(
+            f"Dry mode - request setup: url = {url}, params = {params}"
+        )
         return
 
     r = requests.get(url, params=params)
@@ -48,7 +56,9 @@ def polls_file(legislature_id: int):
     return f"polls_legislature_{legislature_id}.json"
 
 
-def store_polls_json(polls: dict, legislature_id: int, dry=False, path: Path = None):
+def store_polls_json(
+    polls: dict, legislature_id: int, dry=False, path: Path = None
+):
     file = get_location(polls_file(legislature_id), path=path)
 
     if dry:
@@ -68,7 +78,6 @@ def load_polls_json(legislature_id: int, path: Path = None):
 
 
 def parse_poll_data(poll):
-
     handle_committee = (
         lambda x: None if x is None else None if len(x) == 0 else x[0]["label"]
     )
@@ -119,7 +128,9 @@ def get_mandates_info(legislature_id: int, dry=False, num_mandates: int = 999):
         "range_end": num_mandates,  # setting a high limit to include all mandates in one go
     }
     if dry:
-        logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
+        logger.debug(
+            f"Dry mode - request setup: url = {url}, params = {params}"
+        )
         return
 
     r = requests.get(url, params=params)
@@ -164,7 +175,6 @@ def load_mandate_json(legislature_id: int, path: Path = None):
 
 
 def parse_mandate_data(m):
-
     handle_constituency = (
         lambda x, k: x["electoral_data"]["constituency"][k]
         if x["electoral_data"].get("constituency", None)
@@ -190,12 +200,16 @@ def parse_mandate_data(m):
     if "fraction_membership" in m:
         d.update(
             {
-                "fraction_names": [_m["label"] for _m in m["fraction_membership"]],
+                "fraction_names": [
+                    _m["label"] for _m in m["fraction_membership"]
+                ],
                 "fraction_ids": [_m["id"] for _m in m["fraction_membership"]],
                 "fraction_starts": [
                     _m["valid_from"] for _m in m["fraction_membership"]
                 ],
-                "fraction_ends": [_m["valid_until"] for _m in m["fraction_membership"]],
+                "fraction_ends": [
+                    _m["valid_until"] for _m in m["fraction_membership"]
+                ],
             }
         )
     return d
@@ -237,11 +251,12 @@ def get_mandates_df(legislature_id: int, test: bool = True, path: Path = None):
 
 
 def get_vote_info(poll_id: int, dry=False):
-
     url = f"https://www.abgeordnetenwatch.de/api/v2/polls/{poll_id}"
     params = {"related_data": "votes"}  # collecting parlamentarians' votes
     if dry:
-        logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
+        logger.debug(
+            f"Dry mode - request setup: url = {url}, params = {params}"
+        )
         return
 
     r = requests.get(url, params=params)
@@ -257,7 +272,6 @@ def votes_file(legislature_id: int, poll_id: int):
 
 
 def store_vote_info(votes: dict, poll_id: int, dry=False, path: Path = None):
-
     if dry:
         logger.debug(
             f"Dry mode - Writing votes info to {get_location(votes_file(None, poll_id), path=path, dry=dry, mkdir=True)}"
@@ -296,7 +310,6 @@ def load_vote_json(legislature_id: int, poll_id: int, path: Path = None):
 
 
 def parse_vote_data(vote):
-
     d = {
         "mandate_id": vote["mandate"]["id"],
         "mandate": vote["mandate"]["label"],
@@ -350,7 +363,9 @@ def check_stored_vote_ids(legislature_id: int = None, path: Path = None):
     legislature_ids = {dir2int(v): v for v in path.glob("votes_legislature_*")}
 
     file2int = lambda x: int(str(x).split("_")[-2])
-    id_unknown = legislature_id is not None and legislature_id not in legislature_ids
+    id_unknown = (
+        legislature_id is not None and legislature_id not in legislature_ids
+    )
 
     if id_unknown:
         logger.error(
@@ -397,7 +412,9 @@ def get_all_remaining_vote_info(
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
 
     # Get known legislature_id / poll_id combinations
-    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
+    known_id_combos = check_stored_vote_ids(
+        legislature_id=legislature_id, path=path
+    )
 
     # Get polls info for legislative period
     df_period = get_polls_df(legislature_id, test=test, path=path)
@@ -430,7 +447,9 @@ def get_all_remaining_vote_info(
 def compile_votes_data(legislature_id: int, path: Path = None):
     "Compiles the individual politicians' votes for a specific legislature period"
 
-    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
+    known_id_combos = check_stored_vote_ids(
+        legislature_id=legislature_id, path=path
+    )
 
     # TODO: figure out why some mandate_id entries are duplicate in vote_json files
 
@@ -442,7 +461,9 @@ def compile_votes_data(legislature_id: int, path: Path = None):
     ):
         df = get_votes_df(legislature_id, poll_id, test=False, path=path)
 
-        ids = df.loc[df.duplicated(subset=["mandate_id"]), "mandate_id"].unique()
+        ids = df.loc[
+            df.duplicated(subset=["mandate_id"]), "mandate_id"
+        ].unique()
         if len(ids) > 0:
             logger.warning(
                 f'Dropping duplicates for mandate_ids ({ids}):\n{df.loc[df["mandate_id"].isin(ids)]}'

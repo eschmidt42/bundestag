@@ -1,20 +1,18 @@
-from bundestag import abgeordnetenwatch as aw
-
-import pandas as pd
-import spacy
-from loguru import logger
 import sys
-import plotly.express as px
-import seaborn as sns
+
+import gensim
+import gensim.corpora as corpora
 import matplotlib.pyplot as plt
 import numpy as np
-
-import gensim.corpora as corpora
-import gensim
-
+import pandas as pd
+import plotly.express as px
+import seaborn as sns
+import spacy
+from fastcore.all import *
+from loguru import logger
 from sklearn import decomposition
 
-from fastcore.all import *
+from bundestag import abgeordnetenwatch as aw
 
 logger.remove()
 logger.add(sys.stderr, level="INFO")
@@ -62,7 +60,9 @@ class SpacyTransformer:
         )
         self.lda_topics = {
             i: descr
-            for (i, descr) in self.lda_model.print_topics(num_topics=num_topics)
+            for (i, descr) in self.lda_model.print_topics(
+                num_topics=num_topics
+            )
         }
 
     def fit(self, documents, mode="lda", **kwargs):
@@ -155,10 +155,22 @@ def compare_word_frequencies(
     fig, ax = plt.subplots()
     bins = np.arange(30)
     sns.histplot(
-        data=tmp, x=wc_col0, alpha=0.4, ax=ax, color="blue", label=label0, bins=bins
+        data=tmp,
+        x=wc_col0,
+        alpha=0.4,
+        ax=ax,
+        color="blue",
+        label=label0,
+        bins=bins,
     )
     sns.histplot(
-        data=tmp, x=wc_col1, alpha=0.4, ax=ax, color="green", label=label1, bins=bins
+        data=tmp,
+        x=wc_col1,
+        alpha=0.4,
+        ax=ax,
+        color="green",
+        label=label1,
+        bins=bins,
     )
     ax.legend()
     ax.set(title=title)

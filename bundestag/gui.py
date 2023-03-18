@@ -1,7 +1,8 @@
-from bundestag import similarity as sim
 import ipywidgets as widgets
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
+from bundestag import similarity as sim
 
 
 class GUI:
@@ -33,7 +34,9 @@ class GUI:
         if start_date is None or end_date is None:
             return self.df, self.party_votes
 
-        mask = (self.df["date"] >= str(start_date)) & (self.df["date"] <= str(end_date))
+        mask = (self.df["date"] >= str(start_date)) & (
+            self.df["date"] <= str(end_date)
+        )
         df = self.df.loc[mask]
 
         date_range = pd.date_range(start_date, end_date)
@@ -127,9 +130,7 @@ class PartyGUI(GUI):
 
         start_date = self.start_widget.value
         end_date = self.end_widget.value
-        self.selection_widget.value = (
-            f"Selected: Party = {party}, date range = {start_date} - {end_date}"
-        )
+        self.selection_widget.value = f"Selected: Party = {party}, date range = {start_date} - {end_date}"
 
         df, party_votes = self.filter_dfs(start_date, end_date)
         party_votes_pivoted = sim.pivot_party_votes_df(party_votes)
