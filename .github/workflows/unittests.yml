@@ -21,14 +21,7 @@ jobs:
 
             - name: Create virtal environment
               run: |-
-                  python3 -m venv .venv
-            - name: Install dependencies
-              run: |-
-                  source .venv/bin/activate
-                  python -m pip install --upgrade pip
-                  pip install pip-tools==6.12.3
-                  pip-sync requirements/dev-requirements.txt
-                  python -m spacy download de_core_news_sm
+                  make dev-install
             - name: Run tests
               run: |-
                   source .venv/bin/activate
