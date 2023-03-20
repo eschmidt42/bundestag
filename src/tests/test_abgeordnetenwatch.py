@@ -94,31 +94,57 @@ def test_load_polls_json(dry: bool):
         assert _mkdir.call_count == 0
 
 
+POLL_DATA_RAW = {
+    "id": 1240,
+    "entity_type": "node",
+    "label": "Verl\u00e4ngerung des Bundeswehreinsatzes in Mali (MINUSMA 2017/2018)",
+    "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/1240",
+    "field_legislature": {
+        "id": 111,
+        "entity_type": "parliament_period",
+        "label": "Bundestag 2017 - 2021",
+        "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
+        "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19",
+    },
+    "field_topics": [
+        {
+            "id": 21,
+            "entity_type": "taxonomy_term",
+            "label": "Au\u00dfenpolitik und internationale Beziehungen",
+            "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/21",
+            "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/aussenpolitik-und-internationale-beziehungen",
+        },
+        {
+            "id": 13,
+            "entity_type": "taxonomy_term",
+            "label": "Verteidigung",
+            "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/13",
+            "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/verteidigung",
+        },
+    ],
+    "field_committees": None,
+    "field_intro": "<p>\r\n\tDer Bundestag hat mit den Stimmen von CDU/CSU, FDP, Gr\u00fcne und SPD f\u00fcr die Einsatzverl\u00e4ngerung der Bundeswehr der NATO-Mission MINUSMA gestimmt.\r\n</p>\r\n",
+    "field_poll_date": "2017-12-12",
+    "field_related_links": None,
+}
+
+POLL_DATA_PARSED = {
+    "poll_id": 1240,
+    "poll_title": "Verlängerung des Bundeswehreinsatzes in Mali (MINUSMA 2017/2018)",
+    "poll_first_committee": None,
+    "poll_description": "Der Bundestag hat mit den Stimmen von CDU/CSU, FDP, Grüne und SPD für die Einsatzverlängerung der Bundeswehr der NATO-Mission MINUSMA gestimmt.",
+    "legislature_id": 111,
+    "legislature_period": "Bundestag 2017 - 2021",
+    "poll_date": "2017-12-12",
+}
+
+
 def test_parse_poll_data():
-    info = {
-        "id": 42,
-        "label": "wup",
-        "field_committees": [{"label": "wooop"}],
-        "field_intro": "bla",
-        "field_legislature": {"id": 21, "label": "bam"},
-        "field_poll_date": "2020-02-02",
-    }
+    res = aw.parse_poll_data(POLL_DATA_RAW)
 
-    d = {
-        "poll_id": 42,
-        "poll_title": "wup",
-        "poll_first_committee": "wooop",
-        "poll_description": "bla",
-        "legislature_id": 21,
-        "legislature_period": "bam",
-        "poll_date": "2020-02-02",
-    }
-
-    res = aw.parse_poll_data(info)
-
-    assert set(list(d.keys())) == set(list(res.keys()))
-    for k in d.keys():
-        assert d[k] == res[k]
+    assert set(list(POLL_DATA_PARSED.keys())) == set(list(res.keys()))
+    for k in POLL_DATA_PARSED.keys():
+        assert POLL_DATA_PARSED[k] == res[k]
 
 
 def test_get_polls_df():
