@@ -155,6 +155,7 @@ def test_is_date():
     assert hp.is_date("2022-02-02", pd.to_datetime) == True
 
 
+@pytest.mark.skip("to be implemented")
 def test_get_sheet_df():
     pass
 
@@ -250,14 +251,17 @@ def test_disambiguate_party():
 #     pass
 
 
+@pytest.mark.skip("to be implemented")
 def test_set_sheet_dtypes():
     pass
 
 
+@pytest.mark.skip("to be implemented")
 def test_get_multiple_sheets_df():
     pass
 
 
+@pytest.mark.skip("to be implemented")
 def test_get_multiple_sheets():
     pass
 
