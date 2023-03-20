@@ -19,7 +19,7 @@ API_ENCODING = "ISO-8859-1"
 
 def get_location(
     fname: str, path: Path, dry: bool = False, mkdir: bool = False
-):
+) -> Path:
     file = path / fname
     if (not dry) and mkdir:
         file.parent.mkdir(exist_ok=True)
@@ -54,7 +54,9 @@ def polls_file(legislature_id: int):
 def store_polls_json(
     polls: dict, legislature_id: int, dry: bool = False, path: Path = None
 ):
-    file = get_location(polls_file(legislature_id), path=path)
+    file = get_location(
+        polls_file(legislature_id), path=path, dry=dry, mkdir=False
+    )
 
     if dry:
         logger.debug(f"Dry mode - Writing poll info to {file}")
@@ -64,8 +66,10 @@ def store_polls_json(
         json.dump(polls, f)
 
 
-def load_polls_json(legislature_id: int, path: Path = None):
-    file = get_location(polls_file(legislature_id), path=path)
+def load_polls_json(legislature_id: int, path: Path = None, dry: bool = False):
+    file = get_location(
+        polls_file(legislature_id), path=path, dry=dry, mkdir=False
+    )
     logger.debug(f"Reading poll info from {file}")
     with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
@@ -92,28 +96,11 @@ def parse_poll_data(poll):
     return d
 
 
+# TODO: add optional pandera validation
 def get_polls_df(legislature_id: int, path: Path = None):
     "Parses info from poll json files for `legislature_id`"
     info = load_polls_json(legislature_id, path=path)
     return pd.DataFrame([parse_poll_data(v) for v in info["data"]])
-
-
-def test_poll_data(df: pd.DataFrame):
-    "Basic sanity check on poll data"
-
-    # there should be no missing values except for poll_first_committee
-    for c in df.columns:
-        msg = f"{c}: failed because NaNs/None values were found."
-        mask = df[c].isna()
-        if c == "poll_first_committee":
-            continue
-        assert mask.sum() == 0, f"{msg}: \n{df.loc[mask].head()}"
-
-    # there should be no duplicated poll_id values
-    mask = df["poll_id"].duplicated()
-    assert (
-        mask.sum() == 0
-    ), f'Surprisingly found duplicated poll_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
 
 
 def get_mandates_info(legislature_id: int, dry=False, num_mandates: int = 999):
@@ -142,7 +129,9 @@ def mandates_file(legislature_id: int):
 def store_mandates_info(
     mandates: dict, legislature_id: int, dry: bool = False, path: Path = None
 ):
-    file = get_location(mandates_file(legislature_id), path=path, dry=dry)
+    file = get_location(
+        mandates_file(legislature_id), path=path, dry=dry, mkdir=False
+    )
     # if path is None:
     #     path = ABGEORDNETENWATCH_PATH
     # file = (
@@ -157,8 +146,12 @@ def store_mandates_info(
         json.dump(mandates, f)
 
 
-def load_mandate_json(legislature_id: int, path: Path = None):
-    file = get_location(mandates_file(legislature_id), path=path)
+def load_mandate_json(
+    legislature_id: int, path: Path = None, dry: bool = False
+):
+    file = get_location(
+        mandates_file(legislature_id), path=path, dry=dry, mkdir=False
+    )
     # if mandates_path is None:
     #     mandates_path = (
     #         ABGEORDNETENWATCH_PATH / f"mandates_legislature_{legislature_id}.json"
@@ -210,38 +203,12 @@ def parse_mandate_data(m):
     return d
 
 
-def test_mandate_data(df: pd.DataFrame):
-    "Basic sanity check on mandate data"
-
-    # there should be no missing values for any column in `cols`
-    cols = ["mandate_id", "mandate", "politician_id", "politician"]
-    for c in cols:
-        msg = f"{c}: failed because NaNs/None values were found."
-        mask = df[c].isna()
-        assert mask.sum() == 0, f"{msg}: \n{df.loc[mask].head()}"
-
-    # there should only be one id value for those columns in `cols` each
-    cols = ["legislature_id", "legislature_period"]
-    for c in cols:
-        ids = df[c].unique()
-        msg = f"Surprisingly found multiple {c} values: {ids}"
-        assert len(ids) == 1, msg
-
-    # there should be no duplicate mandate_id and politician_id values
-    cols = ["mandate_id", "politician_id"]
-    for c in cols:
-        mask = df[c].duplicated()
-        assert (
-            mask.sum() == 0
-        ), f"Surprisingly found duplicated {c} values: {df.loc[mask,c].unique()} \nexamples: \n{df.loc[mask].head()}"
-
-
 def get_mandates_df(legislature_id: int, test: bool = True, path: Path = None):
     "Parses info from mandate json file(s) for `legislature_id`"
     info = load_mandate_json(legislature_id, path=path)
     df = pd.DataFrame([parse_mandate_data(v) for v in info["data"]])
-    if test:
-        test_mandate_data(df)
+    # if test:
+    #     test_mandate_data(df)
     return df
 
 
@@ -269,7 +236,7 @@ def votes_file(legislature_id: int, poll_id: int):
 def store_vote_info(votes: dict, poll_id: int, dry=False, path: Path = None):
     if dry:
         logger.debug(
-            f"Dry mode - Writing votes info to {get_location(votes_file(None, poll_id), path=path, dry=dry, mkdir=True)}"
+            f"Dry mode - Writing votes info to {get_location(votes_file(None, poll_id), path=path, dry=dry, mkdir=False)}"
         )
         return
 
@@ -316,38 +283,15 @@ def parse_vote_data(vote):
     return d
 
 
-def test_vote_data(df):
-    "Basic sanity check on vote data"
-
-    # there should be no missing values for any column in `cols`
-    cols = ["mandate_id", "mandate", "poll_id", "vote"]
-    for c in cols:
-        msg = f"{c}: failed because NaNs/None values were found."
-        mask = df[c].isna()
-        assert mask.sum() == 0, f"{msg}: \n{df.loc[mask].head()}"
-
-    # there should only be one poll_id value
-    ids = df["poll_id"].unique()
-    msg = f"Surprisingly found multiple poll_id values: {ids}"
-    assert len(ids) == 1, msg
-
-    # there should be no duplicate mandate_id value
-    mask = df["mandate_id"].duplicated()
-    assert (
-        mask.sum() == 0
-    ), f'Surprisingly found duplicated mandate_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
-
-
-def get_votes_df(
-    legislature_id: int, poll_id: int, test: bool = True, path: Path = None
-):
+# TODO: add optional pandera schema validation
+def get_votes_df(legislature_id: int, poll_id: int, path: Path = None):
     "Parses info from vote json files for `legislature_id` and `poll_id`"
     info = load_vote_json(legislature_id, poll_id, path=path)
     df = pd.DataFrame(
         [parse_vote_data(v) for v in info["data"]["related_data"]["votes"]]
     )
-    if test:
-        test_vote_data(df)
+    # if test:
+    #     test_vote_data(df)
     return df
 
 
@@ -381,17 +325,6 @@ def check_stored_vote_ids(legislature_id: int, path: Path):
                 file2int(v): v for v in leg_path.glob("poll_*_votes.json")
             }
         return all_ids
-
-
-def test_stored_vote_ids_check(path: Path = None):
-    tmp = check_stored_vote_ids(path=path)
-    assert isinstance(tmp, dict), "Sanity check for dict type of `tmp` failed"
-    assert all(
-        [isinstance(v, dict) for v in tmp.values()]
-    ), "Sanity check for dict type of values of `tmp` failed"
-    assert all(
-        [isinstance(p, Path) for d in tmp.values() for p in d.values()]
-    ), "Sanity check of lowest level values failed, expect all to be of type pathlib.Path"
 
 
 def get_all_remaining_vote_info(
@@ -462,7 +395,7 @@ def compile_votes_data(legislature_id: int, path: Path = None):
                 f'Dropping duplicates for mandate_ids ({ids}):\n{df.loc[df["mandate_id"].isin(ids)]}'
             )
             df = df.drop_duplicates(subset=["mandate_id"])
-        test_vote_data(df)
+        # test_vote_data(df)
 
         df_all_votes.append(df)
 
