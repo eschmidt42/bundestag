@@ -20,7 +20,8 @@ dependencies = [
     "ipywidgets",
     "xlrd",
     "openpyxl",
-    "fastparquet"
+    "fastparquet",
+    "pydantic"
 ]
 
 authors = [
@@ -35,7 +36,8 @@ dev = [
     "isort",
     "pytest",
     "pre-commit",
-    "coverage"
+    "coverage",
+    "pandera"
 ]
 
 [tool.black]

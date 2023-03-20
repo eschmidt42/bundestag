@@ -205,6 +205,7 @@ pycparser==2.21
     # via cffi
 pydantic==1.8.2
     # via
+    #   bundestag (pyproject.toml)
     #   spacy
     #   thinc
 pygments==2.10.0

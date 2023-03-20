@@ -243,13 +243,17 @@ mdurl==0.1.2
     # via markdown-it-py
 mistune==2.0.5
     # via nbconvert
+multimethod==1.9.1
+    # via pandera
 murmurhash==1.0.9
     # via
     #   preshed
     #   spacy
     #   thinc
 mypy-extensions==1.0.0
-    # via black
+    # via
+    #   black
+    #   typing-inspect
 nbclassic==0.5.3
     # via
     #   jupyterlab
@@ -287,6 +291,7 @@ numpy==1.24.2
     #   gensim
     #   matplotlib
     #   pandas
+    #   pandera
     #   scikit-learn
     #   scipy
     #   seaborn
@@ -317,6 +322,7 @@ packaging==23.0
     #   jupyterlab-server
     #   matplotlib
     #   nbconvert
+    #   pandera
     #   pytest
     #   spacy
     #   thinc
@@ -325,7 +331,10 @@ pandas==1.5.3
     #   bundestag (pyproject.toml)
     #   fastai
     #   fastparquet
+    #   pandera
     #   seaborn
+pandera==0.14.4
+    # via bundestag (pyproject.toml)
 pandocfilters==1.5.0
     # via nbconvert
 parso==0.8.3
@@ -377,7 +386,9 @@ pycparser==2.21
     # via cffi
 pydantic==1.10.6
     # via
+    #   bundestag (pyproject.toml)
     #   confection
+    #   pandera
     #   spacy
     #   thinc
 pygments==2.14.0
@@ -537,6 +548,9 @@ typing-extensions==4.5.0
     #   pydantic
     #   torch
     #   torchvision
+    #   typing-inspect
+typing-inspect==0.8.0
+    # via pandera
 uri-template==1.2.0
     # via jsonschema
 urllib3==1.26.15
@@ -563,6 +577,8 @@ wheel==0.40.0
     #   nvidia-cuda-runtime-cu11
 widgetsnbextension==4.0.5
     # via ipywidgets
+wrapt==1.15.0
+    # via pandera
 xlrd==2.0.1
     # via bundestag (pyproject.toml)
 y-py==0.5.9
