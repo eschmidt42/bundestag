@@ -1,15 +1,17 @@
 import re
 import time
-import typing
+import typing as T
 from pathlib import Path
 
 import pandas as pd
 import requests
 import tqdm
 from bs4 import BeautifulSoup
-from fastcore.all import *
 
 import bundestag.logging as logging
+
+# from fastcore.all import *
+
 
 logger = logging.logger
 
@@ -25,32 +27,50 @@ VOTE_COLS = ["ja", "nein", "Enthaltung", "ungültig", "nichtabgegeben"]
 
 
 def get_file_paths(
-    path: typing.Union[Path, str], suffix: str = None, pattern=None
-):
-    "Collecting files with a specific suffix or pattern from `path`"
-    logger.info(f"Collecting using suffix = {suffix} and pattern = {pattern}")
+    path: T.Union[Path, str], suffix: str = None, pattern: re.Pattern = None
+) -> T.List[Path]:
+    """Collecting files with matching suffix or pattern
 
-    return (
-        Path(path)
-        .ls()
-        .filter(
-            lambda x: (suffix and x.suffix == suffix)
-            or (pattern and pattern.search(str(x)))
+    Args:
+        path (T.Union[Path, str]): Location to search for files
+        suffix (str, optional): Suffix to search for. Defaults to None.
+        pattern (re.Pattern, optional): Pattern to search for. Defaults to None.
+
+    Raises:
+        NotImplementedError: Function fails if neither suffix nor pattern are provided
+
+    Returns:
+        T.List[Path]: List of matched files
+    """
+
+    path = Path(path)
+    if suffix is not None:
+        logger.debug(f"Collecting using {suffix=}")
+        files = list(path.rglob(suffix))
+    elif pattern is not None:
+        logger.debug(f"Collecting using {pattern=}")
+        files = [f for f in path.glob("**/*") if pattern.search(f.name)]
+    else:
+        raise NotImplementedError(
+            f"Either suffix or pattern need to be passed to this function."
         )
-        .unique()
-    )
+    files = list(set(files))
+    return files
 
 
-def test_file_paths(html_file_paths: list, html_path: Path):
-    logger.debug("Sanity checking the number of found files")
-    assert len(html_file_paths) > 0
-    assert len(html_file_paths) >= len(
-        get_file_paths(html_path, suffix=".htm")
-    )
+def collect_sheet_uris(
+    html_file_paths: T.List[Path], pattern: re.Pattern = None
+) -> T.List[str]:
+    """Extracting URIs to roll call votes stored in excel sheets
 
+    Args:
+        html_file_paths (T.List[Path]): List of files to parse
+        pattern (re.Pattern, optional): Regular expression pattern to use to identify URIs. Defaults to None.
 
-def collect_sheet_uris(html_file_paths: typing.List[Path], pattern=None):
-    "Extracting URIs to roll call votes stored in excel sheets"
+    Returns:
+        T.List[str]: List of identified URIs
+    """
+
     logger.info("Extracting URIs to excel sheets from htm files")
     uris = {}
     if pattern is None:
@@ -72,18 +92,17 @@ def collect_sheet_uris(html_file_paths: typing.List[Path], pattern=None):
     return uris
 
 
-def test_sheet_uris(sheet_uris):
-    logger.debug("Sanity checking collected URIs to excel sheets")
-    assert isinstance(sheet_uris, dict)
-    assert (
-        "10.09.2020: Abstrakte Normenkontrolle - Düngeverordnung (Beschlussempfehlung)"
-        in sheet_uris
-    )
-
-
 def download_sheet(
-    uri: str, sheet_path: typing.Union[Path, str], dry: bool = False
+    uri: str, sheet_path: T.Union[Path, str], dry: bool = False
 ):
+    """Downloads a single excel sheet given `uri` and writes to `sheet_path`
+
+    Args:
+        uri (str): URI to download
+        sheet_path (T.Union[Path, str]): Directory to write downloaded sheet to
+        dry (bool, optional): Switch to deactivate downloading. Defaults to False.
+    """
+
     "Downloads a single excel sheet given `uri` and writes to `sheet_path`"
     sheet_path.mkdir(exist_ok=True)
     file = Path(sheet_path) / uri.split("/")[-1]
@@ -97,18 +116,27 @@ def download_sheet(
         f.write(r.content)
 
 
-def get_sheet_fname(uri):
+def get_sheet_fname(uri: str) -> str:
     return uri.split("/")[-1]
 
 
 def download_multiple_sheets(
-    uris: typing.Dict[str, str],
-    sheet_path: typing.Union[Path, str],
+    uris: T.Dict[str, str],
+    sheet_path: T.Union[Path, str],
     t_sleep: float = 0.01,
     nmax: int = None,
     dry: bool = False,
 ):
-    "Downloads multiple excel sheets containing roll call votes using `uris`, writing to `sheet_path`"
+    """Downloads multiple excel sheets containing roll call votes using `uris`, writing to `sheet_path`
+
+    Args:
+        uris (T.Dict[str, str]): Dict of sheets to download
+        sheet_path (T.Union[Path, str]): Path to write the sheets to
+        t_sleep (float, optional): Wait time in seconds between downloaded files. Defaults to 0.01.
+        nmax (int, optional): Maximum number of sheets to download. Defaults to None.
+        dry (bool, optional): Switch for dry run. Defaults to False.
+    """
+
     n = min(nmax, len(uris)) if nmax else len(uris)
     logger.info(
         f"Downloading {n} excel sheets and storing under {sheet_path} (dry = {dry})"
@@ -131,26 +159,20 @@ def download_multiple_sheets(
 
 
 def get_file2poll_maps(
-    uris: typing.Dict[str, str], sheet_path: typing.Union[str, Path]
-):
+    uris: T.Dict[str, str], sheet_path: T.Union[str, Path]
+) -> T.Dict[str, str]:
     "Creates a file name (so file needs to exist) to poll title map"
     known_sheets = get_file_paths(sheet_path, pattern=RE_FNAME)
-    file_poll_title_maps = {}
+    file2poll = {}
     for poll_title, uri in uris.items():
         fname = get_sheet_fname(uri)
         file = Path(sheet_path) / fname
         if file in known_sheets:
-            file_poll_title_maps[fname] = poll_title
-    return file_poll_title_maps
+            file2poll[fname] = poll_title
+    return file2poll
 
 
-def test_file_title_maps(
-    file_poll_title_maps: typing.Dict[str, str], uris: typing.Dict[str, str]
-):
-    assert len(file_poll_title_maps) <= len(uris)
-
-
-def is_date(s: str, fun: typing.Callable):
+def is_date(s: str, fun: T.Callable):
     try:
         _ = fun(s)
         return True
@@ -158,9 +180,10 @@ def is_date(s: str, fun: typing.Callable):
         return False
 
 
+# TODO: implement optional pandera schema validation
 def get_sheet_df(
-    sheet_file: typing.Union[str, Path],
-    file_title_maps: typing.Dict[str, str] = None,
+    sheet_file: T.Union[str, Path],
+    file_title_maps: T.Dict[str, str] = None,
 ):
     "Parsing xlsx and xls files into dataframes"
 
@@ -192,34 +215,9 @@ def get_sheet_df(
     return df.pipe(disambiguate_party)
 
 
-def test_get_sheet_df(df: pd.DataFrame):
-    assert isinstance(df, pd.DataFrame)
-    assert all(
-        [
-            col in df.columns.values
-            for col in [
-                "Wahlperiode",
-                "Sitzungnr",
-                "Abstimmnr",
-                "Fraktion/Gruppe",
-                "Name",
-                "Vorname",
-                "Titel",
-                "ja",
-                "nein",
-                "Enthaltung",
-                "ungültig",
-                "nichtabgegeben",
-                "Bezeichnung",
-                "sheet_name",
-                "date",
-                "title",
-            ]
-        ]
-    )
-
-
-def handle_title_and_date(full_title: str, sheet_file):
+def handle_title_and_date(
+    full_title: str, sheet_file: Path
+) -> T.Tuple[str, pd.DatetimeTZDtype]:
     "Extracting the title of the roll call vote and the date"
     title = full_title.split(":")
     date = title[0]
@@ -232,6 +230,8 @@ def handle_title_and_date(full_title: str, sheet_file):
     else:
         date = None
         title = full_title
+
+    title = title.strip()
     return title, date
 
 
@@ -245,7 +245,7 @@ PARTY_MAP = {
 
 def disambiguate_party(
     df: pd.DataFrame, col: str = "Fraktion/Gruppe", party_map: dict = None
-):
+) -> pd.DataFrame:
     if party_map is None:
         party_map = PARTY_MAP
     df[col] = df[col].apply(
@@ -254,12 +254,13 @@ def disambiguate_party(
     return df
 
 
+# TODO: add pandera schema validation
 def get_squished_dataframe(
     df: pd.DataFrame,
     id_col: str = "Bezeichnung",
-    feature_cols: typing.List[str] = VOTE_COLS,
-    other_cols: typing.List = None,
-):
+    feature_cols: T.List[str] = VOTE_COLS,
+    other_cols: T.List = None,
+) -> pd.DataFrame:
     "Reformats `df`"
     other_cols = ["date", "title"] if other_cols is None else other_cols
     tmp = df.loc[:, [id_col] + feature_cols + other_cols]
@@ -277,13 +278,6 @@ def get_squished_dataframe(
         tmp.set_index(["Bezeichnung", "date", "title"]),
         on=["Bezeichnung", "date", "title"],
     ).drop(columns=VOTE_COLS)
-
-
-def test_squished_df(df_squished: pd.DataFrame, df: pd.DataFrame):
-    assert len(df_squished) == len(df)
-    assert "vote" in df_squished.columns
-    assert "issue" in df_squished.columns
-    assert not any([v in df_squished.columns for v in VOTE_COLS])
 
 
 DTYPES = {
@@ -311,8 +305,8 @@ def set_sheet_dtypes(df: pd.DataFrame):
 
 
 def get_multiple_sheets_df(
-    sheet_files: typing.List[typing.Union[Path, str]],
-    file_title_maps: typing.Dict[str, str] = None,
+    sheet_files: T.List[T.Union[Path, str]],
+    file_title_maps: T.Dict[str, str] = None,
 ):
     "Loads, processes and concatenates multiple vote sheets"
     logger.info("Loading processing and concatenating multiple vote sheets")
