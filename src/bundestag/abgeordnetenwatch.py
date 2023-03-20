@@ -15,16 +15,11 @@ import bundestag.logging as logging
 logger = logging.logger
 
 API_ENCODING = "ISO-8859-1"
-ABGEORDNETENWATCH_PATH = Path(
-    "../abgeordnetenwatch_data"
-)  # location for data storage
 
 
 def get_location(
-    fname: str, path: Path = None, dry: bool = False, mkdir: bool = False
+    fname: str, path: Path, dry: bool = False, mkdir: bool = False
 ):
-    if path is None:
-        path = ABGEORDNETENWATCH_PATH
     file = path / fname
     if (not dry) and mkdir:
         file.parent.mkdir(exist_ok=True)
@@ -57,7 +52,7 @@ def polls_file(legislature_id: int):
 
 
 def store_polls_json(
-    polls: dict, legislature_id: int, dry=False, path: Path = None
+    polls: dict, legislature_id: int, dry: bool = False, path: Path = None
 ):
     file = get_location(polls_file(legislature_id), path=path)
 
@@ -356,9 +351,7 @@ def get_votes_df(
     return df
 
 
-def check_stored_vote_ids(legislature_id: int = None, path: Path = None):
-    if path is None:
-        path = ABGEORDNETENWATCH_PATH
+def check_stored_vote_ids(legislature_id: int, path: Path):
     dir2int = lambda x: int(str(x).split("_")[-1])
     legislature_ids = {dir2int(v): v for v in path.glob("votes_legislature_*")}
 
@@ -417,7 +410,7 @@ def get_all_remaining_vote_info(
     )
 
     # Get polls info for legislative period
-    df_period = get_polls_df(legislature_id, test=test, path=path)
+    df_period = get_polls_df(legislature_id, path=path)
 
     # remaining poll ids to collect
     remaining_poll_ids = [
