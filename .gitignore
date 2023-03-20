@@ -10,3 +10,4 @@ abgeordnetenwatch_data/
 abgeordnetenwatch_data_test/
 .venv
 *.egg-info
+data/

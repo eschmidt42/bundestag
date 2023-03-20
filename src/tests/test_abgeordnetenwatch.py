@@ -1,9 +1,12 @@
 import unittest
 from pathlib import Path
 
+import pytest
+
 from bundestag import abgeordnetenwatch as aw
 
 
+@pytest.mark.skip("Currently not functioning because no data")
 class TestDataCollection(unittest.TestCase):
     @classmethod
     def setUpClass(self):

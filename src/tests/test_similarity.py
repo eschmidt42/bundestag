@@ -2,11 +2,13 @@ import unittest
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from bundestag import html_parsing as hp
 from bundestag import similarity as sim
 
 
+@pytest.mark.skip("Currently not functioning because no data")
 class TestHTMLParsing(unittest.TestCase):
     @classmethod
     def setUpClass(self):
