@@ -509,7 +509,3 @@ class TestDataCollection(unittest.TestCase):
 
     def test_6_stored_vote_ids(self):
         aw.test_stored_vote_ids_check(path=self.write_path)
-
-
-if __name__ == "__main__":
-    unittest.main()
