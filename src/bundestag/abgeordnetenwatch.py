@@ -2,15 +2,18 @@ import json
 import re
 import sys
 import time
+import typing as T
 from pathlib import Path
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from pydantic import BaseModel, Field
 from scipy import stats
 from tqdm import tqdm
 
 import bundestag.logging as logging
+import bundestag.schemas as schemas
 
 logger = logging.logger
 
@@ -26,7 +29,9 @@ def get_location(
     return file
 
 
-def get_poll_info(legislature_id: int, dry=False, num_polls: int = 999):
+def request_poll_data(
+    legislature_id: int, dry=False, num_polls: int = 999
+) -> dict:
     url = "https://www.abgeordnetenwatch.de/api/v2/polls"
     params = {
         "field_legislature": legislature_id,  # Bundestag period 2017-2021 = 111
@@ -76,34 +81,37 @@ def load_polls_json(legislature_id: int, path: Path = None, dry: bool = False):
     return info
 
 
-def parse_poll_data(poll):
+def parse_poll_data(poll: schemas.Poll) -> dict:
     handle_committee = (
-        lambda x: None if x is None else None if len(x) == 0 else x[0]["label"]
+        lambda x: None if x is None else None if len(x) == 0 else x[0].label
     )
     handle_description = (
         lambda x: BeautifulSoup(x, features="html.parser").get_text().strip()
     )
 
     d = {
-        "poll_id": poll["id"],
-        "poll_title": poll["label"],
-        "poll_first_committee": handle_committee(poll["field_committees"]),
-        "poll_description": handle_description(poll["field_intro"]),
-        "legislature_id": poll["field_legislature"]["id"],
-        "legislature_period": poll["field_legislature"]["label"],
-        "poll_date": poll["field_poll_date"],
+        "poll_id": poll.id,
+        "poll_title": poll.label,
+        "poll_first_committee": handle_committee(poll.field_committees),
+        "poll_description": handle_description(poll.field_intro),
+        "legislature_id": poll.field_legislature.id,
+        "legislature_period": poll.field_legislature.label,
+        "poll_date": poll.field_poll_date,
     }
     return d
 
 
 # TODO: add optional pandera validation
-def get_polls_df(legislature_id: int, path: Path = None):
+def get_polls_df(legislature_id: int, path: Path = None) -> pd.DataFrame:
     "Parses info from poll json files for `legislature_id`"
     info = load_polls_json(legislature_id, path=path)
-    return pd.DataFrame([parse_poll_data(v) for v in info["data"]])
+    polls = schemas.PollResponse(**info)
+    return pd.DataFrame([parse_poll_data(v) for v in polls.data])
 
 
-def get_mandates_info(legislature_id: int, dry=False, num_mandates: int = 999):
+def request_mandates_data(
+    legislature_id: int, dry=False, num_mandates: int = 999
+) -> dict:
     url = f"https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates"
     params = {
         "parliament_period": legislature_id,  # collecting parlamentarians' votes
@@ -126,17 +134,12 @@ def mandates_file(legislature_id: int):
     return f"mandates_legislature_{legislature_id}.json"
 
 
-def store_mandates_info(
+def store_mandates_json(
     mandates: dict, legislature_id: int, dry: bool = False, path: Path = None
 ):
     file = get_location(
         mandates_file(legislature_id), path=path, dry=dry, mkdir=False
     )
-    # if path is None:
-    #     path = ABGEORDNETENWATCH_PATH
-    # file = (
-    #     path / f"mandates_legislature_{legislature_id}.json"
-    # )
 
     if dry:
         logger.debug(f"Dry mode - Writing mandates info to {file}")
@@ -148,71 +151,63 @@ def store_mandates_info(
 
 def load_mandate_json(
     legislature_id: int, path: Path = None, dry: bool = False
-):
+) -> dict:
     file = get_location(
         mandates_file(legislature_id), path=path, dry=dry, mkdir=False
     )
-    # if mandates_path is None:
-    #     mandates_path = (
-    #         ABGEORDNETENWATCH_PATH / f"mandates_legislature_{legislature_id}.json"
-    #     )
+
     logger.debug(f"Reading mandates info from {file}")
     with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
     return info
 
 
-def parse_mandate_data(m):
-    handle_constituency = (
-        lambda x, k: x["electoral_data"]["constituency"][k]
-        if x["electoral_data"].get("constituency", None)
-        else None
-    )
+def parse_mandate_data(mandate: schemas.Mandate) -> dict:
     d = {
-        "legislature_id": m["parliament_period"]["id"],
-        "legislature_period": m["parliament_period"]["label"],
-        "mandate_id": m["id"],
-        "mandate": m["label"],
-        "politician_id": m["politician"]["id"],
-        "politician": m["politician"]["label"],
-        "politician_url": m["politician"]["abgeordnetenwatch_url"],
-        "start_date": m["start_date"],
-        "end_date": m["end_date"],
-        "constituency_id": handle_constituency(
-            m, "id"
-        ),  #  m['electoral_data']['constituency']['id']
-        "constituency_name": handle_constituency(
-            m, "label"
-        ),  # m['electoral_data']['constituency']['label'],
+        "legislature_id": mandate.parliament_period.id,
+        "legislature_period": mandate.parliament_period.label,
+        "mandate_id": mandate.id,
+        "mandate": mandate.label,
+        "politician_id": mandate.politician.id,
+        "politician": mandate.politician.label,
+        "politician_url": mandate.politician.abgeordnetenwatch_url,
+        "start_date": mandate.start_date,
+        "end_date": mandate.end_date,
+        "constituency_id": mandate.electoral_data.constituency.id
+        if mandate.electoral_data.constituency is not None
+        else None,
+        "constituency_name": mandate.electoral_data.constituency.label
+        if mandate.electoral_data.constituency is not None
+        else None,
     }
-    if "fraction_membership" in m:
+
+    if mandate.fraction_membership is not None:
         d.update(
             {
                 "fraction_names": [
-                    _m["label"] for _m in m["fraction_membership"]
+                    _m.label for _m in mandate.fraction_membership
                 ],
-                "fraction_ids": [_m["id"] for _m in m["fraction_membership"]],
+                "fraction_ids": [_m.id for _m in mandate.fraction_membership],
                 "fraction_starts": [
-                    _m["valid_from"] for _m in m["fraction_membership"]
+                    _m.valid_from for _m in mandate.fraction_membership
                 ],
                 "fraction_ends": [
-                    _m["valid_until"] for _m in m["fraction_membership"]
+                    _m.valid_until for _m in mandate.fraction_membership
                 ],
             }
         )
     return d
 
 
-def get_mandates_df(legislature_id: int, test: bool = True, path: Path = None):
+def get_mandates_df(legislature_id: int, path: Path = None) -> pd.DataFrame:
     "Parses info from mandate json file(s) for `legislature_id`"
     info = load_mandate_json(legislature_id, path=path)
-    df = pd.DataFrame([parse_mandate_data(v) for v in info["data"]])
-    # if test:
-    #     test_mandate_data(df)
+    mandates = schemas.MandatesResponse(**info)
+    df = pd.DataFrame([parse_mandate_data(m) for m in mandates.data])
     return df
 
 
-def get_vote_info(poll_id: int, dry=False):
+def request_vote_data(poll_id: int, dry=False) -> dict:
     url = f"https://www.abgeordnetenwatch.de/api/v2/polls/{poll_id}"
     params = {"related_data": "votes"}  # collecting parlamentarians' votes
     if dry:
@@ -233,7 +228,7 @@ def votes_file(legislature_id: int, poll_id: int):
     return f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
 
 
-def store_vote_info(votes: dict, poll_id: int, dry=False, path: Path = None):
+def store_vote_json(votes: dict, poll_id: int, dry=False, path: Path = None):
     if dry:
         logger.debug(
             f"Dry mode - Writing votes info to {get_location(votes_file(None, poll_id), path=path, dry=dry, mkdir=False)}"
@@ -245,53 +240,51 @@ def store_vote_info(votes: dict, poll_id: int, dry=False, path: Path = None):
         votes_file(legislature_id, poll_id), path=path, dry=dry, mkdir=True
     )
 
-    # if votes_path is None:
-    #     votes_path = ABGEORDNETENWATCH_PATH / f"votes_legislature_{legislature_id}"
-    # votes_path.mkdir(exist_ok=True)
-    # votes_path = votes_path / f"poll_{poll_id}_votes.json"
-
     logger.debug(f"Writing votes info to {file}")
 
     with open(file, "w", encoding="utf8") as f:
         json.dump(votes, f)
 
 
-def load_vote_json(legislature_id: int, poll_id: int, path: Path = None):
-    # legislature_id = votes["data"]["field_legislature"]["id"]
+def load_vote_json(
+    legislature_id: int, poll_id: int, path: Path = None
+) -> dict:
     file = get_location(
         votes_file(legislature_id, poll_id), path=path, dry=False, mkdir=False
     )
-    # votes_path = (
-    #     ABGEORDNETENWATCH_PATH
-    #     / f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
-    # )
+
     logger.debug(f"Reading vote info from {file}")
     with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
     return info
 
 
-def parse_vote_data(vote):
+def parse_vote_data(vote: schemas.Vote) -> dict:
     d = {
-        "mandate_id": vote["mandate"]["id"],
-        "mandate": vote["mandate"]["label"],
-        "poll_id": vote["poll"]["id"],
-        "vote": vote["vote"],
-        "reason_no_show": vote["reason_no_show"],
-        "reason_no_show_other": vote["reason_no_show_other"],
+        "mandate_id": vote.mandate.id,
+        "mandate": vote.mandate.label,
+        "poll_id": vote.poll.id,
+        "vote": vote.vote,
+        "reason_no_show": vote.reason_no_show,
+        "reason_no_show_other": vote.reason_no_show_other,
     }
+
     return d
 
 
 # TODO: add optional pandera schema validation
-def get_votes_df(legislature_id: int, poll_id: int, path: Path = None):
+def get_votes_df(
+    legislature_id: int, poll_id: int, path: Path = None
+) -> pd.DataFrame:
     "Parses info from vote json files for `legislature_id` and `poll_id`"
     info = load_vote_json(legislature_id, poll_id, path=path)
+    votes = schemas.VoteResponse(**info)
     df = pd.DataFrame(
-        [parse_vote_data(v) for v in info["data"]["related_data"]["votes"]]
+        [
+            parse_vote_data(v) for v in votes.data.related_data.votes
+        ]  # info["data"]["related_data"]["votes"]]
     )
-    # if test:
-    #     test_vote_data(df)
+
     return df
 
 
@@ -327,7 +320,7 @@ def check_stored_vote_ids(legislature_id: int, path: Path):
         return all_ids
 
 
-def get_all_remaining_vote_info(
+def get_all_remaining_vote_data(
     legislature_id: int,
     dry: bool = False,
     t_sleep: float = 1,
@@ -363,8 +356,8 @@ def get_all_remaining_vote_info(
         _t = t_sleep + abs(dt_rv.rvs())
         if not dry:
             time.sleep(_t)
-        info = get_vote_info(poll_id, dry=dry)
-        store_vote_info(info, poll_id, dry=dry, path=path)
+        info = request_vote_data(poll_id, dry=dry)
+        store_vote_json(info, poll_id, dry=dry, path=path)
     logger.debug(
         f"vote collection for legislature_id {legislature_id} complete (dry = {dry})"
     )

@@ -1,3 +1,5 @@
+import json
+import typing as T
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
@@ -6,7 +8,8 @@ import pandas as pd
 import pytest
 import requests
 
-from bundestag import abgeordnetenwatch as aw
+import bundestag.abgeordnetenwatch as aw
+import bundestag.schemas as schemas
 
 
 def test_get_location():
@@ -17,16 +20,210 @@ def test_get_location():
     assert file == path / fname
 
 
+@pytest.fixture(scope="module")
+def poll_response_raw() -> dict:
+    response = json.load(
+        open("src/tests/data/polls_legislature_111.json", "r")
+    )
+    return response
+
+
+@pytest.fixture(scope="module")
+def mandates_response_raw() -> dict:
+    response = json.load(
+        open("src/tests/data/mandates_legislature_111.json", "r")
+    )
+    return response
+
+
+@pytest.fixture(scope="module")
+def votes_response_raw() -> dict:
+    response = json.load(open("src/tests/data/poll_4217_votes.json", "r"))
+    return response
+
+
+POLL_DATA_PARSED = {
+    "poll_id": 4293,
+    "poll_title": "Änderung des Infektionsschutzgesetzes und Grundrechtseinschränkungen",
+    "poll_first_committee": "Haushaltsausschuss",
+    "poll_description": "Ein von den Fraktionen der CDU/CSU und SPD eingebrachter Gesetzentwurf zur Hilfe für Flutopfer in Deutschland sieht auch Änderungen des Infektionsschutzgesetzes vor. Diese sollen unter anderem in bestimmten Einrichtungen eine Auskunftspflicht von Mitarbeiter:innen zu ihrem Impf- oder Genesenenstatus ermöglichen.\nIm Vorfeld hatte die Opposition für das Gesetzespaket eine namentliche Abstimmung nur über die Punkte verlangt, die auch das Infektionsschutzgesetz betreffen.\nDie Neuregelungen wurden mit 344 Ja-Stimmen der Unions- und SPD-Fraktion gegen 280 Nein-Stimmen der Oppositionsfraktionen sowie einzelner Abgeordneter der Union und SPD angenommen. Lediglich eine Abgeordnete hatte sich bei der Abstimmung enthalten.",
+    "legislature_id": 111,
+    "legislature_period": "Bundestag 2017 - 2021",
+    "poll_date": "2021-09-07",
+}
+
+MANDATE_DATA_PARSED = {
+    "legislature_id": 111,
+    "legislature_period": "Bundestag 2017 - 2021",
+    "mandate_id": 52657,
+    "mandate": "Zeki Gökhan (Bundestag 2017 - 2021)",
+    "politician_id": 122163,
+    "politician": "Zeki Gökhan",
+    "politician_url": "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
+    "start_date": "2021-08-19",
+    "end_date": None,
+    "constituency_id": 4215,
+    "constituency_name": "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
+    "fraction_names": ["DIE LINKE seit 19.08.2021"],
+    "fraction_ids": [9233],
+    "fraction_starts": ["2021-08-19"],
+    "fraction_ends": [None],
+}
+
+VOTE_DATA_PARSED = {
+    "mandate_id": 45467,
+    "mandate": "Michael von Abercron (Bundestag 2017 - 2021)",
+    "poll_id": 4217,
+    "vote": "yes",
+    "reason_no_show": None,
+    "reason_no_show_other": None,
+}
+
+POLLS_DF = pd.DataFrame(
+    {
+        "poll_id": {0: 4293, 1: 4284},
+        "poll_title": {
+            0: "Änderung des Infektionsschutzgesetzes und Grundrechtseinschränkungen",
+            1: "Fortbestand der epidemischen Lage von nationaler Tragweite",
+        },
+        "poll_first_committee": {
+            0: "Haushaltsausschuss",
+            1: "Ausschuss für Gesundheit",
+        },
+        "poll_description": {
+            0: "Ein von den Fraktionen der CDU/CSU und SPD eingebrachter Gesetzentwurf zur Hilfe für Flutopfer in Deutschland sieht auch Änderungen des Infektionsschutzgesetzes vor. Diese sollen unter anderem in bestimmten Einrichtungen eine Auskunftspflicht von Mitarbeiter:innen zu ihrem Impf- oder Genesenenstatus ermöglichen.\nIm Vorfeld hatte die Opposition für das Gesetzespaket eine namentliche Abstimmung nur über die Punkte verlangt, die auch das Infektionsschutzgesetz betreffen.\nDie Neuregelungen wurden mit 344 Ja-Stimmen der Unions- und SPD-Fraktion gegen 280 Nein-Stimmen der Oppositionsfraktionen sowie einzelner Abgeordneter der Union und SPD angenommen. Lediglich eine Abgeordnete hatte sich bei der Abstimmung enthalten.",
+            1: "Der von den Fraktionen der CDU/CSU und SPD eingebrachte Antrag sieht vor, dass der Bundestag feststellt, dass die seit dem 25. März 2020 geltende epidemische Lage von nationaler Tragweite weiter fortbesteht. Das wird damit begründet, dass angesichts des erneuten Anstiegs der COVID-19-Fallzahlen in Deutschland weiterhin eine erhebliche Gesundheitsgefährdung der Bevölkerung gegeben sei.\nDer Antrag wurde mit 325 Ja-Stimmen der CDU- und SPD-Fraktion gegen 252 Nein-Stimmen der Oppositionsfraktionen angenommen. Fünf Abgeordnete haben sich enthalten.",
+        },
+        "legislature_id": {0: 111, 1: 111},
+        "legislature_period": {
+            0: "Bundestag 2017 - 2021",
+            1: "Bundestag 2017 - 2021",
+        },
+        "poll_date": {0: "2021-09-07", 1: "2021-08-25"},
+    }
+)
+
+MANDATES_DF = pd.DataFrame(
+    {
+        "legislature_id": {0: 111, 1: 111},
+        "legislature_period": {
+            0: "Bundestag 2017 - 2021",
+            1: "Bundestag 2017 - 2021",
+        },
+        "mandate_id": {0: 52657, 1: 52107},
+        "mandate": {
+            0: "Zeki Gökhan (Bundestag 2017 - 2021)",
+            1: "Florian Jäger (Bundestag 2017 - 2021)",
+        },
+        "politician_id": {0: 122163, 1: 121214},
+        "politician": {0: "Zeki Gökhan", 1: "Florian Jäger"},
+        "politician_url": {
+            0: "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
+            1: "https://www.abgeordnetenwatch.de/profile/florian-jaeger",
+        },
+        "start_date": {0: "2021-08-19", 1: "2021-07-20"},
+        "end_date": {0: None, 1: None},
+        "constituency_id": {0: 4215, 1: 4339},
+        "constituency_name": {
+            0: "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
+            1: "215 - Fürstenfeldbruck (Bundestag 2017 - 2021)",
+        },
+        "fraction_names": {
+            0: ["DIE LINKE seit 19.08.2021"],
+            1: ["AfD seit 20.07.2021"],
+        },
+        "fraction_ids": {0: [9233], 1: [9228]},
+        "fraction_starts": {0: ["2021-08-19"], 1: ["2021-07-20"]},
+        "fraction_ends": {0: [None], 1: [None]},
+    }
+)
+
+VOTES_DF = pd.DataFrame(
+    {
+        "mandate_id": {0: 45467, 1: 44472},
+        "mandate": {
+            0: "Michael von Abercron (Bundestag 2017 - 2021)",
+            1: "Stephan Albani (Bundestag 2017 - 2021)",
+        },
+        "poll_id": {0: 4217, 1: 4217},
+        "vote": {0: "yes", 1: "yes"},
+        "reason_no_show": {0: None, 1: None},
+        "reason_no_show_other": {0: None, 1: None},
+    }
+)
+
+
+def test_parse_poll_response(poll_response_raw: dict):
+    response = schemas.PollResponse(**poll_response_raw)
+    data = response.data[0]
+    res = aw.parse_poll_data(data)
+
+    assert set(list(POLL_DATA_PARSED.keys())) == set(list(res.keys()))
+    for k in POLL_DATA_PARSED.keys():
+        assert POLL_DATA_PARSED[k] == res[k]
+
+
+def test_parse_mandate_response(mandates_response_raw: dict):
+    response = schemas.MandatesResponse(**mandates_response_raw)
+    data = response.data[0]
+    res = aw.parse_mandate_data(data)
+
+    assert all([k in res for k in MANDATE_DATA_PARSED])
+    for k in MANDATE_DATA_PARSED.keys():
+        assert MANDATE_DATA_PARSED[k] == res[k]
+
+
+def test_parse_vote_response(votes_response_raw):
+    response = schemas.VoteResponse(**votes_response_raw)
+    data = response.data.related_data.votes[0]
+    res = aw.parse_vote_data(data)
+
+    assert all([k in res for k in VOTE_DATA_PARSED])
+    for k in VOTE_DATA_PARSED.keys():
+        assert VOTE_DATA_PARSED[k] == res[k]
+
+
+def test_get_polls_df(poll_response_raw: dict):
+    with patch(
+        "bundestag.abgeordnetenwatch.load_polls_json",
+        MagicMock(return_value=poll_response_raw),
+    ):
+        res = aw.get_polls_df(42, "dummy/path")
+        assert res.equals(POLLS_DF)
+
+
+def test_get_mandates_df(mandates_response_raw: dict):
+    with patch(
+        "bundestag.abgeordnetenwatch.load_mandate_json",
+        MagicMock(return_value=mandates_response_raw),
+    ):
+        res = aw.get_mandates_df(42, "dummy/path")
+        assert res.equals(MANDATES_DF)
+
+
+def test_get_votes_df(votes_response_raw: dict):
+    with patch(
+        "bundestag.abgeordnetenwatch.load_vote_json",
+        MagicMock(return_value=votes_response_raw),
+    ):
+        res = aw.get_votes_df(42, 21, "dummy/path")
+        assert res.equals(VOTES_DF)
+
+
 @pytest.mark.parametrize(
-    "dry,status_code",
+    "func,dry,status_code",
     [
-        (True, 200),
-        (False, 200),
-        (True, 201),
-        (False, 201),
+        (func, dry, status_code)
+        for func in [
+            aw.request_poll_data,
+            aw.request_mandates_data,
+            aw.request_vote_data,
+        ]
+        for dry in [True, False]
+        for status_code in [200, 201]
     ],
 )
-def test_get_poll_info(dry: bool, status_code: int):
+def test_request_data(func: T.Callable, dry: bool, status_code: int):
     r = requests.Response()
     r.status_code = status_code
     r.url = "blub"
@@ -35,7 +232,7 @@ def test_get_poll_info(dry: bool, status_code: int):
     ) as _get, patch.object(r, "json", MagicMock()):
         # line to test
         try:
-            aw.get_poll_info(42, dry=dry)
+            func(42, dry=dry)
         except AssertionError as ex:
             if status_code != 200:
                 pytest.xfail(
@@ -52,6 +249,14 @@ def test_get_poll_info(dry: bool, status_code: int):
 
 def test_polls_file():
     assert aw.polls_file(42) == "polls_legislature_42.json"
+
+
+def test_mandates_file():
+    assert aw.mandates_file(42) == "mandates_legislature_42.json"
+
+
+def test_votes_file():
+    assert aw.votes_file(42, 21) == "votes_legislature_42/poll_21_votes.json"
 
 
 @pytest.mark.parametrize("dry", [True, False])
@@ -77,6 +282,51 @@ def test_store_polls_json(dry: bool):
 
 
 @pytest.mark.parametrize("dry", [True, False])
+def test_store_mandates_json(dry: bool):
+    polls = {}
+    legislature_id = 42
+    path = Path("file/path")
+
+    with (
+        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
+        patch("builtins.open", new_callable=mock_open()) as _open,
+        patch("json.dump", MagicMock()) as json_dump,
+    ):
+        # line to test
+        aw.store_mandates_json(polls, legislature_id, dry=dry, path=path)
+
+        assert _mkdir.call_count == 0
+        if dry:
+            assert _open.call_count == 0
+        else:
+            assert _open.call_count == 1
+            json_dump.assert_called_once()
+
+
+@pytest.mark.parametrize("dry", [True, False])
+def test_store_vote_json(dry: bool):
+    votes = {"data": {"field_legislature": {"id": 21}}}
+    poll_id = 42
+    path = Path("file/path")
+
+    with (
+        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
+        patch("builtins.open", new_callable=mock_open()) as _open,
+        patch("json.dump", MagicMock()) as json_dump,
+    ):
+        # line to test
+        aw.store_vote_json(votes, poll_id, dry=dry, path=path)
+
+        if dry:
+            assert _open.call_count == 0
+            assert _mkdir.call_count == 0
+        else:
+            assert _open.call_count == 1
+            assert _mkdir.call_count == 1
+            json_dump.assert_called_once()
+
+
+@pytest.mark.parametrize("dry", [True, False])
 def test_load_polls_json(dry: bool):
     legislature_id = 42
     path = Path("file/path")
@@ -92,170 +342,6 @@ def test_load_polls_json(dry: bool):
         assert json_load.call_count == 1
         assert _open.call_count == 1
         assert _mkdir.call_count == 0
-
-
-POLL_DATA_RAW = {
-    "id": 1240,
-    "entity_type": "node",
-    "label": "Verl\u00e4ngerung des Bundeswehreinsatzes in Mali (MINUSMA 2017/2018)",
-    "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/1240",
-    "field_legislature": {
-        "id": 111,
-        "entity_type": "parliament_period",
-        "label": "Bundestag 2017 - 2021",
-        "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
-        "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19",
-    },
-    "field_topics": [
-        {
-            "id": 21,
-            "entity_type": "taxonomy_term",
-            "label": "Au\u00dfenpolitik und internationale Beziehungen",
-            "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/21",
-            "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/aussenpolitik-und-internationale-beziehungen",
-        },
-        {
-            "id": 13,
-            "entity_type": "taxonomy_term",
-            "label": "Verteidigung",
-            "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/13",
-            "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/verteidigung",
-        },
-    ],
-    "field_committees": None,
-    "field_intro": "<p>\r\n\tDer Bundestag hat mit den Stimmen von CDU/CSU, FDP, Gr\u00fcne und SPD f\u00fcr die Einsatzverl\u00e4ngerung der Bundeswehr der NATO-Mission MINUSMA gestimmt.\r\n</p>\r\n",
-    "field_poll_date": "2017-12-12",
-    "field_related_links": None,
-}
-
-POLL_DATA_PARSED = {
-    "poll_id": 1240,
-    "poll_title": "Verlängerung des Bundeswehreinsatzes in Mali (MINUSMA 2017/2018)",
-    "poll_first_committee": None,
-    "poll_description": "Der Bundestag hat mit den Stimmen von CDU/CSU, FDP, Grüne und SPD für die Einsatzverlängerung der Bundeswehr der NATO-Mission MINUSMA gestimmt.",
-    "legislature_id": 111,
-    "legislature_period": "Bundestag 2017 - 2021",
-    "poll_date": "2017-12-12",
-}
-
-
-def test_parse_poll_data():
-    res = aw.parse_poll_data(POLL_DATA_RAW)
-
-    assert set(list(POLL_DATA_PARSED.keys())) == set(list(res.keys()))
-    for k in POLL_DATA_PARSED.keys():
-        assert POLL_DATA_PARSED[k] == res[k]
-
-
-def test_get_polls_df():
-    info = {
-        "data": [
-            {
-                "id": 42,
-                "label": "wup",
-                "field_committees": [{"label": "wooop"}],
-                "field_intro": "bla",
-                "field_legislature": {"id": 21, "label": "bam"},
-                "field_poll_date": "2020-02-02",
-            }
-        ]
-    }
-    d = pd.DataFrame(
-        [
-            {
-                "poll_id": 42,
-                "poll_title": "wup",
-                "poll_first_committee": "wooop",
-                "poll_description": "bla",
-                "legislature_id": 21,
-                "legislature_period": "bam",
-                "poll_date": "2020-02-02",
-            }
-        ]
-    )
-    with patch(
-        "bundestag.abgeordnetenwatch.load_polls_json",
-        MagicMock(return_value=info),
-    ):
-        res = aw.get_polls_df(42, "dummy/path")
-        assert res.equals(d)
-
-
-# def test_poll_data(df: pd.DataFrame):
-#     "Basic sanity check on poll data"
-
-#     # there should be no missing values except for poll_first_committee
-#     for c in df.columns:
-#         msg = f"{c}: failed because NaNs/None values were found."
-#         mask = df[c].isna()
-#         if c == "poll_first_committee":
-#             continue
-#         assert mask.sum() == 0, f"{msg}: \n{df.loc[mask].head()}"
-
-#     # there should be no duplicated poll_id values
-#     mask = df["poll_id"].duplicated()
-#     assert (
-#         mask.sum() == 0
-#     ), f'Surprisingly found duplicated poll_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
-
-
-@pytest.mark.parametrize(
-    "dry,status_code",
-    [
-        (True, 200),
-        (False, 200),
-        (True, 201),
-        (False, 201),
-    ],
-)
-def test_get_mandates_info(dry: bool, status_code: int):
-    r = requests.Response()
-    r.status_code = status_code
-    r.url = "blub"
-    with patch(
-        "requests.get", MagicMock(return_value=r)
-    ) as _get, patch.object(r, "json", MagicMock()):
-        # line to test
-        try:
-            aw.get_poll_info(42, dry=dry)
-        except AssertionError as ex:
-            if status_code != 200:
-                pytest.xfail(
-                    "Not 200 status_code value should raise an exception"
-                )
-            else:
-                raise ex
-
-        if dry:
-            assert _get.call_count == 0
-        else:
-            assert _get.call_count == 1
-
-
-def test_mandates_file():
-    assert aw.mandates_file(42) == "mandates_legislature_42.json"
-
-
-@pytest.mark.parametrize("dry", [True, False])
-def test_store_mandates_info(dry: bool):
-    polls = {}
-    legislature_id = 42
-    path = Path("file/path")
-
-    with (
-        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
-        patch("builtins.open", new_callable=mock_open()) as _open,
-        patch("json.dump", MagicMock()) as json_dump,
-    ):
-        # line to test
-        aw.store_mandates_info(polls, legislature_id, dry=dry, path=path)
-
-        assert _mkdir.call_count == 0
-        if dry:
-            assert _open.call_count == 0
-        else:
-            assert _open.call_count == 1
-            json_dump.assert_called_once()
 
 
 @pytest.mark.parametrize("dry", [True, False])
@@ -274,192 +360,6 @@ def test_load_mandate_json(dry: bool):
         assert json_load.call_count == 1
         assert _open.call_count == 1
         assert _mkdir.call_count == 0
-
-
-MANDATE_DATA_RAW = {
-    "id": 37798,
-    "entity_type": "candidacy_mandate",
-    "label": "Alexander Graf Lambsdorff (Bundestag 2017 - 2021)",
-    "api_url": "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates/37798",
-    "id_external_administration": "2158",
-    "id_external_administration_description": "mdbID - ID der Bundestagsverwaltung",
-    "type": "mandate",
-    "parliament_period": {
-        "id": 111,
-        "entity_type": "parliament_period",
-        "label": "Bundestag 2017 - 2021",
-        "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
-        "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19",
-    },
-    "politician": {
-        "id": 28887,
-        "entity_type": "politician",
-        "label": "Alexander Graf Lambsdorff",
-        "api_url": "https://www.abgeordnetenwatch.de/api/v2/politicians/28887",
-        "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/profile/alexander-graf-lambsdorff",
-    },
-    "start_date": None,
-    "end_date": None,
-    "info": None,
-    "electoral_data": {
-        "id": 37798,
-        "entity_type": "electoral_data",
-        "label": "Alexander Graf Lambsdorff (Bundestag 2017 - 2021)",
-        "electoral_list": {
-            "id": 115,
-            "entity_type": "electoral_list",
-            "label": "Landesliste Nordrhein-Westfalen (Bundestag 2017 - 2021)",
-            "api_url": "https://www.abgeordnetenwatch.de/api/v2/electoral-lists/115",
-        },
-        "list_position": 3,
-        "constituency": {
-            "id": 4220,
-            "entity_type": "constituency",
-            "label": "96 - Bonn (Bundestag 2017 - 2021)",
-            "api_url": "https://www.abgeordnetenwatch.de/api/v2/constituencies/4220",
-        },
-        "constituency_result": 10.5,
-        "constituency_result_count": None,
-        "mandate_won": "list",
-    },
-    "fraction_membership": [
-        {
-            "id": 16,
-            "entity_type": "fraction_membership",
-            "label": "FDP",
-            "fraction": {
-                "id": 14,
-                "entity_type": "fraction",
-                "label": "FDP (Bundestag 2017 - 2021)",
-                "api_url": "https://www.abgeordnetenwatch.de/api/v2/fractions/14",
-            },
-            "valid_from": None,
-            "valid_until": None,
-        }
-    ],
-}
-
-MANDATE_DATA_PARSED = {
-    "legislature_id": 111,
-    "legislature_period": "Bundestag 2017 - 2021",
-    "mandate_id": 37798,
-    "mandate": "Alexander Graf Lambsdorff (Bundestag 2017 - 2021)",
-    "politician_id": 28887,
-    "politician": "Alexander Graf Lambsdorff",
-    "politician_url": "https://www.abgeordnetenwatch.de/profile/alexander-graf-lambsdorff",
-    "start_date": None,
-    "end_date": None,
-    "constituency_id": 4220,
-    "constituency_name": "96 - Bonn (Bundestag 2017 - 2021)",
-    "fraction_names": ["FDP"],
-    "fraction_ids": [16],
-    "fraction_starts": [None],
-    "fraction_ends": [None],
-}
-
-
-def test_parse_mandate_data():
-    res = aw.parse_mandate_data(MANDATE_DATA_RAW)
-
-    assert all([k in res for k in MANDATE_DATA_PARSED])
-    for k in MANDATE_DATA_PARSED.keys():
-        assert MANDATE_DATA_PARSED[k] == res[k]
-
-
-# def test_mandate_data(df: pd.DataFrame):
-#     "Basic sanity check on mandate data"
-
-#     # there should be no missing values for any column in `cols`
-#     cols = ["mandate_id", "mandate", "politician_id", "politician"]
-#     for c in cols:
-#         msg = f"{c}: failed because NaNs/None values were found."
-#         mask = df[c].isna()
-#         assert mask.sum() == 0, f"{msg}: \n{df.loc[mask].head()}"
-
-#     # there should only be one id value for those columns in `cols` each
-#     cols = ["legislature_id", "legislature_period"]
-#     for c in cols:
-#         ids = df[c].unique()
-#         msg = f"Surprisingly found multiple {c} values: {ids}"
-#         assert len(ids) == 1, msg
-
-#     # there should be no duplicate mandate_id and politician_id values
-#     cols = ["mandate_id", "politician_id"]
-#     for c in cols:
-#         mask = df[c].duplicated()
-#         assert (
-#             mask.sum() == 0
-#         ), f"Surprisingly found duplicated {c} values: {df.loc[mask,c].unique()} \nexamples: \n{df.loc[mask].head()}"
-
-
-def test_get_mandates_df():
-    d = pd.DataFrame([MANDATE_DATA_PARSED])
-    with patch(
-        "bundestag.abgeordnetenwatch.load_mandate_json",
-        MagicMock(return_value={"data": [MANDATE_DATA_RAW]}),
-    ):
-        res = aw.get_mandates_df(42, "dummy/path")
-        assert res.equals(d)
-
-
-@pytest.mark.parametrize(
-    "dry,status_code",
-    [
-        (True, 200),
-        (False, 200),
-        (True, 201),
-        (False, 201),
-    ],
-)
-def test_get_vote_info(dry: bool, status_code: int):
-    r = requests.Response()
-    r.status_code = status_code
-    r.url = "blub"
-    with patch(
-        "requests.get", MagicMock(return_value=r)
-    ) as _get, patch.object(r, "json", MagicMock()):
-        # line to test
-        try:
-            aw.get_vote_info(42, dry=dry)
-        except AssertionError as ex:
-            if status_code != 200:
-                pytest.xfail(
-                    "Not 200 status_code value should raise an exception"
-                )
-            else:
-                raise ex
-
-        if dry:
-            assert _get.call_count == 0
-        else:
-            assert _get.call_count == 1
-
-
-def test_votes_file():
-    assert aw.votes_file(42, 21) == "votes_legislature_42/poll_21_votes.json"
-
-
-@pytest.mark.parametrize("dry", [True, False])
-def test_store_vote_info(dry: bool):
-    votes = {"data": {"field_legislature": {"id": 21}}}
-    poll_id = 42
-    path = Path("file/path")
-
-    with (
-        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
-        patch("builtins.open", new_callable=mock_open()) as _open,
-        patch("json.dump", MagicMock()) as json_dump,
-    ):
-        # line to test
-        aw.store_vote_info(votes, poll_id, dry=dry, path=path)
-
-        if dry:
-            assert _open.call_count == 0
-            assert _mkdir.call_count == 0
-        else:
-            assert _open.call_count == 1
-            assert _mkdir.call_count == 1
-            json_dump.assert_called_once()
 
 
 @pytest.mark.parametrize("dry", [True, False])
@@ -481,50 +381,42 @@ def test_load_vote_json(dry: bool):
         assert _mkdir.call_count == 0
 
 
-VOTE_DATA_RAW = {
-    "id": 83519,
-    "entity_type": "vote",
-    "label": "Bernd Baumann - Verl\u00e4ngerung Ausbildungsfortsetzung Irak",
-    "api_url": "https://www.abgeordnetenwatch.de/api/v2/votes/83519",
-    "mandate": {
-        "id": 45234,
-        "entity_type": "candidacy_mandate",
-        "label": "Bernd Baumann (Bundestag 2017 - 2021)",
-        "api_url": "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates/45234",
-    },
-    "poll": {
-        "id": 1237,
-        "entity_type": "node",
-        "label": "Verl\u00e4ngerung Ausbildungsfortsetzung Irak",
-        "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/1237",
-    },
-    "vote": "no",
-    "reason_no_show": None,
-    "reason_no_show_other": None,
-    "fraction": {
-        "id": 56,
-        "entity_type": "fraction",
-        "label": "AfD (Bundestag 2017 - 2021)",
-        "api_url": "https://www.abgeordnetenwatch.de/api/v2/fractions/56",
-    },
-}
+# VOTE_DATA_RAW = {
+#     "id": 83519,
+#     "entity_type": "vote",
+#     "label": "Bernd Baumann - Verl\u00e4ngerung Ausbildungsfortsetzung Irak",
+#     "api_url": "https://www.abgeordnetenwatch.de/api/v2/votes/83519",
+#     "mandate": {
+#         "id": 45234,
+#         "entity_type": "candidacy_mandate",
+#         "label": "Bernd Baumann (Bundestag 2017 - 2021)",
+#         "api_url": "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates/45234",
+#     },
+#     "poll": {
+#         "id": 1237,
+#         "entity_type": "node",
+#         "label": "Verl\u00e4ngerung Ausbildungsfortsetzung Irak",
+#         "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/1237",
+#     },
+#     "vote": "no",
+#     "reason_no_show": None,
+#     "reason_no_show_other": None,
+#     "fraction": {
+#         "id": 56,
+#         "entity_type": "fraction",
+#         "label": "AfD (Bundestag 2017 - 2021)",
+#         "api_url": "https://www.abgeordnetenwatch.de/api/v2/fractions/56",
+#     },
+# }
 
-VOTE_DATA_PARSED = {
-    "mandate_id": 45234,
-    "mandate": "Bernd Baumann (Bundestag 2017 - 2021)",
-    "poll_id": 1237,
-    "vote": "no",
-    "reason_no_show": None,
-    "reason_no_show_other": None,
-}
-
-
-def test_parse_vote_data():
-    res = aw.parse_vote_data(VOTE_DATA_RAW)
-
-    assert all([k in res for k in VOTE_DATA_PARSED])
-    for k in VOTE_DATA_PARSED.keys():
-        assert VOTE_DATA_PARSED[k] == res[k]
+# VOTE_DATA_PARSED = {
+#     "mandate_id": 45234,
+#     "mandate": "Bernd Baumann (Bundestag 2017 - 2021)",
+#     "poll_id": 1237,
+#     "vote": "no",
+#     "reason_no_show": None,
+#     "reason_no_show_other": None,
+# }
 
 
 # def test_vote_data(df):
@@ -547,16 +439,6 @@ def test_parse_vote_data():
 #     assert (
 #         mask.sum() == 0
 #     ), f'Surprisingly found duplicated mandate_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
-
-
-def test_get_votes_df():
-    j = {"data": {"related_data": {"votes": [VOTE_DATA_RAW]}}}
-    d = pd.DataFrame([VOTE_DATA_PARSED])
-    with patch(
-        "bundestag.abgeordnetenwatch.load_vote_json", MagicMock(return_value=j)
-    ):
-        res = aw.get_votes_df(42, 21, "dummy/path")
-        assert res.equals(d)
 
 
 @pytest.mark.skip("to be implemented")
@@ -616,7 +498,7 @@ class TestDataCollection(unittest.TestCase):
         # return super().tearDown()
 
     def test_0_get_poll_info(self):
-        polls = aw.get_poll_info(
+        polls = aw.request_poll_data(
             self.legislature_id, dry=self.dry, num_polls=self.num_polls
         )
         aw.store_polls_json(
@@ -632,10 +514,10 @@ class TestDataCollection(unittest.TestCase):
         aw.test_poll_data(df)
 
     def test_2_get_mandate_info(self):
-        mandates = aw.get_mandates_info(
+        mandates = aw.request_mandates_data(
             self.legislature_id, dry=self.dry, num_mandates=self.num_mandates
         )
-        aw.store_mandates_info(
+        aw.store_mandates_json(
             mandates, self.legislature_id, dry=self.dry, path=self.write_path
         )
         if not self.dry:
@@ -648,8 +530,8 @@ class TestDataCollection(unittest.TestCase):
         aw.test_mandate_data(df)
 
     def test_4_get_vote_info(self):
-        votes = aw.get_vote_info(self.poll_id, dry=self.dry)
-        aw.store_vote_info(
+        votes = aw.request_vote_data(self.poll_id, dry=self.dry)
+        aw.store_vote_json(
             votes, self.poll_id, dry=self.dry, path=self.write_path
         )
         if not self.dry:
