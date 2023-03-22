@@ -381,44 +381,6 @@ def test_load_vote_json(dry: bool):
         assert _mkdir.call_count == 0
 
 
-# VOTE_DATA_RAW = {
-#     "id": 83519,
-#     "entity_type": "vote",
-#     "label": "Bernd Baumann - Verl\u00e4ngerung Ausbildungsfortsetzung Irak",
-#     "api_url": "https://www.abgeordnetenwatch.de/api/v2/votes/83519",
-#     "mandate": {
-#         "id": 45234,
-#         "entity_type": "candidacy_mandate",
-#         "label": "Bernd Baumann (Bundestag 2017 - 2021)",
-#         "api_url": "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates/45234",
-#     },
-#     "poll": {
-#         "id": 1237,
-#         "entity_type": "node",
-#         "label": "Verl\u00e4ngerung Ausbildungsfortsetzung Irak",
-#         "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/1237",
-#     },
-#     "vote": "no",
-#     "reason_no_show": None,
-#     "reason_no_show_other": None,
-#     "fraction": {
-#         "id": 56,
-#         "entity_type": "fraction",
-#         "label": "AfD (Bundestag 2017 - 2021)",
-#         "api_url": "https://www.abgeordnetenwatch.de/api/v2/fractions/56",
-#     },
-# }
-
-# VOTE_DATA_PARSED = {
-#     "mandate_id": 45234,
-#     "mandate": "Bernd Baumann (Bundestag 2017 - 2021)",
-#     "poll_id": 1237,
-#     "vote": "no",
-#     "reason_no_show": None,
-#     "reason_no_show_other": None,
-# }
-
-
 # def test_vote_data(df):
 #     "Basic sanity check on vote data"
 
