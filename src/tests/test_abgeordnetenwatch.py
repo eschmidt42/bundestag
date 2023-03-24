@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
 
 import pandas as pd
+import pandera as pa
 import pytest
 import requests
 
@@ -422,19 +423,65 @@ def test_get_all_remaining_vote_info():
     pass
 
 
-@pytest.mark.skip("to be implemented")
-def test_compile_votes_data():
-    pass
+@pytest.mark.parametrize("n", [1, 2])
+def test_compile_votes_data(n):
+    with patch(
+        "bundestag.abgeordnetenwatch.get_votes_df",
+        MagicMock(return_value=VOTES_DF),
+    ), patch(
+        "bundestag.abgeordnetenwatch.check_stored_vote_ids",
+        MagicMock(return_value={42: list(range(n))}),
+    ):
+        # line to test
+        try:
+            _ = aw.compile_votes_data(42, "dummy/path", validate=True)
+        except pa.errors.SchemaError as ex:
+            if n > 1:
+                pytest.xfail(
+                    "Duplicate poll_id-mandate_id combinations lead to schema error"
+                )
+            else:
+                raise ex
 
 
-@pytest.mark.skip("to be implemented")
-def test_get_party_from_fraction_string():
-    pass
+@pytest.mark.parametrize(
+    "entries,targets",
+    [
+        (["DIE LINKE seit 19.08.2021"], ["DIE LINKE"]),
+        (
+            ["AfD seit 20.07.2021", "CDU/CSU seit 01.07.2021"],
+            ["AfD", "CDU/CSU"],
+        ),
+        ([], []),
+        (None, ["unknown"]),
+    ],
+)
+def test_get_parties_from_col(entries: T.List[str], targets: T.List[str]):
+    col = "fraction_names"
+    row = pd.Series({col: entries})
+    # line to test
+    res = aw.get_parties_from_col(row, col=col, missing="unknown")
+    assert all([targ == res[i] for i, targ in enumerate(targets)])
 
 
-@pytest.mark.skip("to be implemented")
 def test_get_politician_names():
-    pass
+    col = "mandate"
+    df = pd.DataFrame(
+        {
+            col: [
+                "Zeki Gökhan (Bundestag 2017 - 2021)",
+                "bla blaaaa blah (Bundestag 2017 - 2021)",
+                "wup (Bundestag 2022 - 2025)",
+            ]
+        }
+    )
+
+    # line to test
+    names = aw.get_politician_names(df, col=col)
+
+    assert names[0] == "Zeki Gökhan"
+    assert names[1] == "bla blaaaa blah"
+    assert names[2] == "wup"
 
 
 @pytest.mark.skip("Currently not functioning because no data")

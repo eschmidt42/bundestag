@@ -272,18 +272,21 @@ def parse_vote_data(vote: schemas.Vote) -> dict:
     return d
 
 
-# TODO: add optional pandera schema validation
 def get_votes_df(
-    legislature_id: int, poll_id: int, path: Path = None
+    legislature_id: int,
+    poll_id: int,
+    path: Path = None,
+    validate: bool = False,
 ) -> pd.DataFrame:
     "Parses info from vote json files for `legislature_id` and `poll_id`"
     info = load_vote_json(legislature_id, poll_id, path=path)
     votes = schemas.VoteResponse(**info)
     df = pd.DataFrame(
-        [
-            parse_vote_data(v) for v in votes.data.related_data.votes
-        ]  # info["data"]["related_data"]["votes"]]
+        [parse_vote_data(v) for v in votes.data.related_data.votes]
     )
+
+    if validate:
+        schemas.VOTES.validate(df)
 
     return df
 
@@ -325,7 +328,6 @@ def get_all_remaining_vote_data(
     dry: bool = False,
     t_sleep: float = 1,
     dt_rv_scale: float = 0.1,
-    test: bool = True,
     path: Path = None,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
@@ -363,7 +365,9 @@ def get_all_remaining_vote_data(
     )
 
 
-def compile_votes_data(legislature_id: int, path: Path = None):
+def compile_votes_data(
+    legislature_id: int, path: Path = None, validate: bool = False
+):
     "Compiles the individual politicians' votes for a specific legislature period"
 
     known_id_combos = check_stored_vote_ids(
@@ -378,7 +382,7 @@ def compile_votes_data(legislature_id: int, path: Path = None):
         total=len(known_id_combos[legislature_id]),
         desc="poll_id",
     ):
-        df = get_votes_df(legislature_id, poll_id, test=False, path=path)
+        df = get_votes_df(legislature_id, poll_id, path=path, validate=False)
 
         ids = df.loc[
             df.duplicated(subset=["mandate_id"]), "mandate_id"
@@ -392,20 +396,33 @@ def compile_votes_data(legislature_id: int, path: Path = None):
 
         df_all_votes.append(df)
 
-    return pd.concat(df_all_votes, ignore_index=True)
+    df_all_votes = pd.concat(df_all_votes, ignore_index=True)
+
+    if validate:
+        schemas.VOTES.validate(df_all_votes)
+    return df_all_votes
 
 
 PARTY_PATTERN = re.compile("(.+)\sseit")
 
 
-def get_party_from_fraction_string(row, col="fraction_names"):
-    x = row[col]
-    if not isinstance(x, list):
-        return "unknown"
-    elif len(x) > 0 and "seit" not in x[0]:
-        return x[0]
+def extract_party_from_string(s: str) -> str:
+    if not isinstance(s, str):
+        raise ValueError(f"Expected {s=} to be of type string.")
+    elif "seit" in s:
+        return PARTY_PATTERN.search(s).groups()[0]
     else:
-        return PARTY_PATTERN.search(x[0]).groups()[0]
+        return s
+
+
+def get_parties_from_col(
+    row: pd.Series, col="fraction_names", missing: str = "unknonw"
+):
+    strings = row[col]
+    if strings is None or not isinstance(strings, list):
+        return [missing]
+    else:
+        return [extract_party_from_string(s) for s in strings]
 
 
 def get_politician_names(df: pd.DataFrame, col="mandate"):

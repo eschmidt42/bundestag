@@ -1,5 +1,7 @@
 import typing as T
 
+import pandera as pa
+from pandera import Check, Column, DataFrameSchema, Index, MultiIndex
 from pydantic import BaseModel
 
 
@@ -211,3 +213,92 @@ class VoteMeta(BaseModel):
 class VoteResponse(BaseModel):
     meta: VoteMeta
     data: VoteData
+
+
+VOTES = DataFrameSchema(
+    columns={
+        "mandate_id": Column(
+            dtype="int64",
+            nullable=False,
+            unique=False,
+            coerce=False,
+            required=True,
+            regex=False,
+            description=None,
+            title=None,
+        ),
+        "mandate": Column(
+            dtype="object",
+            checks=None,
+            nullable=False,
+            unique=False,
+            coerce=False,
+            required=True,
+            regex=False,
+            description=None,
+            title=None,
+        ),
+        "poll_id": Column(
+            dtype="int64",
+            nullable=False,
+            unique=False,
+            coerce=False,
+            required=True,
+            regex=False,
+            description=None,
+            title=None,
+        ),
+        "vote": Column(
+            dtype="object",
+            checks=pa.Check.isin(["no", "yes", "no_show", "abstain"]),
+            nullable=False,
+            unique=False,
+            coerce=False,
+            required=True,
+            regex=False,
+            description=None,
+            title=None,
+        ),
+        "reason_no_show": Column(
+            dtype="object",
+            checks=None,
+            nullable=True,
+            unique=False,
+            coerce=False,
+            required=True,
+            regex=False,
+            description=None,
+            title=None,
+        ),
+        "reason_no_show_other": Column(
+            dtype="object",
+            checks=None,
+            nullable=True,
+            unique=False,
+            coerce=False,
+            required=True,
+            regex=False,
+            description=None,
+            title=None,
+        ),
+    },
+    checks=None,
+    index=Index(
+        dtype="int64",
+        nullable=False,
+        coerce=False,
+        name=None,
+        description=None,
+        title=None,
+    ),
+    dtype=None,
+    coerce=True,
+    strict=False,
+    name=None,
+    ordered=False,
+    unique=["mandate_id", "poll_id"],
+    report_duplicates="all",
+    unique_column_names=False,
+    title=None,
+    description=None,
+)
