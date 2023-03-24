@@ -9,6 +9,7 @@ import tqdm
 from bs4 import BeautifulSoup
 
 import bundestag.logging as logging
+import bundestag.schemas as schemas
 
 # from fastcore.all import *
 
@@ -184,6 +185,7 @@ def is_date(s: str, fun: T.Callable):
 def get_sheet_df(
     sheet_file: T.Union[str, Path],
     file_title_maps: T.Dict[str, str] = None,
+    validate: bool = False,
 ):
     "Parsing xlsx and xls files into dataframes"
 
@@ -212,7 +214,12 @@ def get_sheet_df(
     df["date"] = date
     df["title"] = title
 
-    return df.pipe(disambiguate_party)
+    df = df.pipe(disambiguate_party)
+
+    if validate:
+        schemas.SHEET.validate(df)
+
+    return df
 
 
 def handle_title_and_date(
@@ -260,6 +267,7 @@ def get_squished_dataframe(
     id_col: str = "Bezeichnung",
     feature_cols: T.List[str] = VOTE_COLS,
     other_cols: T.List = None,
+    validate: bool = False,
 ) -> pd.DataFrame:
     "Reformats `df`"
     other_cols = ["date", "title"] if other_cols is None else other_cols
@@ -274,10 +282,15 @@ def get_squished_dataframe(
         .drop(labels=0, axis=1)
         .rename(columns={f"level_{2+len(other_cols)}": "vote"})
     )
-    return df.join(
+    df = df.join(
         tmp.set_index(["Bezeichnung", "date", "title"]),
         on=["Bezeichnung", "date", "title"],
     ).drop(columns=VOTE_COLS)
+
+    if validate:
+        schemas.SHEET_SQUISHED(df)
+
+    return df
 
 
 DTYPES = {

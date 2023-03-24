@@ -8,7 +8,8 @@ import pandas as pd
 import pytest
 import requests
 
-from bundestag import html_parsing as hp
+import bundestag.html_parsing as hp
+import bundestag.schemas as schemas
 
 PATTERN = re.compile("\.txt")
 
@@ -155,36 +156,18 @@ def test_is_date():
     assert hp.is_date("2022-02-02", pd.to_datetime) == True
 
 
-@pytest.mark.skip("to be implemented")
 def test_get_sheet_df():
-    pass
+    path = Path("src/tests/data/20201126_3_xls-data.xlsx")
+    file_title_maps = {
+        "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
+        "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",
+        "20201118_4_xls-data.xlsx": "18.11.2020: Corona-Maßnahmen (epidemische Lage), Antrag CDU/CSU, SPD",
+        "20201118_1_xls-data.xlsx": "18.11.2020: Corona-Maßnahmen (epidemische Lage), Änderungsantrag FDP",
+        "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
+    }
 
-
-# def test_get_sheet_df(df: pd.DataFrame):
-#     assert isinstance(df, pd.DataFrame)
-#     assert all(
-#         [
-#             col in df.columns.values
-#             for col in [
-#                 "Wahlperiode",
-#                 "Sitzungnr",
-#                 "Abstimmnr",
-#                 "Fraktion/Gruppe",
-#                 "Name",
-#                 "Vorname",
-#                 "Titel",
-#                 "ja",
-#                 "nein",
-#                 "Enthaltung",
-#                 "ungültig",
-#                 "nichtabgegeben",
-#                 "Bezeichnung",
-#                 "sheet_name",
-#                 "date",
-#                 "title",
-#             ]
-#         ]
-#     )
+    # line to test
+    df = hp.get_sheet_df(path, file_title_maps=file_title_maps, validate=True)
 
 
 @pytest.mark.parametrize(
@@ -256,9 +239,22 @@ def test_set_sheet_dtypes():
     pass
 
 
-@pytest.mark.skip("to be implemented")
-def test_get_multiple_sheets_df():
-    pass
+def test_get_final_sheet_df():
+    path = Path("src/tests/data/20201126_3_xls-data.xlsx")
+    file_title_maps = {
+        "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
+        "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",
+        "20201118_4_xls-data.xlsx": "18.11.2020: Corona-Maßnahmen (epidemische Lage), Antrag CDU/CSU, SPD",
+        "20201118_1_xls-data.xlsx": "18.11.2020: Corona-Maßnahmen (epidemische Lage), Änderungsantrag FDP",
+        "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
+    }
+
+    df = hp.get_sheet_df(path, file_title_maps=file_title_maps, validate=False)
+
+    # lines to test
+    df = hp.get_squished_dataframe(df)
+    df = hp.set_sheet_dtypes(df)
+    schemas.SHEET_FINAL.validate(df)
 
 
 @pytest.mark.skip("to be implemented")
