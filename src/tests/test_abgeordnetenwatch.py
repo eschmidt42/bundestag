@@ -62,13 +62,13 @@ MANDATE_DATA_PARSED = {
     "politician": "Zeki Gökhan",
     "politician_url": "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
     "start_date": "2021-08-19",
-    "end_date": None,
+    "end_date": "",
     "constituency_id": 4215,
     "constituency_name": "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
     "fraction_names": ["DIE LINKE seit 19.08.2021"],
     "fraction_ids": [9233],
     "fraction_starts": ["2021-08-19"],
-    "fraction_ends": [None],
+    "fraction_ends": [""],
 }
 
 VOTE_DATA_PARSED = {
@@ -123,7 +123,7 @@ MANDATES_DF = pd.DataFrame(
             1: "https://www.abgeordnetenwatch.de/profile/florian-jaeger",
         },
         "start_date": {0: "2021-08-19", 1: "2021-07-20"},
-        "end_date": {0: None, 1: None},
+        "end_date": {0: "", 1: ""},
         "constituency_id": {0: 4215, 1: 4339},
         "constituency_name": {
             0: "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
@@ -135,7 +135,7 @@ MANDATES_DF = pd.DataFrame(
         },
         "fraction_ids": {0: [9233], 1: [9228]},
         "fraction_starts": {0: ["2021-08-19"], 1: ["2021-07-20"]},
-        "fraction_ends": {0: [None], 1: [None]},
+        "fraction_ends": {0: [""], 1: [""]},
     }
 )
 

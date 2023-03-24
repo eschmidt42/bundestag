@@ -172,7 +172,7 @@ def parse_mandate_data(mandate: schemas.Mandate) -> dict:
         "politician": mandate.politician.label,
         "politician_url": mandate.politician.abgeordnetenwatch_url,
         "start_date": mandate.start_date,
-        "end_date": mandate.end_date,
+        "end_date": "" if mandate.end_date is None else mandate.end_date,
         "constituency_id": mandate.electoral_data.constituency.id
         if mandate.electoral_data.constituency is not None
         else None,
@@ -192,7 +192,8 @@ def parse_mandate_data(mandate: schemas.Mandate) -> dict:
                     _m.valid_from for _m in mandate.fraction_membership
                 ],
                 "fraction_ends": [
-                    _m.valid_until for _m in mandate.fraction_membership
+                    "" if _m.valid_until is None else _m.valid_until
+                    for _m in mandate.fraction_membership
                 ],
             }
         )
