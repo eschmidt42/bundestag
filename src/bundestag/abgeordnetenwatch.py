@@ -30,7 +30,7 @@ def get_location(
 
 
 def request_poll_data(
-    legislature_id: int, dry=False, num_polls: int = 999
+    legislature_id: int, dry: bool = False, num_polls: int = 999
 ) -> dict:
     url = "https://www.abgeordnetenwatch.de/api/v2/polls"
     params = {
@@ -324,12 +324,31 @@ def check_stored_vote_ids(legislature_id: int, path: Path):
         return all_ids
 
 
+def get_user_download_decision(n: int, max_tries: int = 3) -> bool:
+    msg = lambda x: f"Incorrect input {resp}, please enter y or n"
+    for _ in range(max_tries):
+        resp = input(f"Download {n} polls? [y/n]")
+        if not isinstance(resp, str):
+            logger.error(msg(resp))
+            continue
+        elif resp.lower() in ["y", "n"]:
+            do_dowload = resp.lower() == "y"
+            _msg = "proceeding with download" if do_dowload else "terminating."
+            logger.info(f"Received: {resp}, {_msg}")
+            return do_dowload
+        else:
+            logger.error(msg(resp))
+
+    raise ValueError(f"Received {max_tries} incorrect inputs, terminating.")
+
+
 def get_all_remaining_vote_data(
     legislature_id: int,
     dry: bool = False,
     t_sleep: float = 1,
     dt_rv_scale: float = 0.1,
     path: Path = None,
+    ask_user: bool = True,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
 
@@ -347,9 +366,22 @@ def get_all_remaining_vote_data(
         for v in df_period["poll_id"].unique()
         if v not in known_id_combos[legislature_id]
     ]
+    n = len(remaining_poll_ids)
     logger.debug(
-        f"remaining poll_ids (legislature_id = {legislature_id}) = {len(remaining_poll_ids)}:\n{remaining_poll_ids}"
+        f"remaining poll_ids (legislature_id = {legislature_id}) = {n}:\n{remaining_poll_ids}"
     )
+    if n == 0:
+        logger.info("Nothing to download, returning.")
+        return
+
+    # getting input from the user
+    if ask_user:
+        do_download = get_user_download_decision(n)
+    else:
+        do_download = True
+
+    if not do_download:
+        return
 
     dt_rv = stats.norm(scale=dt_rv_scale)
 
