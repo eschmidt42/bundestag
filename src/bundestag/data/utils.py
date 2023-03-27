@@ -7,6 +7,10 @@ import bundestag.logging as logging
 
 logger = logging.logger
 
+RE_HTM = re.compile("(\.html?)")
+RE_FNAME = re.compile("(\.xlsx?)")
+RE_SHEET = re.compile("(XLSX?)")
+
 
 def get_file_paths(
     path: T.Union[Path, str], suffix: str = None, pattern: re.Pattern = None
@@ -67,6 +71,43 @@ def get_location(
 
 def load_json(path: Path = None, dry: bool = False):
     logger.debug(f"Reading json info from {path=}")
+    if dry:
+        return {}
     with open(path, "r", encoding="utf8") as f:
         info = json.load(f)
     return info
+
+
+def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
+    msg = lambda x: f"Incorrect input {resp}, please enter y or n"
+    for _ in range(max_tries):
+        resp = input(f"Create {path=}? ([y]/n) ")
+        if resp is None or len(resp) == 0:
+            do_creation = True
+            _msg = (
+                "proceeding with download" if do_creation else "terminating."
+            )
+            logger.info(f"Received: {resp}, {_msg}")
+            return do_creation
+        elif resp.lower() in ["y", "n"]:
+            do_creation = resp.lower() == "y"
+            _msg = (
+                "proceeding with download" if do_creation else "terminating."
+            )
+            logger.info(f"Received: {resp}, {_msg}")
+            return do_creation
+        if not isinstance(resp, str):
+            logger.error(msg(resp))
+            continue
+
+        else:
+            logger.error(msg(resp))
+
+    raise ValueError(f"Received {max_tries} incorrect inputs, terminating.")
+
+
+def ensure_path_exists(path: Path):
+    do_creation = get_user_path_creation_decision(path, max_tries=3)
+
+    if do_creation:
+        path.mkdir(exist_ok=True, parents=True)

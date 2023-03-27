@@ -11,9 +11,6 @@ import bundestag.schemas as schemas
 
 logger = logging.logger
 
-RE_HTM = re.compile("(\.html?)")
-RE_FNAME = re.compile("(\.xlsx?)")
-RE_SHEET = re.compile("(XLSX?)")
 VOTE_COLS = ["ja", "nein", "Enthaltung", "ungültig", "nichtabgegeben"]
 
 
@@ -21,7 +18,9 @@ def get_file2poll_maps(
     uris: T.Dict[str, str], sheet_path: T.Union[str, Path]
 ) -> T.Dict[str, str]:
     "Creates a file name (so file needs to exist) to poll title map"
-    known_sheets = data_utils.get_file_paths(sheet_path, pattern=RE_FNAME)
+    known_sheets = data_utils.get_file_paths(
+        sheet_path, pattern=data_utils.RE_FNAME
+    )
     file2poll = {}
     for poll_title, uri in uris.items():
         fname = data_utils.get_sheet_fname(uri)
@@ -50,7 +49,16 @@ def get_sheet_df(
         logger.warning(f"{sheet_file} is of size 0, skipping ...")
         return
 
-    dfs = pd.read_excel(sheet_file, sheet_name=None)
+    import xlrd
+
+    try:
+        dfs = pd.read_excel(sheet_file, sheet_name=None, engine="xlrd")
+    except ValueError as ex:
+        dfs = pd.read_excel(sheet_file, sheet_name=None, engine="openpyxl")
+    except xlrd.XLRDError as ex:
+        # file is erroneous and needs to be skipped
+        logger.error(f"{sheet_file=} is erroneous and is skipped")
+        return None
 
     assert (
         len(dfs) == 1
@@ -181,14 +189,67 @@ def get_multiple_sheets_df(
     "Loads, processes and concatenates multiple vote sheets"
     logger.info("Loading processing and concatenating multiple vote sheets")
     df = []
+    n_skipped = 0
     for sheet_file in tqdm.tqdm(
         sheet_files, total=len(sheet_files), desc="Sheets"
     ):
+        sheet_df = get_sheet_df(sheet_file, file_title_maps=file_title_maps)
+        if sheet_df is None:
+            n_skipped += 1
+            continue
         df.append(
-            (
-                get_sheet_df(sheet_file, file_title_maps=file_title_maps)
-                .pipe(get_squished_dataframe)
-                .pipe(set_sheet_dtypes)
-            )
+            (sheet_df.pipe(get_squished_dataframe).pipe(set_sheet_dtypes))
+        )
+    if n_skipped > 0:
+        n = len(sheet_files)
+        pct = n_skipped / n * 100.0
+        logger.warning(
+            f"{n_skipped} / {n} = {pct:.2f} % files skipped due to excel parsing error"
         )
     return pd.concat(df, ignore_index=True)
+
+
+def run(
+    html_path: Path,
+    sheet_path: Path,
+    preprocessed_path: Path,
+    dry: bool = False,
+):
+    import bundestag.data.download.bundestag_sheets as download_sheets
+
+    logger.info("Start parsing sheets")
+
+    # ensuring path exists
+    if not html_path.exists():
+        raise ValueError(
+            f"{html_path=} doesn't exist, terminating transformation."
+        )
+    if not sheet_path.exists():
+        raise ValueError(
+            f"{sheet_path=} doesn't exist, terminating transformation."
+        )
+    if not preprocessed_path.exists():
+        data_utils.ensure_path_exists(preprocessed_path)
+
+    html_path, sheet_path = Path(html_path), Path(sheet_path)
+    # collect htm files
+    html_file_paths = data_utils.get_file_paths(
+        html_path, pattern=data_utils.RE_HTM
+    )
+    # extract excel sheet uris from htm files
+    sheet_uris = download_sheets.collect_sheet_uris(html_file_paths)
+
+    # locate downloaded excel files
+    sheet_files = data_utils.get_file_paths(
+        sheet_path, pattern=data_utils.RE_FNAME
+    )
+    # process excel files
+    file_title_maps = get_file2poll_maps(sheet_uris, sheet_path)
+    df = get_multiple_sheets_df(sheet_files, file_title_maps=file_title_maps)
+
+    if not dry:
+        path = preprocessed_path / "bundestag.de_votes.parquet"
+        logger.info(f"Writing to {path}")
+        df.to_parquet(path)
+
+    logger.info("Done parsing sheets")

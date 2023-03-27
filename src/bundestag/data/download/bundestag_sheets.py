@@ -112,3 +112,31 @@ def download_multiple_sheets(
         download_sheet(uri, sheet_path=sheet_path, dry=dry)
 
         time.sleep(t_sleep)
+
+
+def run(
+    html_path: Path,
+    sheet_path: Path,
+    nmax: int = None,
+    dry: bool = False,
+    pattern: re.Pattern = data_utils.RE_HTM,
+):
+    logger.info("Start downloading sheets")
+
+    # ensure paths exist
+    if not html_path.exists():
+        data_utils.ensure_path_exists(html_path)
+    if not sheet_path.exists():
+        data_utils.ensure_path_exists(sheet_path)
+
+    html_path, sheet_path = Path(html_path), Path(sheet_path)
+    # collect htm files
+    html_file_paths = data_utils.get_file_paths(html_path, pattern=pattern)
+    # extract excel sheet uris from htm files
+    sheet_uris = collect_sheet_uris(html_file_paths)
+    # download excel files
+    download_multiple_sheets(
+        sheet_uris, sheet_path=sheet_path, nmax=nmax, dry=dry
+    )
+
+    logger.info("Done downloading sheets")

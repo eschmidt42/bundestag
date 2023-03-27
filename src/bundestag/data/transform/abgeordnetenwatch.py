@@ -185,9 +185,22 @@ def get_votes_df(
     "Parses info from vote json files for `legislature_id` and `poll_id`"
     info = load_vote_json(legislature_id, poll_id, path=path)
     votes = schemas.VoteResponse(**info)
+    n_none = 0
+    df = []
+    for vote in votes.data.related_data.votes:
+        if vote.id is None:
+            n_none += 1
+            continue
+        vote = parse_vote_data(vote)
+        df.append(vote)
+
+    if n_none > 0:
+        logger.warning(
+            f"Removed {n_none} votes because of their id being None"
+        )
     df = pd.DataFrame(
-        [parse_vote_data(v) for v in votes.data.related_data.votes]
-    )
+        df
+    )  # [parse_vote_data(v) for v in votes.data.related_data.votes]
 
     if validate:
         schemas.VOTES.validate(df)
@@ -242,3 +255,57 @@ def get_politician_names(df: pd.DataFrame, col="mandate"):
 def transform_votes_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.assign(**{"politician name": get_politician_names})
     return df
+
+
+def run(
+    legislature_id: int,
+    dry: bool = False,
+    raw_path: Path = None,
+    preprocessed_path: Path = None,
+) -> pd.DataFrame:
+    logger.info("Start transforming abgeordnetenwatch data")
+
+    if not dry and (raw_path is None or preprocessed_path is None):
+        raise ValueError(
+            f"When {dry=} `raw_path` and or `preprocessed_path` cannot be None."
+        )
+
+    # ensure paths exist
+    if not raw_path.exists():
+        raise ValueError(
+            f"{raw_path=} doesn't exist, terminating transformation."
+        )
+    if not preprocessed_path.exists():
+        data_utils.ensure_path_exists(preprocessed_path)
+
+    # polls
+    df = get_polls_df(legislature_id, path=raw_path)
+    if not dry:
+        file = preprocessed_path / f"df_polls_{legislature_id}.parquet"
+        logger.debug(f"writing to {file}")
+        df.to_parquet(path=file)
+
+    # mandates
+    df = get_mandates_df(legislature_id, path=raw_path)
+    if not dry:
+        file = preprocessed_path / f"df_mandates_{legislature_id}.parquet"
+        logger.debug(f"Writing to {file}")
+        df.to_parquet(path=file)
+
+    # votes
+    df_all_votes = compile_votes_data(legislature_id, path=raw_path)
+
+    if not dry:
+        all_votes_path = (
+            preprocessed_path
+            / f"compiled_votes_legislature_{legislature_id}.csv"
+        )
+        logger.debug(f"Writing to {all_votes_path}")
+
+        df_all_votes.to_csv(all_votes_path, index=False)
+
+        file = preprocessed_path / f"df_all_votes_{legislature_id}.parquet"
+        logger.debug(f"Writing to {file}")
+        df_all_votes.to_parquet(path=file)
+
+    logger.info("Done transforming abgeordnetenwatch data")

@@ -149,6 +149,7 @@ def check_stored_vote_ids(legislature_id: int, path: Path):
         logger.error(
             f"Given legislature_id {legislature_id} is unknown. Known ids: {sorted(list(legislature_ids.keys()))}"
         )
+        return {legislature_id: {}}
 
     elif legislature_id is not None:
         vote_ids = {
@@ -171,15 +172,20 @@ def check_stored_vote_ids(legislature_id: int, path: Path):
 def get_user_download_decision(n: int, max_tries: int = 3) -> bool:
     msg = lambda x: f"Incorrect input {resp}, please enter y or n"
     for _ in range(max_tries):
-        resp = input(f"Download {n} polls? [y/n]")
-        if not isinstance(resp, str):
-            logger.error(msg(resp))
-            continue
+        resp = input(f"Download {n} polls? ([y]/n) ")
+        if resp is None or len(resp) == 0:
+            do_dowload = True
+            _msg = "proceeding with download" if do_dowload else "terminating."
+            logger.info(f"Received: {resp}, {_msg}")
+            return do_dowload
         elif resp.lower() in ["y", "n"]:
             do_dowload = resp.lower() == "y"
             _msg = "proceeding with download" if do_dowload else "terminating."
             logger.info(f"Received: {resp}, {_msg}")
             return do_dowload
+        elif not isinstance(resp, str):
+            logger.error(msg(resp))
+            continue
         else:
             logger.error(msg(resp))
 
@@ -203,6 +209,8 @@ def check_possible_poll_ids(
     polls_file = path / polls_file
     logger.debug(f"Reading {polls_file=}")
     info = data_utils.load_json(polls_file, dry=dry)
+    if dry:
+        return []
     polls = schemas.PollResponse(**info)
     poll_ids = list(set([v.id for v in polls.data]))
     logger.debug(f"Identified {len(poll_ids)} unique poll ids")
@@ -265,3 +273,38 @@ def get_all_remaining_vote_data(
     logger.debug(
         f"vote collection for legislature_id {legislature_id} complete (dry = {dry})"
     )
+
+
+def run(
+    legislature_id: int,
+    dry: bool = False,
+    raw_path: Path = None,
+    preprocessed_path: Path = None,
+    max_polls: int = 999,
+    max_mandates: int = 999,
+) -> pd.DataFrame:
+    logger.info("Start downloading abgeordnetenwatch data")
+
+    if not dry and (raw_path is None or preprocessed_path is None):
+        raise ValueError(
+            f"When {dry=} `raw_path` and or `preprocessed_path` cannot be None."
+        )
+
+    # ensure paths exist
+    if not raw_path.exists():
+        data_utils.ensure_path_exists(raw_path)
+
+    # polls
+    data = request_poll_data(legislature_id, dry=dry, num_polls=max_polls)
+    store_polls_json(data, legislature_id, dry=dry, path=raw_path)
+
+    # mandates
+    data = request_mandates_data(
+        legislature_id, dry=dry, num_mandates=max_mandates
+    )
+    store_mandates_json(data, legislature_id, dry=dry, path=raw_path)
+
+    # votes
+    get_all_remaining_vote_data(legislature_id, dry=dry, path=raw_path)
+
+    logger.info("Done downloading abgeordnetenwatch data!")

@@ -40,7 +40,7 @@ class Poll(BaseModel):
     label: str
     api_url: str
     field_legislature: FieldLegislature
-    field_topics: T.List[FieldTopic]
+    field_topics: T.List[FieldTopic] = None
     field_committees: T.List[FieldCommittee] = None
     field_intro: str
     field_poll_date: str
@@ -117,10 +117,10 @@ class ElectoralData(BaseModel):
 
 
 class Fraction(BaseModel):
-    id: int
-    entity_type: str
-    label: str
-    api_url: str
+    id: int = None
+    entity_type: str = None
+    label: str = None
+    api_url: str = None
 
 
 class FractionMembership(BaseModel):
@@ -137,8 +137,8 @@ class Mandate(BaseModel):
     entity_type: str
     label: str
     api_url: str
-    id_external_administration: str
-    id_external_administration_description: str
+    id_external_administration: str = None
+    id_external_administration_description: str = None
     type: str
     parliament_period: ParliamentPeriod
     politician: Politician
@@ -169,7 +169,7 @@ class VotePoll(BaseModel):
 
 
 class Vote(BaseModel):
-    id: int
+    id: int = None
     entity_type: str
     label: str
     api_url: str
@@ -178,7 +178,7 @@ class Vote(BaseModel):
     vote: str
     reason_no_show: str = None
     reason_no_show_other: str = None
-    fraction: Fraction
+    fraction: Fraction = None
 
 
 class RelatedData(BaseModel):
@@ -191,7 +191,7 @@ class VoteData(BaseModel):
     label: str
     api_url: str
     field_legislature: FieldLegislature
-    field_topics: T.List[FieldTopic]
+    field_topics: T.List[FieldTopic] = None
     field_committees: T.List[FieldCommittee] = None
     field_intro: str
     field_poll_date: str

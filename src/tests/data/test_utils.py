@@ -52,8 +52,8 @@ def test_load_json(dry: bool):
         # line to test
         data_utils.load_json(path, dry=dry)
 
-        assert json_load.call_count == 1
-        assert _open.call_count == 1
+        assert json_load.call_count == (0 if dry else 1)
+        assert _open.call_count == (0 if dry else 1)
 
 
 PATTERN = re.compile("\.txt")
