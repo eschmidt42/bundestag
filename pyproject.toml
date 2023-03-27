@@ -64,3 +64,6 @@ python_files = ["test_*.py"]
 markers = [
     "slow" # mark test as slow
 ]
+
+[project.scripts]
+bundestag = "bundestag.__main__:app" # pip install -e . enables use of cli
