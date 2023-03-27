@@ -157,7 +157,7 @@ def test_is_date():
 
 
 def test_get_sheet_df():
-    path = Path("src/tests/data/20201126_3_xls-data.xlsx")
+    path = Path("src/tests/data_for_testing/20201126_3_xls-data.xlsx")
     file_title_maps = {
         "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
         "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",
@@ -240,7 +240,7 @@ def test_set_sheet_dtypes():
 
 
 def test_get_final_sheet_df():
-    path = Path("src/tests/data/20201126_3_xls-data.xlsx")
+    path = Path("src/tests/data_for_testing/20201126_3_xls-data.xlsx")
     file_title_maps = {
         "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
         "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",

@@ -24,7 +24,7 @@ def test_get_location():
 @pytest.fixture(scope="module")
 def poll_response_raw() -> dict:
     response = json.load(
-        open("src/tests/data/polls_legislature_111.json", "r")
+        open("src/tests/data_for_testing/polls_legislature_111.json", "r")
     )
     return response
 
@@ -32,14 +32,16 @@ def poll_response_raw() -> dict:
 @pytest.fixture(scope="module")
 def mandates_response_raw() -> dict:
     response = json.load(
-        open("src/tests/data/mandates_legislature_111.json", "r")
+        open("src/tests/data_for_testing/mandates_legislature_111.json", "r")
     )
     return response
 
 
 @pytest.fixture(scope="module")
 def votes_response_raw() -> dict:
-    response = json.load(open("src/tests/data/poll_4217_votes.json", "r"))
+    response = json.load(
+        open("src/tests/data_for_testing/poll_4217_votes.json", "r")
+    )
     return response
 
 
