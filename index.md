@@ -24,6 +24,40 @@ For your inspiration, I have also included an analysis on how similar parties vo
 
 ## How to use
 
+## `bundestag` command line interface to process data
+
+For an overview over commands run
+```shell
+bundestag --help
+```
+
+To download data from abgeordnetenwatch, for a specific legislature id
+```shell
+bundestag download abgeordnetenwatch 132
+```
+
+To transform the downloaded data run
+```shell
+bundestag transform abgeordnetenwatch 132
+````
+
+To find out the legislature id for the current Bundestag, visit [abgeordnetenwatch.de](https://www.abgeordnetenwatch.de/bundestag) and click on the "Open Data" button at the bottom of the page.
+
+### When developing
+
+See
+```shell
+make help
+```
+
+for implemented commands to manage the project.
+
+To get started run
+```shell
+make venv
+make install-dev
+```
+
 ### Docs
 
 For detailed explanations see:
@@ -34,36 +68,6 @@ For detailed explanations see:
 - predict politician votes $\rightarrow$ `nbs/05_predicting_votes.ipynb`
 
 For a short overview of the highlights see below.
-
-### When developing
-
-Create the virtual environment
-```shell
-python3 -m venv .venv
-source .venv/bin/activate
-pip install pip-tools==6.12.3
-```
-
-To update the requirements
-```shell
-pip-compile -o requirements/requirements.txt pyproject.toml --resolver=backtracking
-pip-compile --extra dev -o requirements/dev-requirements.txt pyproject.toml  --resolver=backtracking
-```
-
-To install the dev requirements
-```shell
-pip-sync requirements/dev-requirements.txt
-```
-
-To make the package available
-```shell
-pip install -e .
-```
-
-To make pre-commit available after each commit
-```shell
-pre-commit install
-```
 
 ### Data sources
 
