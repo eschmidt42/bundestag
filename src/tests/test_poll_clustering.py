@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from bundestag import abgeordnetenwatch as aw
+# from bundestag import abgeordnetenwatch as aw
 from bundestag import poll_clustering as pc
 
 

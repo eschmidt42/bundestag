@@ -7,8 +7,9 @@ import plotly.express as px
 import seaborn as sns
 from scipy import spatial
 
+# from bundestag import html_parsing as hp
+import bundestag.data.transform.bundestag_sheets as hp
 import bundestag.logging as logging
-from bundestag import html_parsing as hp
 
 logger = logging.logger
 

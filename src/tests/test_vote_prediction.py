@@ -11,7 +11,7 @@ from fastai.tabular.all import (
     tabular_learner,
 )
 
-from bundestag import abgeordnetenwatch as aw
+# from bundestag import abgeordnetenwatch as aw
 from bundestag import vote_prediction as vp
 
 

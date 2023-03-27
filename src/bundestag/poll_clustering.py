@@ -12,7 +12,8 @@ from fastcore.all import *
 from sklearn import decomposition
 
 import bundestag.logging as logging
-from bundestag import abgeordnetenwatch as aw
+
+# from bundestag import abgeordnetenwatch as aw
 
 logger = logging.logger
 
