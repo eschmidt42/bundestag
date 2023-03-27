@@ -58,7 +58,7 @@ make venv
 make install-dev
 ```
 
-### Docs
+### Notebooks
 
 For detailed explanations see:
 - parse data from bundestag.de $\rightarrow$ `nbs/00_html_parsing.ipynb`
@@ -71,10 +71,36 @@ For a short overview of the highlights see below.
 
 ### Data sources
 
-* Bundestag page `https://www.bundestag.de/parlament/plenum/abstimmung/liste`: Roll call votes with information on presence / absence and vote (yes/no/abstain) for each member of parliament
-* abgeordnetenwatch API `https://www.abgeordnetenwatch.de/api` (they also have a GUI [here](https://www.abgeordnetenwatch.de)): information on politicians, parliaments, legislative periods and mandates
+* Bundestag page `https://www.bundestag.de/parlament/plenum/abstimmung/liste`:
+    * contains: Roll call votes with information on presence / absence and vote (yes/no/abstain) for each member of the Bundestag over a longer time period
+    * used in: `nbs/01_similarities.ipynb` and `nbs/02_gui.ipynb` to investigate similarities between parties and politicians based on voting behavior
+* abgeordnetenwatch API `https://www.abgeordnetenwatch.de/api` (they also have a GUI [here](https://www.abgeordnetenwatch.de)):
+    * contains information on politicians, parliaments, legislative periods and mandates including and beyond the Bundestag
+    * used in: `nbs/04_poll_clustering.ipynb` and `nbs/05_predicting_votes.ipynb` to cluster polls by description and predict votes of individual politicians respectively
 
-### Setup
+### Analysis highlights
+
+Note: the cells using `pd.read_parquet` below only work for `legislature_id` 111 if the data was previously downloaded either with the `bundestag` cli tool or by using the cells below, by commenting them in.
+
+
+```python
+# !bundestag download abgeordnetenwatch 111
+```
+
+
+```python
+# !bundestag download bundestag_sheet
+```
+
+
+```python
+# !bundestag transform abgeordnetenwatch 111
+```
+
+
+```python
+# !bundestag transform bundestag_sheet
+```
 
 
 ```python
@@ -88,9 +114,9 @@ from pathlib import Path
 
 import pandas as pd
 from fastai.tabular.all import *
+from rich import print as pprint
 
-from bundestag import abgeordnetenwatch as aw
-from bundestag import html_parsing as hp
+import bundestag.paths as paths
 from bundestag import poll_clustering as pc
 from bundestag import similarity as sim
 from bundestag import vote_prediction as vp
@@ -107,7 +133,17 @@ If you want to have a closer look at the preprocessing please check out `nbs/00_
 
 
 ```python
-df = pd.read_parquet(path="bundestag.de_votes.parquet")
+_paths = paths.get_paths("data")
+```
+
+
+```python
+file = _paths.preprocessed_bundestag / "bundestag.de_votes.parquet"
+```
+
+
+```python
+df = pd.read_parquet(path=file)
 df.head(3).T
 ```
 
@@ -115,7 +151,6 @@ Votes by party
 
 
 ```python
-%%time
 party_votes = sim.get_votes_by_party(df)
 sim.test_party_votes(party_votes)
 ```
@@ -124,7 +159,6 @@ Re-arranging `party_votes`
 
 
 ```python
-%%time
 party_votes_pivoted = sim.pivot_party_votes_df(party_votes)
 sim.test_party_votes_pivoted(party_votes_pivoted)
 party_votes_pivoted.head()
@@ -136,7 +170,6 @@ Collecting the politicians votes
 
 
 ```python
-%%time
 mdb = "Peter Altmaier"
 mdb_votes = sim.prepare_votes_of_mdb(df, mdb)
 sim.test_votes_of_mdb(mdb_votes)
@@ -147,7 +180,6 @@ Comparing the politician against the parties
 
 
 ```python
-%%time
 mdb_vs_parties = sim.align_mdb_with_parties(
     mdb_votes, party_votes_pivoted
 ).pipe(sim.compute_similarity, lsuffix="mdb", rsuffix="party")
@@ -176,7 +208,6 @@ Collecting party votes
 
 
 ```python
-%%time
 party = "SPD"
 partyA_vs_rest = sim.align_party_with_all_parties(
     party_votes_pivoted, party
@@ -231,14 +262,20 @@ The data used below was processed using `nbs/03_abgeordnetenwatch.ipynb`.
 
 
 ```python
-path = Path("./abgeordnetenwatch_data")
+path = _paths.preprocessed_abgeordnetenwatch
+legislature_id = 111
+file = path / f"df_polls_{legislature_id}.parquet"
+```
+
+
+```python
+df_polls = pd.read_parquet(path=file)
 ```
 
 #### Clustering polls using Latent Dirichlet Allocation (LDA)
 
 
 ```python
-%%time
 source_col = "poll_title"
 nlp_col = f"{source_col}_nlp_processed"
 num_topics = 5  # number of topics / clusters to identify
@@ -246,7 +283,7 @@ num_topics = 5  # number of topics / clusters to identify
 st = pc.SpacyTransformer()
 
 # load data and prepare text for modelling
-df_polls_lda = pd.read_parquet(path=path / "df_polls.parquet").assign(
+df_polls_lda = df_polls.copy().assign(
     **{nlp_col: lambda x: st.clean_text(x, col=source_col)}
 )
 
@@ -273,9 +310,16 @@ Loading data
 
 
 ```python
-df_all_votes = pd.read_parquet(path=path / "df_all_votes.parquet")
-df_mandates = pd.read_parquet(path=path / "df_mandates.parquet")
-df_polls = pd.read_parquet(path=path / "df_polls.parquet")
+df_all_votes = pd.read_parquet(
+    path=path / f"df_all_votes_{legislature_id}.parquet"
+)
+```
+
+
+```python
+df_mandates = pd.read_parquet(
+    path=path / f"df_mandates_{legislature_id}.parquet"
+)
 ```
 
 Splitting data set into training and validation set. Splitting randomly here because it leads to an interesting result, albeit not very realistic for production.
@@ -290,7 +334,11 @@ Training a neural net to predict `vote` based on embeddings for `poll_id` and `p
 
 
 ```python
-%%time
+df_all_votes.head()
+```
+
+
+```python
 to = TabularPandas(
     df_all_votes,
     cat_names=[
@@ -307,7 +355,16 @@ dls = to.dataloaders(bs=512)
 learn = tabular_learner(
     dls
 )  # fastai function to set up a neural net for tabular data
+```
+
+
+```python
 lrs = learn.lr_find()  # searches the learning rate
+pprint(lrs)
+```
+
+
+```python
 learn.fit_one_cycle(
     5, lrs.valley
 )  # performs training using one-cycle hyperparameter schedule
@@ -362,16 +419,6 @@ vp.plot_politician_embeddings(df_all_votes, df_mandates, embeddings)
 ![mandate embeddings](./README_files/mandate_embeddings.png)
 
 The politician embeddings may be the most surprising finding in its clarity. It seems we find for polls and politicians 2-3 clusters, but for politicians with a significant grouping of mandates associated with the government coalition. It seems we find one cluster for the government parties and one for the government opposition.
-
-## To dos / contributing
-
-Any contributions welcome. In the notebooks in `./nbs/` I've listed to dos here and there things which could be done.
-
-**General to dos**:
-- Check for discrepancies between bundestag.de and abgeordnetenwatch based data
-- Make the clustering of polls and policitians interactive
-- Extend the vote prediction model: currently, if the data is split by poll (which would be the realistic case when trying to predict votes of a new poll), the model is hardly better than chance. It would be interesting to see which information would help improve beyond chance.
-- Extend the data processed from the stored json responses from abgeordnetenwatch (currently only using the bare minimum)
 
 
 ```python
