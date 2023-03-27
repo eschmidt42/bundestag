@@ -181,7 +181,6 @@ def is_date(s: str, fun: T.Callable):
         return False
 
 
-# TODO: implement optional pandera schema validation
 def get_sheet_df(
     sheet_file: T.Union[str, Path],
     file_title_maps: T.Dict[str, str] = None,
