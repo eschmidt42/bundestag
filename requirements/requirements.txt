@@ -7,9 +7,7 @@
 argon2-cffi==20.1.0
     # via notebook
 attrs==21.2.0
-    # via
-    #   frictionless
-    #   jsonschema
+    # via jsonschema
 backcall==0.2.0
     # via ipython
 beautifulsoup4==4.9.3
@@ -351,6 +349,7 @@ traitlets==5.0.5
     #   notebook
 typer[all]==0.3.2
     # via
+    #   bundestag (pyproject.toml)
     #   frictionless
     #   pathy
     #   spacy

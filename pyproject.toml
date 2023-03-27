@@ -22,7 +22,8 @@ dependencies = [
     "openpyxl",
     "fastparquet",
     "pydantic",
-    "frictionless"
+    "frictionless",
+    "typer[all]"
 ]
 
 authors = [
