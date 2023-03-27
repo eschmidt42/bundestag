@@ -73,7 +73,9 @@ def load_mandate_json(
     return info
 
 
-def parse_mandate_data(mandate: schemas.Mandate) -> dict:
+def parse_mandate_data(
+    mandate: schemas.Mandate, missing: str = "unknown"
+) -> dict:
     d = {
         "legislature_id": mandate.parliament_period.id,
         "legislature_period": mandate.parliament_period.label,
@@ -93,21 +95,25 @@ def parse_mandate_data(mandate: schemas.Mandate) -> dict:
     }
 
     if mandate.fraction_membership is not None:
-        d.update(
-            {
-                "fraction_names": [
-                    _m.label for _m in mandate.fraction_membership
-                ],
-                "fraction_ids": [_m.id for _m in mandate.fraction_membership],
-                "fraction_starts": [
-                    _m.valid_from for _m in mandate.fraction_membership
-                ],
-                "fraction_ends": [
-                    "" if _m.valid_until is None else _m.valid_until
-                    for _m in mandate.fraction_membership
-                ],
-            }
-        )
+        d_fraction = {
+            "fraction_names": [_m.label for _m in mandate.fraction_membership],
+            "fraction_ids": [_m.id for _m in mandate.fraction_membership],
+            "fraction_starts": [
+                _m.valid_from for _m in mandate.fraction_membership
+            ],
+            "fraction_ends": [
+                "" if _m.valid_until is None else _m.valid_until
+                for _m in mandate.fraction_membership
+            ],
+        }
+    else:
+        d_fraction = {
+            "fraction_names": [missing for _m in mandate.fraction_membership],
+            "fraction_ids": [missing for _m in mandate.fraction_membership],
+            "fraction_starts": [missing for _m in mandate.fraction_membership],
+            "fraction_ends": [missing for _m in mandate.fraction_membership],
+        }
+    d.update(d_fraction)
     return d
 
 
@@ -143,7 +149,7 @@ def get_parties_from_col(
 
 def transform_mandates_df(df: pd.DataFrame) -> pd.DataFrame:
     df["all_parties"] = df.apply(get_parties_from_col, axis=1)
-    df["party"] = df["party"].apply(lambda x: x[-1])
+    df["party"] = df["all_parties"].apply(lambda x: x[-1])
     return df
 
 
@@ -287,6 +293,8 @@ def run(
 
     # mandates
     df = get_mandates_df(legislature_id, path=raw_path)
+    df = transform_mandates_df(df)
+
     if not dry:
         file = preprocessed_path / f"df_mandates_{legislature_id}.parquet"
         logger.debug(f"Writing to {file}")
@@ -294,6 +302,7 @@ def run(
 
     # votes
     df_all_votes = compile_votes_data(legislature_id, path=raw_path)
+    df_all_votes = transform_votes_data(df_all_votes)
 
     if not dry:
         all_votes_path = (
