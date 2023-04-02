@@ -2,8 +2,6 @@ import tarfile
 import urllib.request as request
 from pathlib import Path
 
-from datasets import load_dataset
-
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
 
