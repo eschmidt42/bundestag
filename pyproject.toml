@@ -39,8 +39,7 @@ dev = [
     "pytest",
     "pre-commit",
     "coverage",
-    "pandera",
-    "datasets"
+    "pandera"
 ]
 
 [tool.black]
