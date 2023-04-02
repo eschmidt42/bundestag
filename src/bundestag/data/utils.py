@@ -81,7 +81,7 @@ def load_json(path: Path = None, dry: bool = False):
 def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
     msg = lambda x: f"Incorrect input {resp}, please enter y or n"
     for _ in range(max_tries):
-        resp = input(f"Create {path=}? ([y]/n) ")
+        resp = input(f"Create {path.absolute()=}? ([y]/n) ")
         if resp is None or len(resp) == 0:
             do_creation = True
             _msg = (
