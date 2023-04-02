@@ -43,6 +43,11 @@ bundestag transform abgeordnetenwatch 132
 
 To find out the legislature id for the current Bundestag, visit [abgeordnetenwatch.de](https://www.abgeordnetenwatch.de/bundestag) and click on the "Open Data" button at the bottom of the page.
 
+To download prepared raw and transformed data from huggingface run
+```shell
+bundestag download huggingface
+```
+
 ### When developing
 
 See
