@@ -3,6 +3,7 @@ from rich import print as pprint
 
 import bundestag.data.download.abgeordnetenwatch as download_aw
 import bundestag.data.download.bundestag_sheets as download_bs
+import bundestag.data.download.huggingface as download_hf
 import bundestag.data.transform.abgeordnetenwatch as transform_aw
 import bundestag.data.transform.bundestag_sheets as transform_bs
 import bundestag.data.utils as data_utils
@@ -13,7 +14,7 @@ logger = logging.logger
 
 app = typer.Typer()
 
-VALID_SOURCES = ["abgeordnetenwatch", "bundestag_sheet"]
+VALID_SOURCES = ["abgeordnetenwatch", "bundestag_sheet", "huggingface"]
 
 
 @app.command(help="Download data from a chosen source")
@@ -65,6 +66,13 @@ def download(
             nmax=nmax,
             dry=dry,
             pattern=data_utils.RE_SHEET,
+        )
+
+    elif source == VALID_SOURCES[2]:
+        # run steps for huggingface
+        download_hf.run(
+            path=_paths.base,
+            dry=dry,
         )
 
     else:
