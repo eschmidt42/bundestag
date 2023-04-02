@@ -12,6 +12,7 @@ help:
 	@echo "update       : pip install new requriements into the environment."
 	@echo "docs         : create documentation."
 	@echo "test         : run pytests."
+	@echo "tarballs     : create tarballs of data/raw and data/preprocessed for storage on huggingface datasets https://huggingface.co/datasets/Bingpot/bundestag/."
 
 .PHONY: venv
 venv:
@@ -77,3 +78,10 @@ docs:
 test:
 	source .venv/bin/activate && \
 	pytest -vx .
+
+.PHONY: tarballs
+tarballs:
+	source .venv/bin/activate && \
+	cd data && \
+	tar -czvf raw.tar.gz raw && \
+	tar -czvf preprocessed.tar.gz preprocessed
