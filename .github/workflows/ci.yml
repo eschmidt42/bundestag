@@ -1,5 +1,4 @@
-# This job sets up poetry and runs unittests on every push
-name: Tests
+name: CI
 
 on:
   push
