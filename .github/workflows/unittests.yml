@@ -28,6 +28,7 @@ jobs:
                   source .venv/bin/activate
                   coverage run -m pytest -v src/tests/
                   coverage report --omit="src/tests/*"
+                  coverage xml --omit="src/tests/*"
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v3
