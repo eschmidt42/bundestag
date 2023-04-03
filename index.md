@@ -83,29 +83,67 @@ For a short overview of the highlights see below.
     * contains information on politicians, parliaments, legislative periods and mandates including and beyond the Bundestag
     * used in: `nbs/04_poll_clustering.ipynb` and `nbs/05_predicting_votes.ipynb` to cluster polls by description and predict votes of individual politicians respectively
 
+### Handling data
+
+#### Downloading raw data
+
+Abgeordnetenwatch via cli
+```shell
+bundestag download abgeordnetenwatch 111
+```
+
+or via python
+```python
+bundestag.data.download.abgeordnetenwatch.run(111,raw_path=Path("data/raw/abgeordnetenwatch"),preprocessed_path=Path("data/preprocessed/abgeordnetenwatch"))
+```
+
+Bundestag sheets via cli
+```shell
+bundestag download bundestag_sheet
+```
+
+or via python
+```python
+bundestag.data.download.bundestag_sheets.run(html_path=Path("data/raw/bundestag/htm_files"),sheet_path=Path("data/preprocessed/bundestag/sheets"))
+```
+
+#### Transforming the data
+
+Abgeordnetenwatch via cli
+```shell
+bundestag transform abgeordnetenwatch 111
+```
+
+or via python
+```python
+bundestag.data.transform.abgeordnetenwatch.run(111,raw_path=Path("data/raw/abgeordnetenwatch"),preprocessed_path=Path("data/preprocessed/abgeordnetenwatch"))
+```
+
+Bundestag sheets via cli
+```shell
+bundestag transform bundestag_sheet
+```
+
+or via python
+```python
+bundestag.data.download.bundestag_sheets.run(html_path=Path("data/raw/bundestag/htm_files"),sheet_path=Path("data/raw/bundestag/sheets"), preprocessed_path=Path("data/preprocessed/bundestag"))
+```
+
+#### Downloading raw and preprocessed data from huggingface
+
+Via cli
+```shell
+bundestag download huggingface
+```
+
+or via python
+```python
+bundestag.data.download.huggingface.run(Path("data"))
+```
+
 ### Analysis highlights
 
 Note: the cells using `pd.read_parquet` below only work for `legislature_id` 111 if the data was previously downloaded either with the `bundestag` cli tool or by using the cells below, by commenting them in.
-
-
-```python
-# !bundestag download abgeordnetenwatch 111
-```
-
-
-```python
-# !bundestag download bundestag_sheet
-```
-
-
-```python
-# !bundestag transform abgeordnetenwatch 111
-```
-
-
-```python
-# !bundestag transform bundestag_sheet
-```
 
 
 ```python
@@ -122,10 +160,18 @@ from fastai.tabular.all import *
 from rich import print as pprint
 
 import bundestag.paths as paths
-from bundestag import poll_clustering as pc
-from bundestag import similarity as sim
-from bundestag import vote_prediction as vp
+import bundestag.poll_clustering as pc
+import bundestag.similarity as sim
+import bundestag.vote_prediction as vp
 from bundestag.gui import MdBGUI, PartyGUI
+import bundestag.data.download.huggingface as download_hf
+```
+
+Comment-in the below cell to download prepared data
+
+
+```python
+# download_hf.run(Path("data"))
 ```
 
 ### Part 1 - Party/Party similarities and Politician/Party similarities using bundestag.de data
