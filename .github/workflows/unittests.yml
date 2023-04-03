@@ -12,10 +12,10 @@ jobs:
 
     steps:
             - name: Check out repository
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
             - name: Setup python
-              uses: actions/setup-python@v2
+              uses: actions/setup-python@v4
               with:
                   python-version: '3.9.16'
 
@@ -28,3 +28,11 @@ jobs:
                   source .venv/bin/activate
                   coverage run -m pytest -v src/tests/
                   coverage report --omit="src/tests/*"
+                  coverage xml --omit="src/tests/*"
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
+              with:
+                  files: ./coverage.xml
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  fail_ci_if_error: true
