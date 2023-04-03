@@ -39,7 +39,9 @@ dev = [
     "pytest",
     "pre-commit",
     "coverage",
-    "pandera"
+    "pandera",
+    "mkdocs",
+    "mkdocstrings[python]"
 ]
 
 [tool.black]
