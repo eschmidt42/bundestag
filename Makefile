@@ -42,7 +42,8 @@ install: venv
 .PHONY: compile-dev
 compile-dev:
 	source .venv/bin/activate && \
-	pip-compile --extra dev -o requirements/dev-requirements.txt pyproject.toml  --resolver=backtracking
+	pip-compile --extra dev -o requirements/dev-requirements.txt pyproject.toml  --resolver=backtracking && \
+	cp requirements/dev-requirements.txt .binder/requirements.txt
 
 .PHONY: compile
 compile:
