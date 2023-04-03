@@ -1,0 +1,140 @@
+{
+    "meta": {
+        "abgeordnetenwatch_api": {
+            "version": "2.4",
+            "changelog": "https://www.abgeordnetenwatch.de/api/version-changelog/aktuell",
+            "licence": "CC0 1.0",
+            "licence_link": "https://creativecommons.org/publicdomain/zero/1.0/deed.de",
+            "documentation": "https://www.abgeordnetenwatch.de/api/entitaeten/candidacy-mandate"
+        },
+        "status": "ok",
+        "status_message": "",
+        "result": {
+            "count": 708,
+            "total": 708,
+            "range_start": 0,
+            "range_end": 999
+        }
+    },
+    "data": [
+        {
+            "id": 52657,
+            "entity_type": "candidacy_mandate",
+            "label": "Zeki G\u00f6khan (Bundestag 2017 - 2021)",
+            "api_url": "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates/52657",
+            "id_external_administration": "2312",
+            "id_external_administration_description": "mdbID - ID der Bundestagsverwaltung",
+            "type": "mandate",
+            "parliament_period": {
+                "id": 111,
+                "entity_type": "parliament_period",
+                "label": "Bundestag 2017 - 2021",
+                "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
+                "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19"
+            },
+            "politician": {
+                "id": 122163,
+                "entity_type": "politician",
+                "label": "Zeki G\u00f6khan",
+                "api_url": "https://www.abgeordnetenwatch.de/api/v2/politicians/122163",
+                "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/profile/zeki-goekhan"
+            },
+            "start_date": "2021-08-19",
+            "end_date": null,
+            "info": null,
+            "electoral_data": {
+                "id": 53581,
+                "entity_type": "electoral_data",
+                "label": "Zeki G\u00f6khan (Bundestag 2017 - 2021)",
+                "electoral_list": {
+                    "id": 115,
+                    "entity_type": "electoral_list",
+                    "label": "Landesliste Nordrhein-Westfalen (Bundestag 2017 - 2021)",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/electoral-lists/115"
+                },
+                "list_position": 14,
+                "constituency": {
+                    "id": 4215,
+                    "entity_type": "constituency",
+                    "label": "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/constituencies/4215"
+                },
+                "constituency_result": 4.5,
+                "constituency_result_count": null,
+                "mandate_won": "moved_up"
+            },
+            "fraction_membership": [
+                {
+                    "id": 9233,
+                    "entity_type": "fraction_membership",
+                    "label": "DIE LINKE seit 19.08.2021",
+                    "fraction": {
+                        "id": 41,
+                        "entity_type": "fraction",
+                        "label": "DIE LINKE (Bundestag 2017 - 2021)",
+                        "api_url": "https://www.abgeordnetenwatch.de/api/v2/fractions/41"
+                    },
+                    "valid_from": "2021-08-19",
+                    "valid_until": null
+                }
+            ]
+        },
+        {
+            "id": 52107,
+            "entity_type": "candidacy_mandate",
+            "label": "Florian J\u00e4ger (Bundestag 2017 - 2021)",
+            "api_url": "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates/52107",
+            "id_external_administration": "2311",
+            "id_external_administration_description": "mdbID - ID der Bundestagsverwaltung",
+            "type": "mandate",
+            "parliament_period": {
+                "id": 111,
+                "entity_type": "parliament_period",
+                "label": "Bundestag 2017 - 2021",
+                "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
+                "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19"
+            },
+            "politician": {
+                "id": 121214,
+                "entity_type": "politician",
+                "label": "Florian J\u00e4ger",
+                "api_url": "https://www.abgeordnetenwatch.de/api/v2/politicians/121214",
+                "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/profile/florian-jaeger"
+            },
+            "start_date": "2021-07-20",
+            "end_date": null,
+            "info": null,
+            "electoral_data": {
+                "id": 53029,
+                "entity_type": "electoral_data",
+                "label": "Florian J\u00e4ger (Bundestag 2017 - 2021)",
+                "electoral_list": null,
+                "list_position": null,
+                "constituency": {
+                    "id": 4339,
+                    "entity_type": "constituency",
+                    "label": "215 - F\u00fcrstenfeldbruck (Bundestag 2017 - 2021)",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/constituencies/4339"
+                },
+                "constituency_result": null,
+                "constituency_result_count": null,
+                "mandate_won": "moved_up"
+            },
+            "fraction_membership": [
+                {
+                    "id": 9228,
+                    "entity_type": "fraction_membership",
+                    "label": "AfD seit 20.07.2021",
+                    "fraction": {
+                        "id": 56,
+                        "entity_type": "fraction",
+                        "label": "AfD (Bundestag 2017 - 2021)",
+                        "api_url": "https://www.abgeordnetenwatch.de/api/v2/fractions/56"
+                    },
+                    "valid_from": "2021-07-20",
+                    "valid_until": null
+                }
+            ]
+        }
+    ]
+}

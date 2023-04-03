@@ -21,7 +21,8 @@ jobs:
 
             - name: Create virtal environment
               run: |-
-                  make dev-install
+                  make venv
+                  make install-dev
             - name: Run tests
               run: |-
                   source .venv/bin/activate

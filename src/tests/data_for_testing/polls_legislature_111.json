@@ -1,0 +1,129 @@
+{
+    "meta": {
+        "abgeordnetenwatch_api": {
+            "version": "2.4",
+            "changelog": "https://www.abgeordnetenwatch.de/api/version-changelog/aktuell",
+            "licence": "CC0 1.0",
+            "licence_link": "https://creativecommons.org/publicdomain/zero/1.0/deed.de",
+            "documentation": "https://www.abgeordnetenwatch.de/api/entitaeten/poll"
+        },
+        "status": "ok",
+        "status_message": "",
+        "result": {
+            "count": 176,
+            "total": 176,
+            "range_start": 0,
+            "range_end": 999
+        }
+    },
+    "data": [
+        {
+            "id": 4293,
+            "entity_type": "node",
+            "label": "\u00c4nderung des Infektionsschutzgesetzes und Grundrechtseinschr\u00e4nkungen",
+            "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/4293",
+            "field_legislature": {
+                "id": 111,
+                "entity_type": "parliament_period",
+                "label": "Bundestag 2017 - 2021",
+                "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
+                "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19"
+            },
+            "field_topics": [
+                {
+                    "id": 28,
+                    "entity_type": "taxonomy_term",
+                    "label": "Gesundheit",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/28",
+                    "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/gesundheit"
+                },
+                {
+                    "id": 8,
+                    "entity_type": "taxonomy_term",
+                    "label": "Recht",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/8",
+                    "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/recht"
+                }
+            ],
+            "field_committees": [
+                {
+                    "id": 514,
+                    "entity_type": "node",
+                    "label": "Haushaltsausschuss",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/committees/514"
+                },
+                {
+                    "id": 520,
+                    "entity_type": "node",
+                    "label": "Ausschuss f\u00fcr Gesundheit",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/committees/520"
+                }
+            ],
+            "field_intro": "<p>Ein von den Fraktionen der CDU/CSU und SPD eingebrachter <a class=\"link-download\" href=\"https://dserver.bundestag.de/btd/19/320/1932039.pdf\">Gesetzentwurf</a> zur Hilfe f\u00fcr Flutopfer in Deutschland sieht auch \u00c4nderungen des Infektionsschutzgesetzes vor. Diese sollen unter anderem in bestimmten Einrichtungen eine Auskunftspflicht von Mitarbeiter:innen zu ihrem Impf- oder Genesenenstatus erm\u00f6glichen.</p>\r\n\r\n<p>Im Vorfeld hatte die Opposition f\u00fcr das Gesetzespaket eine namentliche Abstimmung nur \u00fcber die Punkte verlangt, die auch das Infektionsschutzgesetz betreffen.</p>\r\n\r\n<p>Die Neuregelungen wurden mit 344 Ja-Stimmen der Unions- und SPD-Fraktion gegen 280 Nein-Stimmen der Oppositionsfraktionen sowie einzelner Abgeordneter der Union und SPD <strong>angenommen</strong>. Lediglich eine Abgeordnete hatte sich bei der Abstimmung enthalten.</p>\r\n",
+            "field_poll_date": "2021-09-07",
+            "field_related_links": [
+                {
+                    "uri": "https://dserver.bundestag.de/btd/19/320/1932039.pdf",
+                    "title": "Gesetzentwurf"
+                },
+                {
+                    "uri": "https://dserver.bundestag.de/btd/19/322/1932275.pdf",
+                    "title": "Beschlussempfehlung"
+                },
+                {
+                    "uri": "https://www.bundestag.de/parlament/plenum/abstimmung/abstimmung?id=755",
+                    "title": "\u00dcbersichtsseite des Bundestags zur Abstimmung"
+                }
+            ]
+        },
+        {
+            "id": 4284,
+            "entity_type": "node",
+            "label": "Fortbestand der epidemischen Lage von nationaler Tragweite",
+            "api_url": "https://www.abgeordnetenwatch.de/api/v2/polls/4284",
+            "field_legislature": {
+                "id": 111,
+                "entity_type": "parliament_period",
+                "label": "Bundestag 2017 - 2021",
+                "api_url": "https://www.abgeordnetenwatch.de/api/v2/parliament-periods/111",
+                "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/bundestag/19"
+            },
+            "field_topics": [
+                {
+                    "id": 28,
+                    "entity_type": "taxonomy_term",
+                    "label": "Gesundheit",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/28",
+                    "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/gesundheit"
+                },
+                {
+                    "id": 8,
+                    "entity_type": "taxonomy_term",
+                    "label": "Recht",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/topics/8",
+                    "abgeordnetenwatch_url": "https://www.abgeordnetenwatch.de/themen-dip21/recht"
+                }
+            ],
+            "field_committees": [
+                {
+                    "id": 520,
+                    "entity_type": "node",
+                    "label": "Ausschuss f\u00fcr Gesundheit",
+                    "api_url": "https://www.abgeordnetenwatch.de/api/v2/committees/520"
+                }
+            ],
+            "field_intro": "<p>Der von den Fraktionen der CDU/CSU und SPD eingebrachte <a class=\"link-download\" href=\"https://dserver.bundestag.de/btd/19/320/1932040.pdf\">Antrag</a> sieht vor, dass der Bundestag feststellt, dass die seit dem 25. M\u00e4rz 2020 geltende epidemische Lage von nationaler Tragweite weiter fortbesteht. Das wird damit begr\u00fcndet, dass angesichts des erneuten Anstiegs der COVID-19-Fallzahlen in Deutschland weiterhin eine erhebliche Gesundheitsgef\u00e4hrdung der Bev\u00f6lkerung gegeben sei.</p>\r\n\r\n<p>Der Antrag wurde mit 325 Ja-Stimmen der CDU- und SPD-Fraktion gegen 252 Nein-Stimmen der Oppositionsfraktionen <strong>angenommen</strong>. F\u00fcnf Abgeordnete haben sich enthalten.</p>\r\n",
+            "field_poll_date": "2021-08-25",
+            "field_related_links": [
+                {
+                    "uri": "https://dserver.bundestag.de/btd/19/320/1932040.pdf",
+                    "title": "Antrag der Fraktionen der CDU/CSU und SPD"
+                },
+                {
+                    "uri": "https://dejure.org/gesetze/IfSG/5.html",
+                    "title": "\u00a7 5 des Infektionsschutzgesetzes"
+                }
+            ]
+        }
+    ]
+}
