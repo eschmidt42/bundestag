@@ -2,7 +2,7 @@
 
 > Parse and inspect "Namentliche Abstimmungen" (roll call votes) in the Bundestag (the federal German parliament)
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eschmidt42/bundestag/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eschmidt42/bundestag/data?labpath=README.ipynb)
 
 ## Context
 
@@ -159,12 +159,12 @@ import pandas as pd
 from fastai.tabular.all import *
 from rich import print as pprint
 
+import bundestag.data.download.huggingface as download_hf
 import bundestag.paths as paths
 import bundestag.poll_clustering as pc
 import bundestag.similarity as sim
 import bundestag.vote_prediction as vp
 from bundestag.gui import MdBGUI, PartyGUI
-import bundestag.data.download.huggingface as download_hf
 ```
 
 Comment-in the below cell to download prepared data
