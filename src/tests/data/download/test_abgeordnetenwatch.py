@@ -1,11 +1,7 @@
-import json
 import typing as T
-import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
 
-import pandas as pd
-import pandera as pa
 import pytest
 import requests
 
@@ -139,9 +135,146 @@ def test_store_vote_json(dry: bool):
 #     ), f'Surprisingly found duplicated mandate_id values: {df.loc[mask,"poll_id"].unique()} \nexamples: \n{df.loc[mask].head()}'
 
 
-@pytest.mark.skip("to be implemented")
-def test_check_stored_vote_ids():
-    pass
+@pytest.mark.parametrize(
+    "legislature_id,result",
+    [
+        (42, {}),
+        (21, {21: Path("dummy/path/votes_legislature_21")}),
+    ],
+)
+def test_list_votes_dirs(legislature_id: int, result: T.Dict[int, Path]):
+    path = Path("dummy/path")
+    glob_leg = (
+        [Path(f"dummy/path/votes_legislature_{legislature_id}")]
+        if legislature_id == 21
+        else []
+    )
+
+    with patch("pathlib.Path.glob", MagicMock(return_value=glob_leg)) as _glob:
+        # line to test
+        tmp = aw.list_votes_dirs(path=path)
+        assert tmp == result
+
+
+@pytest.mark.parametrize(
+    "legislature_id,exists,result",
+    [
+        (42, False, {}),
+        (
+            21,
+            True,
+            {11: Path("dummy/path/votes_legislature_21/poll_11_votes.json")},
+        ),
+    ],
+)
+def test_list_polls_files(
+    legislature_id: int, exists: bool, result: T.Dict[int, Path]
+):
+    path = Path("dummy/path")
+    glob_leg = (
+        [
+            Path(
+                f"dummy/path/votes_legislature_{legislature_id}/poll_11_votes.json"
+            )
+        ]
+        if legislature_id == 21
+        else []
+    )
+
+    with (
+        patch("pathlib.Path.glob", MagicMock(return_value=glob_leg)) as _glob,
+        patch("pathlib.Path.exists", MagicMock(return_value=exists)) as _glob2,
+    ):
+        # line to test
+        tmp = aw.list_polls_files(legislature_id, path=path)
+        assert tmp == result
+
+
+@pytest.mark.parametrize(
+    "legislature_id,result",
+    [
+        # unknown legislature
+        (42, {42: {}}),
+        # known legislature
+        (
+            21,
+            {
+                21: {
+                    1: Path(
+                        "dummy/path/votes_legislature_21/poll_1_votes.json"
+                    ),
+                    2: Path(
+                        "dummy/path/votes_legislature_21/poll_2_votes.json"
+                    ),
+                }
+            },
+        ),
+        # all legislatures
+        (
+            None,
+            {
+                21: {
+                    1: Path(
+                        "dummy/path/votes_legislature_21/poll_1_votes.json"
+                    ),
+                    2: Path(
+                        "dummy/path/votes_legislature_21/poll_2_votes.json"
+                    ),
+                },
+                22: {
+                    1: Path(
+                        "dummy/path/votes_legislature_22/poll_1_votes.json"
+                    )
+                },
+            },
+        ),
+    ],
+)
+def test_check_stored_vote_ids(
+    legislature_id: int, result: T.Dict[int, T.Dict[int, Path]]
+):
+    path = Path("dummy/path")
+
+    if legislature_id == 42:
+        votes_dirs = {}
+        polls_files = [{}]
+    elif legislature_id == 21:
+        votes_dirs = {21: Path(f"dummy/path/votes_legislature_21")}
+        polls_files = [
+            {
+                1: Path("dummy/path/votes_legislature_21/poll_1_votes.json"),
+                2: Path("dummy/path/votes_legislature_21/poll_2_votes.json"),
+            }
+        ]
+    elif legislature_id == None:
+        votes_dirs = {
+            21: Path(f"dummy/path/votes_legislature_21"),
+            22: Path(f"dummy/path/votes_legislature_22"),
+        }
+        polls_files = [
+            {
+                1: Path("dummy/path/votes_legislature_21/poll_1_votes.json"),
+                2: Path("dummy/path/votes_legislature_21/poll_2_votes.json"),
+            },
+            {1: Path("dummy/path/votes_legislature_22/poll_1_votes.json")},
+        ]
+    else:
+        raise ValueError("Invalid `legislature_id`")
+
+    with (
+        patch(
+            "bundestag.data.download.abgeordnetenwatch.list_votes_dirs",
+            MagicMock(return_value=votes_dirs),
+        ) as list_votes_dirs,
+        patch(
+            "bundestag.data.download.abgeordnetenwatch.list_polls_files",
+            MagicMock(side_effect=polls_files),
+        ) as list_polls_files,
+    ):
+        # line to test
+        tmp = aw.check_stored_vote_ids(legislature_id, path=path)
+
+        assert tmp == result
 
 
 # def test_stored_vote_ids_check(path: Path = None):
@@ -154,5 +287,20 @@ def test_check_stored_vote_ids():
 #         [isinstance(p, Path) for d in tmp.values() for p in d.values()]
 #     ), "Sanity check of lowest level values failed, expect all to be of type pathlib.Path"
 @pytest.mark.skip("to be implemented")
-def test_get_all_remaining_vote_info():
-    pass
+def test_get_user_download_decision():
+    ...
+
+
+@pytest.mark.skip("to be implemented")
+def test_check_possible_poll_ids():
+    ...
+
+
+@pytest.mark.skip("to be implemented")
+def test_get_all_remaining_vote_data():
+    ...
+
+
+@pytest.mark.skip("to be implemented")
+def test_run():
+    ...

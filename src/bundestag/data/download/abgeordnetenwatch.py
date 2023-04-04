@@ -148,38 +148,75 @@ def store_vote_json(votes: dict, poll_id: int, dry=False, path: Path = None):
         json.dump(votes, f)
 
 
-def check_stored_vote_ids(legislature_id: int, path: Path):
-    "Check which vote ids are already stored"
+def list_votes_dirs(path: Path = None) -> T.Dict[int, T.List[Path]]:
+    "List all votes_legislature_* directories"
 
     dir2int = lambda x: int(str(x).split("_")[-1])
-    legislature_ids = {dir2int(v): v for v in path.glob("votes_legislature_*")}
+
+    # get all legislature ids for which there are directories present
+    vote_dirs = list(path.glob("votes_legislature_*"))
+    if len(vote_dirs) == 0:
+        logger.error(f"No vote directories found in {path}")
+        return {}
+
+    # create a dict with legislature ids as keys and the corresponding file paths as values
+    legislature_ids = {dir2int(v): v for v in vote_dirs}
+
+    return legislature_ids
+
+
+def list_polls_files(legislature_id: int, path: Path = None) -> T.List[Path]:
+    "List all polls_legislature_* files"
 
     file2int = lambda x: int(str(x).split("_")[-2])
-    id_unknown = (
+
+    leg_path = path / f"votes_legislature_{legislature_id}"
+
+    # check if the path actually exists
+    if not leg_path.exists():
+        logger.error(
+            f"No vote directory found for legislature {legislature_id} in {path}"
+        )
+        return {}
+
+    # get all poll ids for which there are files present
+    poll_ids = {file2int(v): v for v in leg_path.glob("poll_*_votes.json")}
+    return poll_ids
+
+
+def check_stored_vote_ids(
+    legislature_id: int, path: Path
+) -> T.Dict[int, T.Dict[int, Path]]:
+    "Check which vote ids are already stored"
+
+    legislature_ids = list_votes_dirs(path=path)
+
+    # determine if the legislature id is known
+    leg_id_unknown = (
         legislature_id is not None and legislature_id not in legislature_ids
     )
 
-    if id_unknown:
+    if leg_id_unknown:
+        # if the legislature id is unknown, there are no associated files, hence return an empty dict
         logger.error(
             f"Given legislature_id {legislature_id} is unknown. Known ids: {sorted(list(legislature_ids.keys()))}"
         )
         return {legislature_id: {}}
 
     elif legislature_id is not None:
-        vote_ids = {
-            file2int(v): v
-            for v in (path / f"votes_legislature_{legislature_id}").glob(
-                "poll_*_votes.json"
-            )
-        }
+        # if the legislature id is known, return the associated files
+        # this is the common case
+
+        vote_ids = list_polls_files(legislature_id, path=path)
+
         return {legislature_id: vote_ids}
 
     else:
+        # if the legislature id is None, return all files
         all_ids = {}
-        for leg_id, leg_path in legislature_ids.items():
-            all_ids[leg_id] = {
-                file2int(v): v for v in leg_path.glob("poll_*_votes.json")
-            }
+        for leg_id in legislature_ids:
+            all_ids[leg_id] = list_polls_files(leg_id, path=path)
+
         return all_ids
 
 
