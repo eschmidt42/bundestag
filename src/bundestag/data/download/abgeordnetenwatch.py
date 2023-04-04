@@ -306,7 +306,6 @@ def run(
     legislature_id: int,
     dry: bool = False,
     raw_path: Path = None,
-    preprocessed_path: Path = None,
     max_polls: int = 999,
     max_mandates: int = 999,
 ) -> pd.DataFrame:
@@ -314,7 +313,7 @@ def run(
 
     logger.info("Start downloading abgeordnetenwatch data")
     # TODO: remove preprocessed path as it is not used
-    if not dry and (raw_path is None or preprocessed_path is None):
+    if not dry and (raw_path is None):
         raise ValueError(
             f"When {dry=} `raw_path` and or `preprocessed_path` cannot be None."
         )
