@@ -24,6 +24,8 @@ API_ENCODING = "ISO-8859-1"
 def request_poll_data(
     legislature_id: int, dry: bool = False, num_polls: int = 999
 ) -> dict:
+    "Request poll data from abgeordnetenwatch.de"
+
     url = "https://www.abgeordnetenwatch.de/api/v2/polls"
     params = {
         "field_legislature": legislature_id,  # Bundestag period 2017-2021 = 111
@@ -47,6 +49,8 @@ def request_poll_data(
 def store_polls_json(
     polls: dict, legislature_id: int, dry: bool = False, path: Path = None
 ):
+    "Write poll data to file"
+
     file = data_utils.get_location(
         data_utils.polls_file(legislature_id), path=path, dry=dry, mkdir=False
     )
@@ -62,6 +66,8 @@ def store_polls_json(
 def request_mandates_data(
     legislature_id: int, dry=False, num_mandates: int = 999
 ) -> dict:
+    "Request mandates data from abgeordnetenwatch.de"
+
     url = f"https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates"
     params = {
         "parliament_period": legislature_id,  # collecting parlamentarians' votes
@@ -83,6 +89,8 @@ def request_mandates_data(
 def store_mandates_json(
     mandates: dict, legislature_id: int, dry: bool = False, path: Path = None
 ):
+    "Write mandates data to file"
+
     file = data_utils.get_location(
         data_utils.mandates_file(legislature_id),
         path=path,
@@ -99,6 +107,8 @@ def store_mandates_json(
 
 
 def request_vote_data(poll_id: int, dry=False) -> dict:
+    "Request votes data from abgeordnetenwatch.de"
+
     url = f"https://www.abgeordnetenwatch.de/api/v2/polls/{poll_id}"
     params = {"related_data": "votes"}  # collecting parlamentarians' votes
     if dry:
@@ -116,6 +126,8 @@ def request_vote_data(poll_id: int, dry=False) -> dict:
 
 
 def store_vote_json(votes: dict, poll_id: int, dry=False, path: Path = None):
+    "Write votes data to file"
+
     if dry:
         logger.debug(
             f"Dry mode - Writing votes info to {data_utils.get_location(data_utils.votes_file(None, poll_id), path=path, dry=dry, mkdir=False)}"
@@ -137,6 +149,8 @@ def store_vote_json(votes: dict, poll_id: int, dry=False, path: Path = None):
 
 
 def check_stored_vote_ids(legislature_id: int, path: Path):
+    "Check which vote ids are already stored"
+
     dir2int = lambda x: int(str(x).split("_")[-1])
     legislature_ids = {dir2int(v): v for v in path.glob("votes_legislature_*")}
 
@@ -170,22 +184,29 @@ def check_stored_vote_ids(legislature_id: int, path: Path):
 
 
 def get_user_download_decision(n: int, max_tries: int = 3) -> bool:
+    "Ask user if they want to download n polls"
+
     msg = lambda x: f"Incorrect input {resp}, please enter y or n"
+
     for _ in range(max_tries):
         resp = input(f"Download {n} polls? ([y]/n) ")
+
         if resp is None or len(resp) == 0:
             do_dowload = True
             _msg = "proceeding with download" if do_dowload else "terminating."
             logger.info(f"Received: {resp}, {_msg}")
             return do_dowload
+
         elif resp.lower() in ["y", "n"]:
             do_dowload = resp.lower() == "y"
             _msg = "proceeding with download" if do_dowload else "terminating."
             logger.info(f"Received: {resp}, {_msg}")
             return do_dowload
+
         elif not isinstance(resp, str):
             logger.error(msg(resp))
             continue
+
         else:
             logger.error(msg(resp))
 
@@ -262,14 +283,20 @@ def get_all_remaining_vote_data(
 
     dt_rv = stats.norm(scale=dt_rv_scale)
 
-    for i, poll_id in enumerate(
-        tqdm(remaining_poll_ids, total=len(remaining_poll_ids), desc="poll_id")
+    for poll_id in tqdm(
+        remaining_poll_ids, total=len(remaining_poll_ids), desc="poll_id"
     ):
+        # random sleep time
         _t = t_sleep + abs(dt_rv.rvs())
         if not dry:
             time.sleep(_t)
+
+        # collect vote data
         info = request_vote_data(poll_id, dry=dry)
+
+        # store vote data
         store_vote_json(info, poll_id, dry=dry, path=path)
+
     logger.debug(
         f"vote collection for legislature_id {legislature_id} complete (dry = {dry})"
     )
@@ -283,6 +310,8 @@ def run(
     max_polls: int = 999,
     max_mandates: int = 999,
 ) -> pd.DataFrame:
+    "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
+
     logger.info("Start downloading abgeordnetenwatch data")
     # TODO: remove preprocessed path as it is not used
     if not dry and (raw_path is None or preprocessed_path is None):
