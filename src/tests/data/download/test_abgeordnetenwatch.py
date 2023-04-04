@@ -286,9 +286,26 @@ def test_check_stored_vote_ids(
 #     assert all(
 #         [isinstance(p, Path) for d in tmp.values() for p in d.values()]
 #     ), "Sanity check of lowest level values failed, expect all to be of type pathlib.Path"
-@pytest.mark.skip("to be implemented")
-def test_get_user_download_decision():
-    ...
+@pytest.mark.parametrize(
+    "choice,result",
+    [
+        ("y", True),
+        ("Y", True),
+        ("n", False),
+        ("N", False),
+        ("wups", None),
+    ],
+)
+def test_get_user_download_decision(choice: str, result: bool):
+    with patch("builtins.input", MagicMock(return_value=choice)) as _input:
+        try:
+            # line to test
+            tmp = aw.get_user_download_decision(99, max_tries=1)
+        except ValueError:
+            if choice == "wups":
+                pytest.xfail("Expected ValueError")
+        else:
+            assert tmp == result
 
 
 @pytest.mark.skip("to be implemented")

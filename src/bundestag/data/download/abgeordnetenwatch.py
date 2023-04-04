@@ -229,16 +229,20 @@ def get_user_download_decision(n: int, max_tries: int = 3) -> bool:
         resp = input(f"Download {n} polls? ([y]/n) ")
 
         if resp is None or len(resp) == 0:
-            do_dowload = True
-            _msg = "proceeding with download" if do_dowload else "terminating."
+            do_download = True
+            _msg = (
+                "proceeding with download" if do_download else "terminating."
+            )
             logger.info(f"Received: {resp}, {_msg}")
-            return do_dowload
+            return do_download
 
         elif resp.lower() in ["y", "n"]:
-            do_dowload = resp.lower() == "y"
-            _msg = "proceeding with download" if do_dowload else "terminating."
+            do_download = resp.lower() == "y"
+            _msg = (
+                "proceeding with download" if do_download else "terminating."
+            )
             logger.info(f"Received: {resp}, {_msg}")
-            return do_dowload
+            return do_download
 
         elif not isinstance(resp, str):
             logger.error(msg(resp))
