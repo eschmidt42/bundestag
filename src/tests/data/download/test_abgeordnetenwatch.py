@@ -1,3 +1,4 @@
+import json
 import typing as T
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
@@ -308,9 +309,39 @@ def test_get_user_download_decision(choice: str, result: bool):
             assert tmp == result
 
 
-@pytest.mark.skip("to be implemented")
-def test_check_possible_poll_ids():
-    ...
+@pytest.fixture(scope="module")
+def poll_response_raw() -> dict:
+    response = json.load(
+        open("src/tests/data_for_testing/polls_legislature_111.json", "r")
+    )
+    return response
+
+
+@pytest.mark.parametrize(
+    "dry,result",
+    [
+        (True, []),
+        (
+            False,
+            [
+                4293,
+                4284,
+            ],
+        ),
+    ],
+)
+def test_check_possible_poll_ids(
+    dry: bool, result: T.List[int], poll_response_raw: dict
+):
+    data = poll_response_raw if not dry else {}
+    with (
+        patch(
+            "bundestag.data.utils.load_json", MagicMock(return_value=data)
+        ) as _load,
+    ):
+        # line to test
+        tmp = aw.check_possible_poll_ids(42, path=Path("dummy/path"), dry=dry)
+        assert set(tmp) == set(result)
 
 
 @pytest.mark.skip("to be implemented")

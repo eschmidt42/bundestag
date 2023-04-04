@@ -269,13 +269,19 @@ def check_possible_poll_ids(
     """
     polls_file = data_utils.polls_file(legislature_id)
     polls_file = path / polls_file
+
     logger.debug(f"Reading {polls_file=}")
-    info = data_utils.load_json(polls_file, dry=dry)
+    data = data_utils.load_json(polls_file, dry=dry)
+
     if dry:
         return []
-    polls = schemas.PollResponse(**info)
+
+    polls = schemas.PollResponse(**data)
+
     poll_ids = list(set([v.id for v in polls.data]))
+
     logger.debug(f"Identified {len(poll_ids)} unique poll ids")
+
     return poll_ids
 
 
