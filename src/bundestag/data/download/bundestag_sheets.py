@@ -99,10 +99,9 @@ def download_multiple_sheets(
     )
     known_sheets = data_utils.get_file_paths(sheet_path, pattern=RE_FNAME)
 
-    for i, (_, uri) in tqdm.tqdm(
-        enumerate(uris.items()), desc="File", total=n
-    ):
-        if nmax is not None and i > nmax:
+    c = 1
+    for _, uri in tqdm.tqdm(uris.items(), desc="File", total=n):
+        if nmax is not None and c > nmax:
             break
         fname = data_utils.get_sheet_fname(uri)
         file = Path(sheet_path) / fname
@@ -110,6 +109,7 @@ def download_multiple_sheets(
             continue
 
         download_sheet(uri, sheet_path=sheet_path, dry=dry)
+        c += 1
 
         time.sleep(t_sleep)
 
@@ -117,6 +117,7 @@ def download_multiple_sheets(
 def run(
     html_path: Path,
     sheet_path: Path,
+    t_sleep: float = 0.01,
     nmax: int = None,
     dry: bool = False,
     pattern: re.Pattern = data_utils.RE_HTM,
@@ -136,7 +137,7 @@ def run(
     sheet_uris = collect_sheet_uris(html_file_paths)
     # download excel files
     download_multiple_sheets(
-        sheet_uris, sheet_path=sheet_path, nmax=nmax, dry=dry
+        sheet_uris, sheet_path=sheet_path, t_sleep=t_sleep, nmax=nmax, dry=dry
     )
 
     logger.info("Done downloading sheets")
