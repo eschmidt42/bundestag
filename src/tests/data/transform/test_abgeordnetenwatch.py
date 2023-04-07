@@ -372,6 +372,14 @@ def test_get_parties_from_col(entries: T.List[str], targets: T.List[str]):
     assert all([targ == res[i] for i, targ in enumerate(targets)])
 
 
+def test_transform_mandates_data():
+    df = MANDATES_DF.copy()
+    # line to test
+    res = aw.transform_mandates_data(df)
+    assert "all_parties" in res.columns
+    assert "party" in res.columns
+
+
 def test_get_politician_names():
     col = "mandate"
     df = pd.DataFrame(
