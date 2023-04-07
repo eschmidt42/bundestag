@@ -58,7 +58,7 @@ def get_legislature_data(
         legislature_id, dry=dry, num_polls=max_polls
     )
     download_aw.store_polls_json(data, legislature_id, dry=dry, path=raw_path)
-    df = transform_aw.get_polls_df(legislature_id, path=raw_path)
+    df = transform_aw.get_polls_data(legislature_id, path=raw_path)
     if not dry:
         file = preprocessed_path / f"df_polls_{legislature_id}.parquet"
         logger.debug(f"writing to {file}")
@@ -70,7 +70,7 @@ def get_legislature_data(
     download_aw.store_mandates_json(
         data, legislature_id, dry=dry, path=raw_path
     )
-    df = transform_aw.get_mandates_df(legislature_id, path=raw_path)
+    df = transform_aw.get_mandates_data(legislature_id, path=raw_path)
     if not dry:
         file = preprocessed_path / f"df_mandates_{legislature_id}.parquet"
         logger.debug(f"Writing to {file}")
