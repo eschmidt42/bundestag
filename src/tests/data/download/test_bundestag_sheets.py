@@ -12,9 +12,14 @@ import bundestag.data.download.bundestag_sheets as hp
 import bundestag.schemas as schemas
 
 
-@pytest.mark.parametrize("pattern", [hp.RE_SHEET, None])
-def test_collect_sheet_uris(pattern: re.Pattern):
-    s = """
+@pytest.mark.parametrize(
+    "s,href,pattern",
+    [
+        (s, href, pattern)
+        for pattern in [hp.RE_SHEET, None]
+        for (s, href) in [
+            (
+                """
     <td data-th="Dokument">
       <div class="bt-documents-description">
         <p><strong>
@@ -23,22 +28,44 @@ def test_collect_sheet_uris(pattern: re.Pattern):
               <li><a title="PDF | 176 KB" class="bt-link-dokument" href="https://www.bundestag.de/resource/blob/810080/6aec44794420f1c45739567b682af84d/20201126_3-data.pdf" target="_blank" tabindex="0">  PDF | 176 KB</a></li>
               <li><a title="XLSX | 51 KB" class="bt-link-dokument" href="https://www.bundestag.de/resource/blob/810078/41aca52ecb2c567c3851ebd15e7d9475/20201126_3_xls-data.xlsx" target="_blank" tabindex="0">  XLSX | 51 KB</a></li>
         </ul>
+      </div>
+    </td>""",
+                "https://www.bundestag.de/resource/blob/810078/41aca52ecb2c567c3851ebd15e7d9475/20201126_3_xls-data.xlsx",
+            ),
+            (
+                """
+    <td data-th="Dokument">
+      <div class="bt-documents-description">
+        <p><strong>
+        26.11.2020: Übereinkommen über ein Einheitliches Patentgericht</strong></p>
         <ul class="bt-linkliste">
-              <li><a title="PDF | 176 KB" class="bt-link-dokument" target="_blank" tabindex="0">  PDF | 176 KB</a></li>
-              <li><a title="XLSX | 51 KB" class="bt-link-dokument" target="_blank" tabindex="0">  XLSX | 51 KB</a></li>
+              <li><a title="PDF | 176 KB" class="bt-link-dokument" href="https://www.bundestag.de/resource/blob/810080/6aec44794420f1c45739567b682af84d/20201126_3-data.pdf" target="_blank" tabindex="0">  PDF | 176 KB</a></li>
         </ul>
       </div>
-    </td>
-    """
-    uri = "https://www.bundestag.de/resource/blob/810078/41aca52ecb2c567c3851ebd15e7d9475/20201126_3_xls-data.xlsx"
+    </td>""",
+                None,
+            ),
+        ]
+    ],
+    ids=[
+        "xlsx+re_pattern",
+        "no_xlsx+re_pattern",
+        "xlsx+no_pattern",
+        "no_xlsx+no_pattern",
+    ],
+)
+def test_collect_sheet_uris(s: str, href: str, pattern: re.Pattern):
     title = "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht"
 
     html_file_paths = [Path("dummy/path/f1.html")]
     with patch("builtins.open", mock_open(read_data=s)):
-        res = hp.collect_sheet_uris(html_file_paths, pattern=pattern)
+        # line to test
+        uris = hp.collect_sheet_uris(html_file_paths, pattern=pattern)
 
-    assert title in res
-    assert res[title] == uri
+    if href is None:
+        assert title not in uris
+    else:
+        assert uris[title] == href
 
 
 @pytest.mark.parametrize("dry", [True, False])
