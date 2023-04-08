@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 import tqdm
+import xlrd
 
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
@@ -38,43 +39,65 @@ def is_date(s: str, fun: T.Callable):
         return False
 
 
+def file_size_is_zero(file: Path):
+    file_size = file.stat().st_size
+    if file_size == 0:
+        logger.warning(f"{file=} is of size 0, skipping ...")
+        return True
+    return False
+
+
+def read_excel(file: Path, engine: str = "xlrd") -> pd.DataFrame:
+    try:
+        dfs = pd.read_excel(file, sheet_name=None, engine=engine)
+    except ValueError as ex:
+        dfs = pd.read_excel(file, sheet_name=None, engine="openpyxl")
+    except xlrd.XLRDError as ex:
+        # file is erroneous and needs to be skipped
+        logger.error(f"{file=} is erroneous and is skipped")
+        return None
+    return dfs
+
+
 def get_sheet_df(
     sheet_file: T.Union[str, Path],
     file_title_maps: T.Dict[str, str] = None,
     validate: bool = False,
-):
+) -> pd.DataFrame:
     "Parsing xlsx and xls files into dataframes"
 
-    if Path(sheet_file).stat().st_size == 0:
-        logger.warning(f"{sheet_file} is of size 0, skipping ...")
+    sheet_file = Path(sheet_file)
+    if file_size_is_zero(sheet_file):
         return
 
-    import xlrd
+    dfs = read_excel(sheet_file)
+    if dfs is None:
+        return
 
-    try:
-        dfs = pd.read_excel(sheet_file, sheet_name=None, engine="xlrd")
-    except ValueError as ex:
-        dfs = pd.read_excel(sheet_file, sheet_name=None, engine="openpyxl")
-    except xlrd.XLRDError as ex:
-        # file is erroneous and needs to be skipped
-        logger.error(f"{sheet_file=} is erroneous and is skipped")
-        return None
+    # sanity check that there is only one sheet
+    if len(dfs) > 1:
+        raise ValueError(
+            f"{sheet_file=} has more than one page, that's unexpected."
+        )
 
-    assert (
-        len(dfs) == 1
-    ), "The sheet file has more than one page, that's unexpected."
-
+    # assigning sheet name to the dataframe
     for name, df in dfs.items():
         df["sheet_name"] = name
 
-    assert not (df[VOTE_COLS].sum(axis=1) == 0).any()
-    assert not (df[VOTE_COLS].sum(axis=1) > 1).any()
+    # verifying that all vote columns (ja, nein, Enthaltung, ungültig, nichtabgegeben) are plausible
+    mask = df[VOTE_COLS].sum(axis=1) != 1
+    if mask.any():
+        logger.error(
+            f"{sheet_file=} has rows with more than one vote:\n{df.loc[mask,:]}"
+        )
 
-    date, title = None, None
+    # assinging date and title columns
     if file_title_maps is not None:
         title, date = handle_title_and_date(
             file_title_maps[sheet_file.name], sheet_file
         )
+    else:
+        title, date = None, None
 
     df["date"] = date
     df["title"] = title
@@ -126,7 +149,6 @@ def disambiguate_party(
     return df
 
 
-# TODO: add pandera schema validation
 def get_squished_dataframe(
     df: pd.DataFrame,
     id_col: str = "Bezeichnung",
@@ -134,9 +156,11 @@ def get_squished_dataframe(
     other_cols: T.List = None,
     validate: bool = False,
 ) -> pd.DataFrame:
-    "Reformats `df`"
+    "Reformats `df` by squishing the vote columns (ja, nein, Enthaltung, ...) into one column"
     other_cols = ["date", "title"] if other_cols is None else other_cols
     tmp = df.loc[:, [id_col] + feature_cols + other_cols]
+
+    # add issue column
     tmp["issue"] = df["date"].dt.date.apply(str) + " " + df["title"]
 
     tmp = tmp.set_index([id_col, "issue"] + other_cols)
@@ -153,7 +177,7 @@ def get_squished_dataframe(
     ).drop(columns=VOTE_COLS)
 
     if validate:
-        schemas.SHEET_SQUISHED(df)
+        schemas.SHEET_FINAL(df)
 
     return df
 
@@ -176,8 +200,11 @@ DTYPES = {
 }
 
 
-def set_sheet_dtypes(df: pd.DataFrame):
-    for col, dtype in DTYPES.items():
+def set_sheet_dtypes(
+    df: pd.DataFrame, dtypes: T.Dict[str, T.Union[str, object]] = None
+):
+    dtypes = DTYPES if dtypes is None else dtypes
+    for col, dtype in dtypes.items():
         df[col] = df[col].astype(dtype)
     return df
 
@@ -185,6 +212,7 @@ def set_sheet_dtypes(df: pd.DataFrame):
 def get_multiple_sheets_df(
     sheet_files: T.List[T.Union[Path, str]],
     file_title_maps: T.Dict[str, str] = None,
+    validate: bool = False,
 ):
     "Loads, processes and concatenates multiple vote sheets"
     logger.info("Loading processing and concatenating multiple vote sheets")
@@ -193,12 +221,18 @@ def get_multiple_sheets_df(
     for sheet_file in tqdm.tqdm(
         sheet_files, total=len(sheet_files), desc="Sheets"
     ):
-        sheet_df = get_sheet_df(sheet_file, file_title_maps=file_title_maps)
+        sheet_df = get_sheet_df(
+            sheet_file, file_title_maps=file_title_maps, validate=validate
+        )
         if sheet_df is None:
             n_skipped += 1
             continue
         df.append(
-            (sheet_df.pipe(get_squished_dataframe).pipe(set_sheet_dtypes))
+            (
+                sheet_df.pipe(get_squished_dataframe, validate=validate).pipe(
+                    set_sheet_dtypes
+                )
+            )
         )
     if n_skipped > 0:
         n = len(sheet_files)
@@ -214,21 +248,22 @@ def run(
     sheet_path: Path,
     preprocessed_path: Path,
     dry: bool = False,
+    validate: bool = False,
 ):
     import bundestag.data.download.bundestag_sheets as download_sheets
 
     logger.info("Start parsing sheets")
 
     # ensuring path exists
-    if not html_path.exists():
+    if not dry and not html_path.exists():
         raise ValueError(
             f"{html_path=} doesn't exist, terminating transformation."
         )
-    if not sheet_path.exists():
+    if not dry and not sheet_path.exists():
         raise ValueError(
             f"{sheet_path=} doesn't exist, terminating transformation."
         )
-    if not preprocessed_path.exists():
+    if not dry and not preprocessed_path.exists():
         data_utils.ensure_path_exists(preprocessed_path)
 
     html_path, sheet_path = Path(html_path), Path(sheet_path)
@@ -245,7 +280,9 @@ def run(
     )
     # process excel files
     file_title_maps = get_file2poll_maps(sheet_uris, sheet_path)
-    df = get_multiple_sheets_df(sheet_files, file_title_maps=file_title_maps)
+    df = get_multiple_sheets_df(
+        sheet_files, file_title_maps=file_title_maps, validate=validate
+    )
 
     if not dry:
         path = preprocessed_path / "bundestag.de_votes.parquet"

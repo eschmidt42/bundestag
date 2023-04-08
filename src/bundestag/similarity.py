@@ -8,7 +8,7 @@ import seaborn as sns
 from scipy import spatial
 
 # from bundestag import html_parsing as hp
-import bundestag.data.transform.bundestag_sheets as hp
+import bundestag.data.transform.bundestag_sheets as bs
 import bundestag.logging as logging
 
 logger = logging.logger
@@ -18,7 +18,7 @@ def get_votes_by_party(df: pd.DataFrame):
     "Computes total and relative votes by party and poll"
     logger.info("Computing votes by party and poll")
     df["vote"] = df["vote"].astype("category")
-    df["vote"] = df["vote"].cat.set_categories(hp.VOTE_COLS)
+    df["vote"] = df["vote"].cat.set_categories(bs.VOTE_COLS)
 
     vote_fraction = (
         df.groupby(["Fraktion/Gruppe", "date", "title"])["vote"]
@@ -76,7 +76,7 @@ def prepare_votes_of_mdb(df: pd.DataFrame, mdb: str):
 
     mdb_votes = df.loc[mask, ["date", "title", "vote"]]
     mdb_votes["vote"] = mdb_votes["vote"].astype("category")
-    mdb_votes["vote"] = mdb_votes["vote"].cat.set_categories(hp.VOTE_COLS)
+    mdb_votes["vote"] = mdb_votes["vote"].cat.set_categories(bs.VOTE_COLS)
 
     mdb_votes = pd.get_dummies(
         mdb_votes, columns=["vote"], prefix="", prefix_sep=""
@@ -85,9 +85,9 @@ def prepare_votes_of_mdb(df: pd.DataFrame, mdb: str):
 
 
 def test_votes_of_mdb(df: pd.DataFrame):
-    expected_columns = ["date", "title"] + hp.VOTE_COLS
+    expected_columns = ["date", "title"] + bs.VOTE_COLS
     assert all([v in df.columns for v in expected_columns])
-    assert df[hp.VOTE_COLS].isna().sum().sum() == 0
+    assert df[bs.VOTE_COLS].isna().sum().sum() == 0
 
 
 def align_mdb_with_parties(
@@ -121,8 +121,8 @@ def compute_similarity(
     logger.info(
         f'Computing similarities using `lsuffix` = "{lsuffix}", `rsuffix` = "{rsuffix}" and metric = {similarity_metric}'
     )
-    lcols = [f"{v}_{lsuffix}" for v in hp.VOTE_COLS]
-    rcols = [f"{v}_{rsuffix}" for v in hp.VOTE_COLS]
+    lcols = [f"{v}_{lsuffix}" for v in bs.VOTE_COLS]
+    rcols = [f"{v}_{rsuffix}" for v in bs.VOTE_COLS]
     A = df[lcols].values
     B = df[rcols].values
     df["similarity"] = [similarity_metric(a, b) for a, b in zip(A, B)]
@@ -130,8 +130,8 @@ def compute_similarity(
 
 
 def test_mdb_vs_parties(df: pd.DataFrame):
-    mdb_cols = [f"{v}_mdb" for v in hp.VOTE_COLS]
-    party_cols = [f"{v}_party" for v in hp.VOTE_COLS]
+    mdb_cols = [f"{v}_mdb" for v in bs.VOTE_COLS]
+    party_cols = [f"{v}_party" for v in bs.VOTE_COLS]
     expected_columns = (
         ["date", "title", "similarity", "Fraktion/Gruppe"]
         + mdb_cols
@@ -180,8 +180,8 @@ def align_party_with_all_parties(party_votes: pd.DataFrame, party_a: str):
 
 
 def test_partyA_vs_partyB(df: pd.DataFrame):
-    partyA_cols = [f"{v}_a" for v in hp.VOTE_COLS]
-    partyB_cols = [f"{v}_b" for v in hp.VOTE_COLS]
+    partyA_cols = [f"{v}_a" for v in bs.VOTE_COLS]
+    partyB_cols = [f"{v}_b" for v in bs.VOTE_COLS]
     expected_columns = (
         [
             "date",
