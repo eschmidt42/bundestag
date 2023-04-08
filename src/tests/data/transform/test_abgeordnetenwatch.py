@@ -409,12 +409,21 @@ def test_transform_votes_data():
 
 
 @pytest.mark.parametrize(
-    "dry,raw_path_exists,preprocessed_path_exists,validate",
+    "dry,raw_path_exists,preprocessed_path_exists,raw_path,preprocessed_path,validate",
     [
-        (dry, raw_path_exists, preprocessed_path_exists, validate)
+        (
+            dry,
+            raw_path_exists,
+            preprocessed_path_exists,
+            raw_path,
+            preprocessed_path,
+            validate,
+        )
         for dry in [True, False]
         for raw_path_exists in [True, False]
         for preprocessed_path_exists in [True, False]
+        for raw_path in [Path("raw/path"), None]
+        for preprocessed_path in [Path("preprocessed/path"), None]
         for validate in [True, False]
     ],
 )
@@ -422,11 +431,11 @@ def test_run(
     dry: bool,
     raw_path_exists: bool,
     preprocessed_path_exists: bool,
+    raw_path: Path,
+    preprocessed_path: Path,
     validate: bool,
 ):
     legislature_id = 42
-    raw_path = Path("raw/path")
-    preprocessed_path = Path("preprocessed/path")
 
     with (
         patch(
@@ -469,7 +478,9 @@ def test_run(
                 validate=validate,
             )
         except ValueError as ex:
-            if not dry and (
+            if not dry and (raw_path is None or preprocessed_path is None):
+                pytest.xfail("ValueError for missing path")
+            elif not dry and (
                 not raw_path_exists or not preprocessed_path_exists
             ):
                 pytest.xfail(
@@ -480,7 +491,8 @@ def test_run(
             else:
                 raise ex
 
-        assert _exists.call_count == 2
+        if not dry:
+            assert _exists.call_count == 2
         if not dry and not preprocessed_path_exists:
             _ensure_exists.assert_called_once_with(preprocessed_path)
 

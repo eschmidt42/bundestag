@@ -277,11 +277,11 @@ def run(
         )
 
     # ensure paths exist
-    if not raw_path.exists():
+    if not dry and not raw_path.exists():
         raise ValueError(
             f"{raw_path=} doesn't exist, terminating transformation."
         )
-    if not preprocessed_path.exists() and not dry:
+    if not dry and not preprocessed_path.exists():
         data_utils.ensure_path_exists(preprocessed_path)
 
     # polls
