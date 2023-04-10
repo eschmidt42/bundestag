@@ -9,7 +9,7 @@ import pytest
 import requests
 import xlrd
 
-import bundestag.data.transform.bundestag_sheets as bs
+import bundestag.data.transform.bundestag_sheets as transform_bs
 import bundestag.data.utils as data_utils
 import bundestag.schemas as schemas
 
@@ -27,7 +27,7 @@ def test_get_file2poll_maps():
         MagicMock(return_value=known_sheets),
     ) as get_file_paths:
         # line to test
-        file2poll = bs.get_file2poll_maps(uris, sheet_path)
+        file2poll = transform_bs.get_file2poll_maps(uris, sheet_path)
 
         assert len(file2poll) == 1
         assert "1.xlsx" in file2poll
@@ -35,8 +35,8 @@ def test_get_file2poll_maps():
 
 
 def test_is_date():
-    assert bs.is_date("123", pd.to_datetime) == False
-    assert bs.is_date("2022-02-02", pd.to_datetime) == True
+    assert transform_bs.is_date("123", pd.to_datetime) == False
+    assert transform_bs.is_date("2022-02-02", pd.to_datetime) == True
 
 
 @pytest.mark.parametrize(
@@ -49,7 +49,7 @@ def test_file_size_is_zero(st_size: int, expected: bool):
         "pathlib.Path.stat", MagicMock(return_value=MagicMock(st_size=st_size))
     ) as stat:
         # line to test
-        assert bs.file_size_is_zero(path) == expected
+        assert transform_bs.file_size_is_zero(path) == expected
 
 
 @pytest.mark.parametrize(
@@ -67,7 +67,7 @@ def test_read_excel(case: int, side_effect, expected):
         "pandas.read_excel", MagicMock(side_effect=side_effect)
     ) as read_excel:
         # line to test
-        res = bs.read_excel(path)
+        res = transform_bs.read_excel(path)
 
         if case == 0:
             assert res.equals(expected)
@@ -171,7 +171,9 @@ def test_get_sheet_df_with_mock(
     ):
         try:
             # line to test
-            res = bs.get_sheet_df(sheet_file, file_title_maps, validate)
+            res = transform_bs.get_sheet_df(
+                sheet_file, file_title_maps, validate
+            )
         except ValueError as ex:
             if len(dfs) > 1:
                 pytest.xfail(
@@ -209,7 +211,9 @@ def test_get_sheet_df_with_actual_data():
     }
 
     # line to test
-    df = bs.get_sheet_df(path, file_title_maps=file_title_maps, validate=True)
+    df = transform_bs.get_sheet_df(
+        path, file_title_maps=file_title_maps, validate=True
+    )
 
 
 @pytest.mark.parametrize(
@@ -245,7 +249,7 @@ def test_handle_title_and_date(
     # sheet_file = Path("some/file/2020-11-26_bla.csv")
 
     # line to test
-    title, date = bs.handle_title_and_date(full_title, sheet_file)
+    title, date = transform_bs.handle_title_and_date(full_title, sheet_file)
     assert title == exp_title
     if exp_date is None:
         assert date is None
@@ -255,12 +259,14 @@ def test_handle_title_and_date(
 
 def test_disambiguate_party():
     col = "Fraktion/Gruppe"
-    known = list(bs.PARTY_MAP.keys())
+    known = list(transform_bs.PARTY_MAP.keys())
     unknown = ["wuppety"]
     df = pd.DataFrame({col: known + unknown})
 
     # line to test
-    df2 = bs.disambiguate_party(df.copy(), col=col, party_map=bs.PARTY_MAP)
+    df2 = transform_bs.disambiguate_party(
+        df.copy(), col=col, party_map=transform_bs.PARTY_MAP
+    )
 
     assert df2[col].iloc[-1] == df[col].iloc[-1]
     assert not df2[col].iloc[:-1].equals(df[col].iloc[:-1])
@@ -277,12 +283,12 @@ def test_get_squished_dataframe(validate: bool):
         "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
     }
 
-    df = bs.get_sheet_df(
+    df = transform_bs.get_sheet_df(
         path, file_title_maps=file_title_maps, validate=validate
     )
 
     # line to test
-    df = bs.get_squished_dataframe(df, validate=validate)
+    df = transform_bs.get_squished_dataframe(df, validate=validate)
 
 
 @pytest.mark.parametrize(
@@ -303,7 +309,7 @@ def test_set_sheet_dtypes(dtypes: T.Dict[str, T.Any]):
     )
 
     # line to test
-    df2 = bs.set_sheet_dtypes(df.copy(), dtypes)
+    df2 = transform_bs.set_sheet_dtypes(df.copy(), dtypes)
     assert df2.dtypes.equals(df_target.dtypes)
 
 
@@ -317,11 +323,13 @@ def test_get_final_sheet_df():
         "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
     }
 
-    df = bs.get_sheet_df(path, file_title_maps=file_title_maps, validate=False)
+    df = transform_bs.get_sheet_df(
+        path, file_title_maps=file_title_maps, validate=False
+    )
 
     # lines to test
-    df = bs.get_squished_dataframe(df)
-    df = bs.set_sheet_dtypes(df)
+    df = transform_bs.get_squished_dataframe(df)
+    df = transform_bs.set_sheet_dtypes(df)
     schemas.SHEET_FINAL.validate(df)
 
 
@@ -352,7 +360,7 @@ def test_get_multiple_sheets(one_fails: bool):
         ) as _set_sheet_types,
     ):
         # line to test
-        df = bs.get_multiple_sheets_df(
+        df = transform_bs.get_multiple_sheets_df(
             sheet_files, file_title_maps=file_title_maps
         )
 
@@ -437,7 +445,7 @@ def test_run(
     ):
         try:
             # line to test
-            bs.run(
+            transform_bs.run(
                 html_path=html_path,
                 sheet_path=sheet_path,
                 preprocessed_path=preprocessed_path,
