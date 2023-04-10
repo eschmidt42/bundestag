@@ -89,3 +89,57 @@ def test_get_file_paths(suffix: str, pattern: re.Pattern):
                 raise ex
 
     assert set(found_files) == set([file0, file1])
+
+
+@pytest.mark.parametrize(
+    "user_inputs,expected,max_tries",
+    [
+        (["y"], True, 1),
+        (["Y"], True, 1),
+        ([""], True, 1),
+        ([None], True, 1),
+        (["n"], False, 1),
+        (["N"], False, 1),
+        (["no", "nein", "n"], False, 3),
+        (["no", "nein", "n"], "fail", 2),
+        (["yes"], "fail", 1),
+        (["yes", "y"], True, 2),
+        ([1], "fail", 1),
+    ],
+)
+def test_get_user_path_creation_decision(
+    user_inputs, expected, max_tries: int
+):
+    with (patch("builtins.input", side_effect=user_inputs) as _input,):
+        try:
+            # line to test
+            decision = data_utils.get_user_path_creation_decision(
+                Path("dummy/path"), max_tries=max_tries
+            )
+        except ValueError as ex:
+            if expected == "fail":
+                pytest.xfail(
+                    "Expected fail due to wrong user inputs exceeding the max_tries"
+                )
+            else:
+                raise ex
+
+        assert decision == expected
+
+
+@pytest.mark.parametrize("do_creation", [True, False])
+def test_ensure_path_exists(do_creation: bool):
+    path = Path("dummy/path")
+    with (
+        patch(
+            "bundestag.data.utils.get_user_path_creation_decision",
+            return_value=do_creation,
+        ) as _do_creation,
+        patch("pathlib.Path.mkdir") as _mkdir,
+    ):
+        # line to test
+        data_utils.ensure_path_exists(path)
+
+        assert _do_creation.call_count == 1
+        assert _do_creation.call_args[0][0] == path
+        assert _mkdir.call_count == (1 if do_creation else 0)

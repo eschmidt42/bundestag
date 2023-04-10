@@ -79,16 +79,24 @@ def load_json(path: Path = None, dry: bool = False):
 
 
 def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
+    "Asks user if they want to create a path if it does not exist"
+
     msg = lambda x: f"Incorrect input {resp}, please enter y or n"
     for _ in range(max_tries):
         resp = input(f"Create {path.absolute()=}? ([y]/n) ")
-        if resp is None or len(resp) == 0:
+
+        if not isinstance(resp, str) and resp is not None:
+            logger.error(msg(resp))
+            continue
+
+        elif resp is None or len(resp) == 0:
             do_creation = True
             _msg = (
                 "proceeding with download" if do_creation else "terminating."
             )
             logger.info(f"Received: {resp}, {_msg}")
             return do_creation
+
         elif resp.lower() in ["y", "n"]:
             do_creation = resp.lower() == "y"
             _msg = (
@@ -96,9 +104,6 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
             )
             logger.info(f"Received: {resp}, {_msg}")
             return do_creation
-        if not isinstance(resp, str):
-            logger.error(msg(resp))
-            continue
 
         else:
             logger.error(msg(resp))
