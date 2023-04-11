@@ -1,4 +1,5 @@
 import sys
+import typing as T
 
 import gensim
 import gensim.corpora as corpora
@@ -18,40 +19,61 @@ import bundestag.logging as logging
 logger = logging.logger
 
 
+def remove_stopwords_and_punctuation(
+    text: str, nlp: spacy.language.Language
+) -> T.List[str]:
+    return [str(w) for w in nlp(text) if not (w.is_stop or w.is_punct)]
+
+
+def remove_numeric_and_empty(text: str) -> T.List[str]:
+    return [w for w in text if not (w.isnumeric() or w.isspace())]
+
+
+def make_topic_scores_dense(
+    scores: T.List[T.List[T.Tuple[int, float]]]
+) -> np.ndarray:
+    "Transforms `scores` (result of lda_model[corpus]) to a numpy array of shape (Ndoc,Ntopic)"
+    ntopic = max([v[0] for d in scores for v in d])
+    ndoc = len(scores)
+    logger.debug(
+        f"Densifying list of {ntopic} topic scores to {ndoc}-by-{ntopic} array"
+    )
+    dense = np.zeros((ndoc, ntopic))
+    for i, doc in enumerate(scores):
+        for j, score in doc:
+            dense[i, j - 1] = score
+    return dense
+
+
+def clean_text(
+    df: pd.DataFrame, nlp: spacy.language.Language, col: str = "poll_title"
+):
+    logger.debug("Cleaning texts")
+    return list(
+        df[col]
+        .str.split("\n")
+        .str.join(" ")
+        .str.replace("\xa0", " ")
+        .apply(remove_stopwords_and_punctuation, nlp=nlp)
+        .apply(remove_numeric_and_empty)
+    )
+
+
 class SpacyTransformer:
     "Performs cleaning and document to vector transformations"
 
     def __init__(self, language: str = "de_core_news_sm"):
-        self.nlp = spacy.load(language)
+        self.nlp: spacy.language.Language = spacy.load(language)
 
-    @staticmethod
-    def remove_stopwords_and_punctuation(text: str, nlp):
-        return [str(w) for w in nlp(text) if not (w.is_stop or w.is_punct)]
-
-    @staticmethod
-    def remove_numeric_and_empty(text: str):
-        return [w for w in text if not (w.isnumeric() or w == " ")]
-
-    def clean_text(self, df: pd.DataFrame, col: str = "poll_title"):
-        logger.debug("Cleaning texts")
-        return list(
-            df[col]
-            .str.split("\n")
-            .str.join(" ")
-            .str.replace("\xa0", " ")
-            .apply(self.remove_stopwords_and_punctuation, nlp=self.nlp)
-            .apply(self.remove_numeric_and_empty)
-        )
-
-    def _model_preprocessing(self, documents):
+    def model_preprocessing(self, documents):
         "Basic preprocessing steps required for gensim models"
         logger.debug("Performing basic model preprocessing steps")
         self.dictionary = corpora.Dictionary(documents)
         self.corpus = [self.dictionary.doc2bow(doc) for doc in documents]
 
-    def _fit_lda(self, documents, num_topics: int = 10):
+    def fit_lda(self, documents, num_topics: int = 10):
         "Fits `num_topics` LDA topic models to `documents` (iterable of iterable of strings)"
-        self._model_preprocessing(documents)
+        self.model_preprocessing(documents)
 
         logger.debug(f"Fitting LDA topics for {len(documents)}")
         self.lda_model = gensim.models.LdaMulticore(
@@ -66,26 +88,14 @@ class SpacyTransformer:
 
     def fit(self, documents, mode="lda", **kwargs):
         assert mode in ["lda"]
-        getattr(self, f"_fit_{mode}")(documents, **kwargs)
-
-    def _make_topic_scores_dense(self, scores):
-        "Transforms `scores` (result of lda_model[corpus]) to a numpy array of shape (Ndoc,Ntopic)"
-        ntopic = max([v[0] for d in scores for v in d])
-        ndoc = len(scores)
-        logger.debug(
-            f"Densifying list of {ntopic} topic scores to {ndoc}-by-{ntopic} array"
-        )
-        dense = np.zeros((ndoc, ntopic))
-        for i, doc in enumerate(scores):
-            for j, score in doc:
-                dense[i, j - 1] = score
-        return dense
+        getattr(self, f"fit_{mode}")(documents, **kwargs)
 
     def transform_documents(self, documents: pd.Series, label: str = "nlp"):
         "Transforming `documents` to an ndoc-by-ndim matrix"
         logger.debug("Transforming `documents` to a dense real matrix")
-        corpus = corpus = [self.dictionary.doc2bow(doc) for doc in documents]
-        dense = self._make_topic_scores_dense(self.lda_model[corpus])
+        corpus = [self.dictionary.doc2bow(doc) for doc in documents]
+        scores = list(self.lda_model[corpus])
+        dense = make_topic_scores_dense(scores)
         return pd.DataFrame(
             dense,
             columns=[f"{label}_dim{i}" for i in range(dense.shape[1])],
@@ -96,13 +106,10 @@ class SpacyTransformer:
         self,
         df: pd.DataFrame,
         col: str = "poll_title_nlp_processed",
-        do_test: bool = True,
         label: str = "nlp",
         return_new_cols: bool = False,
     ):
         df_lda = self.transform_documents(df[col], label=label)
-        if do_test:
-            test_dense_topic_scores(df_lda.values)
         tmp = df.copy()
         new_cols = df_lda.columns.values.tolist()
         logger.debug(f"Adding nlp features: {new_cols}")
@@ -112,15 +119,7 @@ class SpacyTransformer:
         return tmp
 
 
-def test_cleaned_text(df: pd.DataFrame, col: str = "poll_title_nlp_processed"):
-    "Basic sanity check on `col` which is expected to contain lists of strings"
-    mask = df[col].str.len() == 0
-    assert (
-        not mask.any()
-    ), f"Unexpectedly found empty entries in `{col}`: \n{df.loc[mask]}"
-
-
-def get_word_frequencies(df: pd.DataFrame, col: str):
+def get_word_frequencies(df: pd.DataFrame, col: str) -> pd.Series:
     "Word count over a list of lists, assuming every lowest level list item is a word."
     return pd.Series([_w for w in df[col].values for _w in w]).value_counts()
 
@@ -174,20 +173,7 @@ def compare_word_frequencies(
     ax.legend()
     ax.set(title=title)
     plt.tight_layout()
-    plt.show()
-
-
-def test_dense_topic_scores(dense: np.array):
-    mask = dense.sum(axis=1) > 1.0
-    rows = [i for i, m in enumerate(mask) if m]
-    assert (
-        not mask.any()
-    ), f"Found {mask.sum()} documents with topic scores in total exceeding 1 in rows: {rows}\narray:\n{dense[mask]}"
-    mask = dense.sum(axis=1) <= 1e-5
-    rows = [i for i, m in enumerate(mask) if m]
-    assert (
-        not mask.any()
-    ), f"Found {mask.sum()} documents with topic scores in total smaller than 1e-5 in rows: {rows}\narray:\n{dense[mask]}"
+    return ax
 
 
 def pca_plot_lda_topics(

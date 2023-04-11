@@ -50,7 +50,7 @@ def parse_poll_data(poll: schemas.Poll) -> dict:
     return d
 
 
-def get_polls_df(legislature_id: int, path: Path = None) -> pd.DataFrame:
+def get_polls_data(legislature_id: int, path: Path = None) -> pd.DataFrame:
     "Parses info from poll json files for `legislature_id`"
     info = load_polls_json(legislature_id, path=path)
     polls = schemas.PollResponse(**info)
@@ -108,16 +108,16 @@ def parse_mandate_data(
         }
     else:
         d_fraction = {
-            "fraction_names": [missing for _m in mandate.fraction_membership],
-            "fraction_ids": [missing for _m in mandate.fraction_membership],
-            "fraction_starts": [missing for _m in mandate.fraction_membership],
-            "fraction_ends": [missing for _m in mandate.fraction_membership],
+            "fraction_names": [missing],
+            "fraction_ids": [missing],
+            "fraction_starts": [missing],
+            "fraction_ends": [missing],
         }
     d.update(d_fraction)
     return d
 
 
-def get_mandates_df(legislature_id: int, path: Path = None) -> pd.DataFrame:
+def get_mandates_data(legislature_id: int, path: Path = None) -> pd.DataFrame:
     "Parses info from mandate json file(s) for `legislature_id`"
     info = load_mandate_json(legislature_id, path=path)
     mandates = schemas.MandatesResponse(**info)
@@ -147,7 +147,7 @@ def get_parties_from_col(
         return [extract_party_from_string(s) for s in strings]
 
 
-def transform_mandates_df(df: pd.DataFrame) -> pd.DataFrame:
+def transform_mandates_data(df: pd.DataFrame) -> pd.DataFrame:
     df["all_parties"] = df.apply(get_parties_from_col, axis=1)
     df["party"] = df["all_parties"].apply(lambda x: x[-1])
     return df
@@ -189,8 +189,8 @@ def get_votes_df(
     validate: bool = False,
 ) -> pd.DataFrame:
     "Parses info from vote json files for `legislature_id` and `poll_id`"
-    info = load_vote_json(legislature_id, poll_id, path=path)
-    votes = schemas.VoteResponse(**info)
+    data = load_vote_json(legislature_id, poll_id, path=path)
+    votes = schemas.VoteResponse(**data)
     n_none = 0
     df = []
     for vote in votes.data.related_data.votes:
@@ -241,7 +241,6 @@ def compile_votes_data(
                 f'Dropping duplicates for mandate_ids ({ids}):\n{df.loc[df["mandate_id"].isin(ids)]}'
             )
             df = df.drop_duplicates(subset=["mandate_id"])
-        # test_vote_data(df)
 
         df_all_votes.append(df)
 
@@ -268,6 +267,7 @@ def run(
     dry: bool = False,
     raw_path: Path = None,
     preprocessed_path: Path = None,
+    validate: bool = False,
 ) -> pd.DataFrame:
     logger.info("Start transforming abgeordnetenwatch data")
 
@@ -277,23 +277,23 @@ def run(
         )
 
     # ensure paths exist
-    if not raw_path.exists():
+    if not dry and not raw_path.exists():
         raise ValueError(
             f"{raw_path=} doesn't exist, terminating transformation."
         )
-    if not preprocessed_path.exists():
+    if not dry and not preprocessed_path.exists():
         data_utils.ensure_path_exists(preprocessed_path)
 
     # polls
-    df = get_polls_df(legislature_id, path=raw_path)
+    df = get_polls_data(legislature_id, path=raw_path)
     if not dry:
         file = preprocessed_path / f"df_polls_{legislature_id}.parquet"
         logger.debug(f"writing to {file}")
         df.to_parquet(path=file)
 
     # mandates
-    df = get_mandates_df(legislature_id, path=raw_path)
-    df = transform_mandates_df(df)
+    df = get_mandates_data(legislature_id, path=raw_path)
+    df = transform_mandates_data(df)
 
     if not dry:
         file = preprocessed_path / f"df_mandates_{legislature_id}.parquet"
@@ -301,7 +301,9 @@ def run(
         df.to_parquet(path=file)
 
     # votes
-    df_all_votes = compile_votes_data(legislature_id, path=raw_path)
+    df_all_votes = compile_votes_data(
+        legislature_id, path=raw_path, validate=validate
+    )
     df_all_votes = transform_votes_data(df_all_votes)
 
     if not dry:

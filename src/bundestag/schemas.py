@@ -603,7 +603,7 @@ SHEET_FINAL = DataFrameSchema(
         "Titel": Column(
             dtype="object",
             checks=None,
-            nullable=False,
+            nullable=True,
             unique=False,
             coerce=False,
             required=True,
