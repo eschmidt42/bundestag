@@ -1,10 +1,11 @@
-import sys
+import typing as T
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import torch
-from fastcore.all import *
+from fastai.tabular.all import TabularLearner
 from sklearn import decomposition
 
 import bundestag.logging as logging
@@ -17,38 +18,48 @@ def poll_splitter(
     poll_col: str = "poll_id",
     valid_pct: float = 0.2,
     shuffle: bool = True,
-):
+    seed: int = None,
+) -> T.Tuple[T.List[int], T.List[int]]:
+    "Split the polls into train and test set."
+
     polls = df[poll_col].unique()
     n = len(polls)
-    valid_polls = np.random.choice(polls, size=int(n * valid_pct))
+
+    if seed is None:
+        rng = np.random.RandomState()
+    else:
+        rng = np.random.RandomState(seed)
+
+    polls1 = rng.choice(polls, size=int(n * valid_pct))
+
     logger.debug(
-        f"Splitting votes by polls (num train = {n-len(valid_polls)}, num valid = {len(valid_polls)})"
+        f"Splitting votes by polls (num train = {n-len(polls1)}, num valid = {len(polls1)})"
     )
-    valid_mask = df[poll_col].isin(valid_polls)
-    ix_train = df.loc[~valid_mask].index.values
-    ix_valid = df.loc[valid_mask].index.values
+
+    mask1 = df[poll_col].isin(polls1)
+    ix0 = df.loc[~mask1].index.values
+    ix1 = df.loc[mask1].index.values
+
     if shuffle:
-        np.random.shuffle(ix_train)
-        np.random.shuffle(ix_valid)
-    return (L(ix_train.tolist()), L(ix_valid.tolist()))
+        rng.shuffle(ix0)
+        rng.shuffle(ix1)
 
-
-def test_poll_split(split):
-    assert isinstance(split, tuple)
-    assert len(split) == 2
+    return (ix0.tolist(), ix1.tolist())
 
 
 def plot_predictions(
-    learn,
+    learn: TabularLearner,
     df_all_votes: pd.DataFrame,
     df_mandates: pd.DataFrame,
     df_polls: pd.DataFrame,
-    splits,
+    splits: T.Tuple[T.List[int], T.List[int]],
     y_col: str = "vote",
     n_worst_politicians: int = 20,
     n_worst_polls: int = 5,
 ):
     "Plot absolute and relative confusion matrix as well as the accuracy."
+
+    from IPython.display import display
 
     y_pred, y_targ = learn.get_preds()
     make_numpy = lambda x: x.detach().numpy()
@@ -108,11 +119,11 @@ def plot_predictions(
 
 
 def get_embeddings(
-    learn,
+    learn: TabularLearner,
     transform_func=lambda x: decomposition.PCA(n_components=2).fit_transform(
         x.detach().numpy()
     ),
-):
+) -> T.Dict[str, pd.DataFrame]:
     """Collects embeddings from tabular_learner.model and returns them with optional transformation
     via `transform_func` (e.g. sklearn.decomposition.PCA)"""
     embeddings = {}
@@ -132,16 +143,9 @@ def get_embeddings(
     return embeddings
 
 
-def test_embeddings(emb: dict):
-    assert isinstance(emb, dict)
-    assert all([isinstance(m, pd.DataFrame) for m in emb.values()])
-
-
-def test_poll_proponents(proponents: pd.DataFrame):
-    assert proponents.index.nunique() == len(proponents)
-
-
-def get_poll_proponents(df_all_votes: pd.DataFrame, df_mandates: pd.DataFrame):
+def get_poll_proponents(
+    df_all_votes: pd.DataFrame, df_mandates: pd.DataFrame
+) -> pd.DataFrame:
     "Computes which party most strongly endorsed (% yes votes of party) a poll"
 
     poll_agreement = (
@@ -175,22 +179,21 @@ def plot_poll_embeddings(
     df_all_votes: pd.DataFrame,
     df_polls: pd.DataFrame,
     embeddings: dict,
-    df_mandates: pd.DataFrame = None,
-):
-    col = "poll_id"
-
+    df_mandates: pd.DataFrame,
+    col: str = "poll_id",
+) -> go.Figure:
     tmp = (
-        df_all_votes.drop_duplicates(subset="poll_id")
+        df_all_votes.drop_duplicates(subset=col)
         .join(
-            df_polls[["poll_id", "poll_title"]].set_index("poll_id"),
-            on="poll_id",
+            df_polls[[col, "poll_title"]].set_index(col),
+            on=col,
         )
         .join(embeddings[col].set_index(col), on=col)
     )
 
-    if df_mandates is not None:
-        proponents = get_poll_proponents(df_all_votes, df_mandates)
-        tmp = tmp.join(proponents[["strongest proponent"]], on=col)
+    proponents = get_poll_proponents(df_all_votes, df_mandates)
+    tmp = tmp.join(proponents[["strongest proponent"]], on=col)
+
     return px.scatter(
         data_frame=tmp,
         x=f"{col}__emb_component_0",
@@ -202,10 +205,11 @@ def plot_poll_embeddings(
 
 
 def plot_politician_embeddings(
-    df_all_votes: pd.DataFrame, df_mandates: pd.DataFrame, embeddings: dict
-):
-    col = "politician name"
-
+    df_all_votes: pd.DataFrame,
+    df_mandates: pd.DataFrame,
+    embeddings: T.Dict[str, pd.DataFrame],
+    col: str = "politician name",
+) -> go.Figure:
     tmp = (
         df_all_votes.drop_duplicates(subset="mandate_id")
         .join(
