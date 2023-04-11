@@ -168,7 +168,7 @@ Note: the cells using `pd.read_parquet` below only work for `legislature_id` 111
 from pathlib import Path
 
 import pandas as pd
-from fastai.tabular.all import *
+from fastai.tabular.all import RandomSplitter, TabularPandas, Categorify, CategoryBlock, tabular_learner
 from rich import print as pprint
 
 import bundestag.data.download.huggingface as download_hf
@@ -177,6 +177,8 @@ import bundestag.poll_clustering as pc
 import bundestag.similarity as sim
 import bundestag.vote_prediction as vp
 from bundestag.gui import MdBGUI, PartyGUI
+
+import matplotlib.pyplot as plt
 ```
 
 Comment-in the below cell to download prepared data
@@ -216,7 +218,6 @@ Votes by party
 
 ```python
 party_votes = sim.get_votes_by_party(df)
-sim.test_party_votes(party_votes)
 ```
 
 Re-arranging `party_votes`
@@ -224,7 +225,6 @@ Re-arranging `party_votes`
 
 ```python
 party_votes_pivoted = sim.pivot_party_votes_df(party_votes)
-sim.test_party_votes_pivoted(party_votes_pivoted)
 party_votes_pivoted.head()
 ```
 
@@ -236,7 +236,6 @@ Collecting the politicians votes
 ```python
 mdb = "Peter Altmaier"
 mdb_votes = sim.prepare_votes_of_mdb(df, mdb)
-sim.test_votes_of_mdb(mdb_votes)
 mdb_votes.head()
 ```
 
@@ -247,7 +246,6 @@ Comparing the politician against the parties
 mdb_vs_parties = sim.align_mdb_with_parties(
     mdb_votes, party_votes_pivoted
 ).pipe(sim.compute_similarity, lsuffix="mdb", rsuffix="party")
-sim.test_mdb_vs_parties(mdb_vs_parties)
 mdb_vs_parties.head(3).T
 ```
 
@@ -276,7 +274,7 @@ party = "SPD"
 partyA_vs_rest = sim.align_party_with_all_parties(
     party_votes_pivoted, party
 ).pipe(sim.compute_similarity, lsuffix="a", rsuffix="b")
-sim.test_partyA_vs_partyB(partyA_vs_rest)
+
 partyA_vs_rest.head(3).T
 ```
 
@@ -348,7 +346,7 @@ st = pc.SpacyTransformer()
 
 # load data and prepare text for modelling
 df_polls_lda = df_polls.copy().assign(
-    **{nlp_col: lambda x: st.clean_text(x, col=source_col)}
+    **{nlp_col: lambda x: pc.clean_text(x, col=source_col, nlp=st.nlp)}
 )
 
 # modelling clusters
