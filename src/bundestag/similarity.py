@@ -146,35 +146,57 @@ def get_party_party_similarity(
     )
 
 
+PALETTE = {
+    "AfD": "blue",
+    "CDU/CSU": "black",
+    "FDP": "yellow",
+    "BÜ90/GR": "green",
+    "DIE LINKE.": "purple",
+    "SPD": "red",
+    "Fraktionslos": "grey",
+}
+
+
 def plot_overall_similarity(
-    df: pd.DataFrame, x: str, title: str = "", ax=None
+    df: pd.DataFrame,
+    x: str,
+    title: str = "",
+    ax=None,
+    palette: T.Dict[str, str] = None,
 ) -> plt.Axes:
     if ax is None:
         fig, ax = plt.subplots(figsize=(12, 4))
-    sns.stripplot(data=df, y="similarity", x=x, ax=ax, alpha=0.1)
+    palette = PALETTE if palette is None else palette
+    sns.stripplot(
+        data=df, y="similarity", x=x, ax=ax, alpha=0.1, hue=x, palette=palette
+    )
     ax.set(title=title, ylabel="Similarity (1 = identical, 0 = dissimilar)")
     return ax
 
 
 def plot_similarity_over_time(
     df: pd.DataFrame,
-    grp_col: str,
+    party_col: str,
     time_bin: str = "y",
     title: str = None,
     ax=None,
+    palette: T.Dict[str, str] = None,
 ) -> plt.Axes:
     y = "avg. similarity"
     tmp = (
-        df.groupby([pd.Grouper(key="date", freq=time_bin), grp_col])[
+        df.groupby([pd.Grouper(key="date", freq=time_bin), party_col])[
             "similarity"
         ]
         .mean()
         .to_frame(y)
         .reset_index()
     )
+    palette = PALETTE if palette is None else palette
     if ax is None:
         fig, ax = plt.subplots(figsize=(12, 4))
-    sns.lineplot(data=tmp, x="date", y=y, hue=grp_col, ax=ax)
+    sns.lineplot(
+        data=tmp, x="date", y=y, hue=party_col, ax=ax, palette=palette
+    )
     ax.set(
         xlabel=f"Time [{time_bin}]",
         ylabel=f"{y} (0 = dissimilar, 1 = identical)",

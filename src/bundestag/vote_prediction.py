@@ -9,8 +9,18 @@ from fastai.tabular.all import TabularLearner
 from sklearn import decomposition
 
 import bundestag.logging as logging
+import bundestag.similarity as sim
 
 logger = logging.logger
+
+PALETTE = {
+    "CDU/CSU": "black",
+    "FDP": "yellow",
+    "SPD": "red",
+    "DIE GRÜNEN": "green",
+    "AfD": "blue",
+    "DIE LINKE": "purple",
+}
 
 
 def poll_splitter(
@@ -181,6 +191,7 @@ def plot_poll_embeddings(
     embeddings: dict,
     df_mandates: pd.DataFrame,
     col: str = "poll_id",
+    palette: T.Dict[str, str] = None,
 ) -> go.Figure:
     tmp = (
         df_all_votes.drop_duplicates(subset=col)
@@ -194,6 +205,8 @@ def plot_poll_embeddings(
     proponents = get_poll_proponents(df_all_votes, df_mandates)
     tmp = tmp.join(proponents[["strongest proponent"]], on=col)
 
+    palette = PALETTE if palette is None else palette
+
     return px.scatter(
         data_frame=tmp,
         x=f"{col}__emb_component_0",
@@ -201,6 +214,7 @@ def plot_poll_embeddings(
         title="Poll embeddings",
         hover_data=["poll_title"],
         color="strongest proponent",
+        color_discrete_map=palette,
     )
 
 
@@ -209,6 +223,7 @@ def plot_politician_embeddings(
     df_mandates: pd.DataFrame,
     embeddings: T.Dict[str, pd.DataFrame],
     col: str = "politician name",
+    palette: T.Dict[str, str] = None,
 ) -> go.Figure:
     tmp = (
         df_all_votes.drop_duplicates(subset="mandate_id")
@@ -219,6 +234,8 @@ def plot_politician_embeddings(
         .join(embeddings[col].set_index(col), on=col)
     )
 
+    palette = PALETTE if palette is None else palette
+
     return px.scatter(
         data_frame=tmp,
         x=f"{col}__emb_component_0",
@@ -226,4 +243,5 @@ def plot_politician_embeddings(
         title="Mandate embeddings",
         color="party",
         hover_data=["politician name"],
+        color_discrete_map=palette,
     )
