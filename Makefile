@@ -71,8 +71,8 @@ update:
 .PHONY: docs
 docs:
 	source .venv/bin/activate && \
-	jupyter nbconvert --ClearMetadataPreprocessor.enabled=True --ClearOutput.enabled=True --to markdown README.ipynb && \
-	cp README.md index.md
+	SAVEFIGS=true jupyter nbconvert --to notebook --execute docs/analysis-highlights.ipynb
+	jupyter nbconvert --ClearMetadataPreprocessor.enabled=True --ClearOutput.enabled=True --to markdown docs/analysis-highlights.ipynb
 
 # run tests
 .PHONY: test
