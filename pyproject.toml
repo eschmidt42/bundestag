@@ -41,7 +41,8 @@ dev = [
     "coverage",
     "pandera",
     "mkdocs",
-    "mkdocstrings[python]"
+    "mkdocstrings[python]",
+    "kaleido"
 ]
 
 [tool.black]
