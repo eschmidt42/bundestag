@@ -11,6 +11,7 @@ help:
 	@echo "update-dev   : pip install new dev requriements into the environment."
 	@echo "update       : pip install new requriements into the environment."
 	@echo "docs         : create documentation."
+	@echo "serve-docs   : serve documentation."
 	@echo "test         : run pytests."
 	@echo "tarballs     : create tarballs of data/raw and data/preprocessed for storage on huggingface datasets https://huggingface.co/datasets/Bingpot/bundestag/."
 
@@ -68,11 +69,14 @@ update:
 	python -m spacy download de_core_news_sm
 
 # make docs
+# # --output-dir docs/images
 .PHONY: docs
 docs:
 	source .venv/bin/activate && \
-	SAVEFIGS=true jupyter nbconvert --to notebook --execute docs/analysis-highlights.ipynb
-	jupyter nbconvert --ClearMetadataPreprocessor.enabled=True --ClearOutput.enabled=True --to markdown docs/analysis-highlights.ipynb
+	MAKEDOCS=true jupyter nbconvert --to notebook --execute docs/analysis-highlights.ipynb && \
+	jupyter nbconvert --ClearMetadataPreprocessor.enabled=True --ClearOutput.enabled=True --to markdown docs/analysis-highlights.ipynb  && \
+	rm docs/analysis-highlights.nbconvert.ipynb && \
+	jupyter nbconvert --clear-output docs/analysis-highlights.ipynb
 
 # run tests
 .PHONY: test
@@ -86,3 +90,8 @@ tarballs:
 	cd data && \
 	tar -czvf raw.tar.gz raw && \
 	tar -czvf preprocessed.tar.gz preprocessed
+
+.PHONY: serve-docs
+serve-docs:
+	source .venv/bin/activate && \
+	python3 -m mkdocs serve
