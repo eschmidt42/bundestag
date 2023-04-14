@@ -16,9 +16,11 @@ Since the files on the bundestag website are stored in a way making it tricky to
 
 For your inspiration, I have also included an analysis on how similar parties voted / how similar to parties individual MdBs votes and a small machine learning model which predicts the individual votes of parliament. Teaser: the "fraktionsszwang" seems to exist but is not absolute and the data shows 😁.
 
-## Analysis highlight
+## Embedded members of parliament
 
-Learing embeddings for individual members of the parliament, trying to predict their votes during the 2017-2021 legislative period, we find that they cluster into governing coalition (CDU/CSU & SPD) and the opposition:
+As a side effect of trying to predict the vote of individual members of parliament we can obtain embeddings for each member. Doing so for the 2017-2021 legislative period, we find that they cluster into governing coalition (CDU/CSU & SPD) and the opposition:
 ![](images/mandate_embeddings.png)
+
+![](images/surprised-pikachu.png)
 
 If you want to see more [check out this site](analysis-highlights.md).
