@@ -1,0 +1,7 @@
+-c core-requirements.txt
+jupyterlab
+black
+isort
+pytest
+pre-commit
+coverage
