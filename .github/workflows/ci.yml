@@ -20,11 +20,23 @@ jobs:
       run: |-
           make venv
           make install-dev
+    - name: Archive venv
+      uses: actions/upload-artifact@v3
+      with:
+          name: venv
+          path: .venv
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: build
     steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Download venv
+      uses: actions/download-artifact@v3
+      with:
+          name: venv
+          path: .venv
     - name: Run tests
       run: |-
           source .venv/bin/activate
