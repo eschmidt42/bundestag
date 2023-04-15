@@ -7,16 +7,13 @@ nav:
   - How to use: how-to-use.md
   - Analysis highlights: analysis-highlights.md
   - Documentation:
-      # - __main__: bundestag/__main__.md
     - data:
       - __init__: bundestag/data.md
       - download:
-        # - __init__: bundestag/data/download.md
         - abgeordnetenwatch: bundestag/data/download/abgeordnetenwatch.md
         - bundestag_sheets: bundestag/data/download/bundestag_sheets.md
         - huggingface: bundestag/data/download/huggingface.md
       - transform:
-        # - __init__: bundestag/data/transform.md
         - abgeordnetenwatch: bundestag/data/transform/abgeordnetenwatch.md
         - bundestag_sheets: bundestag/data/transform/bundestag_sheets.md
       - utils: bundestag/data/utils.md
@@ -27,8 +24,6 @@ nav:
     - schemas: bundestag/schemas.md
     - similarity: bundestag/similarity.md
     - vote_prediction: bundestag/vote_prediction.md
-    # - workflows:
-    #   - main: bundestag/main.md
 theme:
   name: readthedocs
   collapse_navigation: true
