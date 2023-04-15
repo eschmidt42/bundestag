@@ -176,7 +176,10 @@ def test_plot_overall_similarity(df: pd.DataFrame):
 
     # line to test
     ax = sim.plot_overall_similarity(
-        mdb_vs_parties, x="Fraktion/Gruppe", title="bla"
+        mdb_vs_parties,
+        x="Fraktion/Gruppe",
+        title="bla",
+        palette={"A": "green", "B": "blue"},
     )
 
     assert isinstance(ax, plt.Axes)
@@ -192,7 +195,10 @@ def test_plot_similarity_over_time(df: pd.DataFrame):
     mdb_vs_parties["date"] = pd.to_datetime(mdb_vs_parties["date"])
     # line to test
     ax = sim.plot_similarity_over_time(
-        mdb_vs_parties, "Fraktion/Gruppe", title="bla"
+        mdb_vs_parties,
+        "Fraktion/Gruppe",
+        title="bla",
+        palette={"A": "green", "B": "blue"},
     )
 
     assert isinstance(ax, plt.Axes)

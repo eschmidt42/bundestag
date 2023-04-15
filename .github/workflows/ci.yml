@@ -5,33 +5,32 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
-            - name: Check out repository
-              uses: actions/checkout@v3
+    - name: Check out repository
+      uses: actions/checkout@v3
 
-            - name: Setup python
-              uses: actions/setup-python@v4
-              with:
-                  python-version: '3.9.16'
+    - name: Setup python
+      uses: actions/setup-python@v4
+      with:
+          python-version: '3.9.16'
 
-            - name: Create virtal environment
-              run: |-
-                  make venv
-                  make install-dev
-            - name: Run tests
-              run: |-
-                  source .venv/bin/activate
-                  coverage run -m pytest -v src/tests/
-                  coverage report --omit="src/tests/*"
-                  coverage xml --omit="src/tests/*"
+    - name: Create virtal environment
+      run: |-
+          make venv
+          make install-dev
 
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v3
-              with:
-                  files: ./coverage.xml
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  fail_ci_if_error: true
+    - name: Run tests
+      run: |-
+          source .venv/bin/activate
+          coverage run -m pytest -v src/tests/
+          coverage report --omit="src/tests/*"
+          coverage xml --omit="src/tests/*"
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+          files: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

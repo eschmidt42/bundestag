@@ -1,0 +1,4 @@
+-c core-requirements.txt dev-requirements.txt
+mkdocs
+mkdocstrings[python]
+kaleido

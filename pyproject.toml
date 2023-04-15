@@ -5,44 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bundestag"
 version = "0.0.3"
-dependencies = [
-    "pandas",
-    "rich",
-    "spacy",
-    "fastai",
-    "plotly",
-    "scikit-learn",
-    "seaborn",
-    "matplotlib",
-    "gensim",
-    "fastcore",
-    "beautifulsoup4",
-    "ipywidgets",
-    "xlrd",
-    "openpyxl",
-    "fastparquet",
-    "pydantic",
-    "frictionless",
-    "typer[all]"
-]
 
 authors = [
     {name = "eschmidt42", email="11818904+eschmidt42@users.noreply.github.com"}
 ]
 description = "Download, parse and analyse votes in the german federal parliament, aka 'Bundestag'"
 
-[project.optional-dependencies]
-dev = [
-    "jupyterlab",
-    "black",
-    "isort",
-    "pytest",
-    "pre-commit",
-    "coverage",
-    "pandera",
-    "mkdocs",
-    "mkdocstrings[python]"
-]
 
 [tool.black]
 line-length = 79
@@ -60,7 +28,7 @@ exclude = ["tests"]  # exclude packages matching these glob patterns (empty by d
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src/bundestag"]
 testpaths = ["src/tests"]
 python_files = ["test_*.py"]
 markers = [

@@ -3,10 +3,10 @@ site_url: https://eschmidt42.github.io/bundestag/
 repo_url: https://github.com/eschmidt42/bundestag/
 nav:
   - Home: index.md
-  # - workflows:
-  #   - main: bundestag/main.md
-  - bundestag:
-    - __main__: bundestag/__main__.md
+  - Installation: installation.md
+  - How to use: how-to-use.md
+  - Analysis highlights: analysis-highlights.md
+  - Documentation:
     - data:
       - __init__: bundestag/data.md
       - download:
@@ -24,7 +24,10 @@ nav:
     - schemas: bundestag/schemas.md
     - similarity: bundestag/similarity.md
     - vote_prediction: bundestag/vote_prediction.md
-theme: readthedocs
+theme:
+  name: readthedocs
+  collapse_navigation: true
+
 plugins:
   - mkdocstrings
 watch:
