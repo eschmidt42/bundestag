@@ -54,7 +54,7 @@ def read_excel(file: Path, engine: str = "xlrd") -> pd.DataFrame:
         dfs = pd.read_excel(file, sheet_name=None, engine="openpyxl")
     except xlrd.XLRDError as ex:
         # file is erroneous and needs to be skipped
-        logger.error(f"{file=} is erroneous and is skipped")
+        logger.error(f"{file=} is erroneous and is skipped: {ex}")
         return None
     return dfs
 
