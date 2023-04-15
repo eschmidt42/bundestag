@@ -31,7 +31,7 @@ venv:
 .PHONY: install-docs
 install-docs: venv
 	source .venv/bin/activate && \
-	pip-sync requirements/docs-requirements.txt && \
+	pip-sync .config/docs-requirements.txt .config/dev-requirements.txt .config/core-requirements.txt && \
 	pip install -e . && \
 	python3 -m spacy download de_core_news_sm && \
 	pre-commit install
@@ -39,7 +39,7 @@ install-docs: venv
 .PHONY: install-dev
 install-dev: venv
 	source .venv/bin/activate && \
-	pip-sync requirements/dev-requirements.txt && \
+	pip-sync .config/dev-requirements.txt .config/core-requirements.txt && \
 	pip install -e . && \
 	python3 -m spacy download de_core_news_sm && \
 	pre-commit install
@@ -47,7 +47,7 @@ install-dev: venv
 .PHONY: install
 install: venv
 	source .venv/bin/activate && \
-	pip-sync requirements/requirements.txt && \
+	pip-sync .config/core-requirements.txt && \
 	pip install -e . && \
 	python3 -m spacy download de_core_news_sm && \
 	pre-commit install
