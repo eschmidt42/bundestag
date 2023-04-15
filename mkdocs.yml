@@ -4,6 +4,7 @@ repo_url: https://github.com/eschmidt42/bundestag/
 nav:
   - Home: index.md
   - Installation: installation.md
+  - How to use: how-to-use.md
   - Analysis highlights: analysis-highlights.md
   - Documentation:
       # - __main__: bundestag/__main__.md
