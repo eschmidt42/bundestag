@@ -2,13 +2,13 @@
 
 ### Jupyter notebooks
 
-* [highlight notebook](docs/analysis-highlights.ipynb)
+* [highlight notebook](analysis-highlights.ipynb)
 * parsing data:
-    * [pt I - scraped bundestag page](nbs/00_html_parsing.ipynb)
-    * [pt II - abgeordnetenwatch api](nbs/03_abgeordnetenwatch_data.ipynb)
+    * pt I - scraped bundestag page: `nbs/00_html_parsing.ipynb`
+    * pt II - abgeordnetenwatch api: `nbs/03_abgeordnetenwatch_data.ipynb`
 * analysis & modelling:
-    * [pt I - parlamentarian-faction and faction-faction similarities](nbs/01_similarities.ipynb)
-    * [pt II - predicting votes of parlamentarians](nbs/05_predicting_votes.ipynb)
+    * pt I - parlamentarian-faction and faction-faction similarities: `nbs/01_similarities.ipynb`
+    * pt II - predicting votes of parlamentarians: `nbs/05_predicting_votes.ipynb`
 
 ### The `bundestag` cli
 
