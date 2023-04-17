@@ -23,12 +23,16 @@ as described in [how-to-use](how-to-use.md).
 
 ## Installing & accessing metabase
 
-Run
+Run the below individually and verify correct start up using `sudo docker ps -a` and `sudo docker logs --follow <container_id>`
 ```shell
-sudo docker compose up -d
+sudo docker compose --profile mysql up -d
+sudo docker compose --profile postgres up -d
+sudo docker compose --profile adminer up -d
+sudo docker compose --profile ingestion up -d
+sudo docker compose --profile metabase up -d
 ```
 
-This should build 5 containers: mysql, ingestion, postgres, adminer, metabase. This may take a few minutes.
+This should build 5 containers: mysql, ingestion, postgres, adminer, metabase. This may take a few minutes. If you want to build them individually use `sudo docker compose --profile <service_name> up -d`, where `<service_name>` is mysql, ingestion, postgres, adminer or metabase.
 
 If everything started correctly, see [List of helpful commands](#List-of-helpful-commands) below for helpful command line arguments to verify, you should be able to access adminer and metabase in your browser under:
 
