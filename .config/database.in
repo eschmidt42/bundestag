@@ -1,2 +1,4 @@
 -r data-requirements.txt
 sqlalchemy
+pymysql
+cryptography
