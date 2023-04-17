@@ -24,4 +24,4 @@ As a side effect of trying to predict the vote of individual members of parliame
 
 ![](images/surprised-pikachu.png)
 
-If you want to see more check out [this site](docs/analysis-highlights.md) or [this notebook](docs/analysis-highlights.ipynb).
+If you want to see more check out [this site](analysis-highlights.md) or [this notebook](analysis-highlights.ipynb).

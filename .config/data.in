@@ -1,15 +1,11 @@
+# some description that may yield an error?
 pandas<2.0
 rich
-spacy
-fastai
 plotly
-scikit-learn
 seaborn
 matplotlib
-gensim
 fastcore
 beautifulsoup4
-ipywidgets
 xlrd
 openpyxl
 fastparquet

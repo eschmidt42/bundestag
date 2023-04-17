@@ -22,7 +22,7 @@ jobs:
     - name: Create virtal environment
       run: |-
           make venv
-          make install-docs
+          make install-docs-env
 
     - name: Build documentation
       run: |-

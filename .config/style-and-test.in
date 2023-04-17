@@ -1,4 +1,7 @@
 -c data-requirements.txt gui-requirements.txt ml-requirements.txt
-mkdocs
-mkdocstrings[python]
-kaleido
+jupyterlab
+black
+isort
+pytest
+pre-commit
+coverage

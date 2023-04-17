@@ -19,7 +19,7 @@ jobs:
     - name: Create virtal environment
       run: |-
           make venv
-          make install-dev
+          make install-dev-env
 
     - name: Run tests
       run: |-

@@ -1,0 +1,5 @@
+-c data-requirements.txt
+spacy
+fastai
+scikit-learn
+gensim
