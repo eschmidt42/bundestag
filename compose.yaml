@@ -14,8 +14,6 @@ services:
       MYSQL_PORT: ${MY_SQL_PORT}
     volumes:
       - metabase-data:/var/lib/mysql
-    # networks:
-    #   - metabase-with-db
     profiles:
       - mysql
     env_file:
