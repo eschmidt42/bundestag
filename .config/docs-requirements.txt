@@ -6,11 +6,11 @@
 #
 click==8.1.3
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   mkdocs
 colorama==0.4.6
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   griffe
 ghp-import==2.1.0
     # via mkdocs
@@ -18,12 +18,12 @@ griffe==0.27.0
     # via mkdocstrings-python
 importlib-metadata==6.4.1
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   markdown
     #   mkdocs
 jinja2==3.1.2
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   mkdocs
     #   mkdocstrings
 kaleido==0.2.1
@@ -36,7 +36,7 @@ markdown==3.3.7
     #   pymdown-extensions
 markupsafe==2.1.2
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   jinja2
     #   mkdocstrings
 mergedeep==1.3.4
@@ -56,17 +56,17 @@ mkdocstrings-python==0.9.0
     # via mkdocstrings
 packaging==23.1
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   mkdocs
 pymdown-extensions==9.11
     # via mkdocstrings
 python-dateutil==2.8.2
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   ghp-import
 pyyaml==6.0
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   mkdocs
     #   pymdown-extensions
     #   pyyaml-env-tag
@@ -74,15 +74,15 @@ pyyaml-env-tag==0.1
     # via mkdocs
 six==1.16.0
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   python-dateutil
 typing-extensions==4.5.0
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   mkdocstrings
 watchdog==3.0.0
     # via mkdocs
 zipp==3.15.0
     # via
-    #   -c .config/core-requirements.txt
+    #   -c .config/data-requirements.txt
     #   importlib-metadata

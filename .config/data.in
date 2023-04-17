@@ -1,0 +1,15 @@
+# some description that may yield an error?
+pandas<2.0
+rich
+plotly
+seaborn
+matplotlib
+fastcore
+beautifulsoup4
+xlrd
+openpyxl
+fastparquet
+pydantic
+frictionless
+typer[all]
+pandera
