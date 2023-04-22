@@ -27,7 +27,7 @@ jobs:
     - name: Download data
       run: |-
           source .venv/bin/activate
-          bundestag download huggingface -y
+          bundestag download huggingface --y
 
     - name: Build documentation
       run: |-
