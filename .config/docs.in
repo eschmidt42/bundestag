@@ -1,0 +1,7 @@
+# requirements to compile the documentation for github pages
+-c data-requirements.txt
+-c gui-requirements.txt
+-c ml-requirements.txt
+mkdocs
+mkdocstrings[python]
+kaleido

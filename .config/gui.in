@@ -1,0 +1,4 @@
+# requirements to use jupyter
+-c data-requirements.txt
+jupyterlab
+ipywidgets

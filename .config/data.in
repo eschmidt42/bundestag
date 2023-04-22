@@ -1,0 +1,15 @@
+# core requirements for the project to enable data parsing
+pandas<2.0
+rich
+plotly
+seaborn
+matplotlib
+fastcore
+beautifulsoup4
+xlrd
+openpyxl
+fastparquet
+pydantic
+frictionless
+typer[all]
+pandera

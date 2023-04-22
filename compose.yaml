@@ -1,0 +1,97 @@
+services:
+
+  # database to store votes/polls/mandates data
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MY_SQL_DATABASE}
+      MYSQL_USER: ${MY_SQL_USER}
+      MYSQL_PASSWORD: ${MY_SQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MY_SQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MY_SQL_HOST}
+      MYSQL_PORT: ${MY_SQL_PORT}
+    volumes:
+      - metabase-data:/var/lib/mysql
+    profiles:
+      - mysql
+    env_file:
+      - .env
+    ports:
+      - "${MY_SQL_PORT}:${MY_SQL_PORT}"
+
+  # data ingestion into mysql
+  ingestion:
+    container_name: ingestion
+    build:
+      dockerfile: ./.docker/ingestion.dockerfile
+    depends_on:
+      - mysql
+    profiles:
+      - ingestion
+    env_file:
+      - .env
+
+  # warehouse for metabase
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+    volumes:
+      - metabase-data:/var/lib/postgresql/
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    profiles:
+      - postgres
+
+  # gui to check presence of "bundestag" in mysql and postgres
+  adminer:
+    container_name: adminer
+    image: adminer:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "256M"
+    restart: always
+    ports:
+      - 8888:8080
+    profiles:
+      - adminer
+
+  # BI tool
+  metabase:
+    container_name: metabase
+    image: metabase/metabase:latest
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${POSTGRES_DATABASE}
+      MB_DB_PORT: ${POSTGRES_PORT}
+      MB_DB_USER: ${POSTGRES_USER}
+      MB_DB_PASS: ${POSTGRES_PASS}
+      MB_DB_HOST: ${POSTGRES_HOST}
+    profiles:
+      - metabase
+    depends_on:
+      mysql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+volumes:
+  metabase-data:
+    name: metabase-data
