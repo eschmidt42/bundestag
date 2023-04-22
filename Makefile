@@ -3,21 +3,21 @@ SHELL = /bin/bash
 .PHONY: help
 help:
 	@echo "Commands:"
-	@echo "venv         : creates .venv"
-	@echo "install-docs : install dependencies into virtual environment for docs+development."
-	@echo "install-dev  : install dependencies into virtual environment for development."
-	@echo "install      : install dependenceis info virtual environment for non-development."
-	@echo "compile-all  : update all requirement files after changes to pyproject.toml core/dev/docs dependencies."
-	@echo "compile-docs : update the environment docs requirements after changes to pyproject.toml docs dependencies."
-	@echo "compile-dev  : update the environment dev requirements after changes to pyproject.toml dev dependencies."
-	@echo "compile      : update the environment non-dev requirements after changes to pyproject.toml dependencies."
-	@echo "update-docs  : pip install new docs requriements into the environment."
-	@echo "update-dev   : pip install new dev requriements into the environment."
-	@echo "update       : pip install new requriements into the environment."
-	@echo "docs         : create documentation."
-	@echo "serve-docs   : serve documentation."
-	@echo "test         : run pytests."
-	@echo "tarballs     : create tarballs of data/raw and data/preprocessed for storage on huggingface datasets https://huggingface.co/datasets/Bingpot/bundestag/."
+	@echo "venv             : creates .venv"
+	@echo "install-docs-env : install dependencies into virtual environment for docs+development."
+	@echo "install-dev-env  : install dependencies into virtual environment for development."
+	@echo "install-prod-env : install dependenceis info virtual environment for non-development."
+	@echo "compile-docs-env : update the docs environment requirements after changes to related *.in files."
+	@echo "compile-dev-env  : update the dev environment requirements after changes to related *.in files."
+	@echo "compile-prod-env : update prod environment requirements after changes to related *.in files."
+	@echo "compile-all      : update all requirement files prod requirements after changes to related *.in files."
+	@echo "update-docs-env  : pip install new docs requriements into the environment."
+	@echo "update-dev-env   : pip install new dev requriements into the environment."
+	@echo "update-prod-env  : pip install new prod requriements into the environment."
+	@echo "docs             : create documentation."
+	@echo "serve-docs       : serve documentation."
+	@echo "test             : run pytests."
+	@echo "tarballs         : create tarballs of data/raw and data/preprocessed for storage on huggingface datasets https://huggingface.co/datasets/Bingpot/bundestag/."
 
 # create a virtual environment
 .PHONY: venv
@@ -96,7 +96,7 @@ compile-dev-env: compile-gui compile-style-and-tests compile-ml compile-data
 compile-prod-env: compile-ml compile-data
 
 .PHONY: compile-all
-compile-all: compile-data compile-gui compile-ml compile-style-and-tests compile-docs compile-database compile-binder
+compile-all: compile-data compile-gui compile-ml compile-style-and-test compile-docs compile-database compile-binder
 
 # pip-compile .config/mysql.in -o .config/mysql-requirements.txt --resolver=backtracking
 .PHONY: compile-data
