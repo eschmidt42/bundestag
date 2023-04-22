@@ -2,7 +2,9 @@
 
 > How do individual members of the federal German parliament (Bundestag) vote in "Namentliche Abstimmungen" (roll call votes)? How does the individual align with the different political parties? And how may the members vote on upcoming bills? All this here.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eschmidt42/bundestag/data?labpath=README.ipynb) [![Tests](https://github.com/eschmidt42/bundestag/actions/workflows/unittests.yml/badge.svg)](https://github.com/eschmidt42/bundestag/actions/workflows/unittests.yml) [![codecov](https://codecov.io/gh/eschmidt42/bundestag/branch/main/graph/badge.svg?token=SIZEIVYX66)](https://codecov.io/gh/eschmidt42/bundestag)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eschmidt42/bundestag/HEAD?labpath=docs%2Fanalysis-highlights.ipynb)
+[![Tests](https://github.com/eschmidt42/bundestag/actions/workflows/ci.yml/badge.svg)](https://github.com/eschmidt42/bundestag/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/eschmidt42/bundestag/branch/main/graph/badge.svg?token=SIZEIVYX66)](https://codecov.io/gh/eschmidt42/bundestag)
 
 This project was created out of curiosity and purely for entertainment.
 
