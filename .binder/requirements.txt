@@ -223,18 +223,22 @@ importlib-resources==5.12.0
 ipykernel==6.22.0
     # via
     #   -r .config/gui-requirements.txt
+    #   ipywidgets
     #   nbclassic
     #   notebook
 ipython==8.12.0
     # via
     #   -r .config/gui-requirements.txt
     #   ipykernel
+    #   ipywidgets
     #   jupyterlab
 ipython-genutils==0.2.0
     # via
     #   -r .config/gui-requirements.txt
     #   nbclassic
     #   notebook
+ipywidgets==8.0.6
+    # via -r .config/gui-requirements.txt
 isodate==0.6.1
     # via
     #   -r .config/data-requirements.txt
@@ -340,6 +344,10 @@ jupyterlab-server==2.22.1
     # via
     #   -r .config/gui-requirements.txt
     #   jupyterlab
+jupyterlab-widgets==3.0.7
+    # via
+    #   -r .config/gui-requirements.txt
+    #   ipywidgets
 kiwisolver==1.4.4
     # via
     #   -r .config/data-requirements.txt
@@ -833,6 +841,7 @@ traitlets==5.9.0
     #   comm
     #   ipykernel
     #   ipython
+    #   ipywidgets
     #   jupyter-client
     #   jupyter-core
     #   jupyter-events
@@ -911,6 +920,10 @@ wheel==0.40.0
     #   nvidia-curand-cu11
     #   nvidia-cusparse-cu11
     #   nvidia-nvtx-cu11
+widgetsnbextension==4.0.7
+    # via
+    #   -r .config/gui-requirements.txt
+    #   ipywidgets
 wrapt==1.15.0
     # via
     #   -r .config/data-requirements.txt
