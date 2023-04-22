@@ -111,8 +111,12 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
     raise ValueError(f"Received {max_tries} incorrect inputs, terminating.")
 
 
-def ensure_path_exists(path: Path):
-    do_creation = get_user_path_creation_decision(path, max_tries=3)
+def ensure_path_exists(path: Path, assume_yes: bool = False):
+    do_creation = (
+        get_user_path_creation_decision(path, max_tries=3)
+        if not assume_yes
+        else True
+    )
 
     if do_creation:
         path.mkdir(exist_ok=True, parents=True)

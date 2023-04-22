@@ -127,19 +127,30 @@ def test_get_user_path_creation_decision(
         assert decision == expected
 
 
-@pytest.mark.parametrize("do_creation", [True, False])
-def test_ensure_path_exists(do_creation: bool):
+@pytest.mark.parametrize(
+    "user_decision,assume_yes",
+    [
+        (user_decision, assume_yes)
+        for user_decision in [True, False]
+        for assume_yes in [True, False]
+    ],
+)
+def test_ensure_path_exists(user_decision: bool, assume_yes: bool):
     path = Path("dummy/path")
     with (
         patch(
             "bundestag.data.utils.get_user_path_creation_decision",
-            return_value=do_creation,
-        ) as _do_creation,
+            return_value=user_decision,
+        ) as _get_user_path_creation_decision,
         patch("pathlib.Path.mkdir") as _mkdir,
     ):
         # line to test
-        data_utils.ensure_path_exists(path)
+        data_utils.ensure_path_exists(path, assume_yes=assume_yes)
 
-        assert _do_creation.call_count == 1
-        assert _do_creation.call_args[0][0] == path
-        assert _mkdir.call_count == (1 if do_creation else 0)
+        if assume_yes:
+            assert _get_user_path_creation_decision.call_count == 0
+            _mkdir.assert_called_once()
+        else:
+            assert _get_user_path_creation_decision.call_count == 1
+            assert _get_user_path_creation_decision.call_args[0][0] == path
+            assert _mkdir.call_count == (1 if user_decision else 0)

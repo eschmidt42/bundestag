@@ -40,6 +40,10 @@ def download(
     nmax: int = typer.Option(
         999, help="Max number of sheets to download (bundestag_sheet specific)"
     ),
+    y: bool = typer.Option(
+        default=False,
+        help="Assume yes to all prompts and run non-interactively.",
+    ),
 ):
     logger.info(f"Downloading from {source}")
 
@@ -56,6 +60,7 @@ def download(
             preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
             max_mandates=max_mandates,
             max_polls=max_polls,
+            assume_yes=y,
         )
 
     elif source == VALID_SOURCES[1]:
@@ -66,6 +71,7 @@ def download(
             nmax=nmax,
             dry=dry,
             pattern=data_utils.RE_SHEET,
+            assume_yes=y,
         )
 
     elif source == VALID_SOURCES[2]:
@@ -73,6 +79,7 @@ def download(
         download_hf.run(
             path=_paths.base,
             dry=dry,
+            assume_yes=y,
         )
 
     else:

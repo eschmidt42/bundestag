@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bundestag"
-version = "0.0.3"
+version = "0.1.0"
 
 authors = [
     {name = "eschmidt42", email="11818904+eschmidt42@users.noreply.github.com"}

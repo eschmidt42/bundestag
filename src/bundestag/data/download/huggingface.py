@@ -8,14 +8,14 @@ import bundestag.logging as logging
 logger = logging.logger
 
 
-def run(path: Path, dry: bool = False):
+def run(path: Path, dry: bool = False, assume_yes: bool = False):
     logger.info(
         f"Loading and extracting dataset from huggingface to {path.absolute()}"
     )
 
     if not dry:
         if not path.exists():
-            data_utils.ensure_path_exists(path)
+            data_utils.ensure_path_exists(path, assume_yes=assume_yes)
 
         # raw data
 
