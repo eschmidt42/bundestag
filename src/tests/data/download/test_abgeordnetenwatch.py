@@ -444,15 +444,16 @@ def test_get_all_remaining_vote_data(
 
 
 @pytest.mark.parametrize(
-    "dry,path_exists,raw_path",
+    "dry,path_exists,raw_path,assume_yes",
     [
-        (dry, path_exists, raw_path)
+        (dry, path_exists, raw_path, assume_yes)
         for dry in [True, False]
         for path_exists in [True, False]
         for raw_path in [Path("dummy/path"), None]
+        for assume_yes in [True, False]
     ],
 )
-def test_run(dry: bool, path_exists: bool, raw_path: Path):
+def test_run(dry: bool, path_exists: bool, raw_path: Path, assume_yes: bool):
     legislature_id = 42
     max_polls = 42
     max_mandates = 21
@@ -499,6 +500,7 @@ def test_run(dry: bool, path_exists: bool, raw_path: Path):
                 ask_user=ask_user,
                 max_mandates=max_mandates,
                 max_polls=max_polls,
+                assume_yes=assume_yes,
             )
         except ValueError:
             if raw_path is None and not dry:
@@ -508,7 +510,9 @@ def test_run(dry: bool, path_exists: bool, raw_path: Path):
                 _exists.assert_called_once()
 
             if not path_exists and not dry:
-                _ensure_exists.assert_called_once_with(raw_path)
+                _ensure_exists.assert_called_once_with(
+                    raw_path, assume_yes=assume_yes
+                )
 
             _request_poll_data.assert_called_once_with(
                 legislature_id, dry=dry, num_polls=max_polls

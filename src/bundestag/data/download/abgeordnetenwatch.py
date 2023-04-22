@@ -380,6 +380,7 @@ def run(
     t_sleep: float = 1,
     dt_rv_scale: float = 0.1,
     ask_user: bool = True,
+    assume_yes: bool = False,
 ) -> pd.DataFrame:
     "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
 
@@ -390,7 +391,7 @@ def run(
 
     # ensure paths exist
     if not dry and not raw_path.exists():
-        data_utils.ensure_path_exists(raw_path)
+        data_utils.ensure_path_exists(raw_path, assume_yes=assume_yes)
 
     # polls
     data = request_poll_data(legislature_id, dry=dry, num_polls=max_polls)

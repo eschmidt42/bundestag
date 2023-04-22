@@ -121,14 +121,15 @@ def run(
     nmax: int = None,
     dry: bool = False,
     pattern: re.Pattern = data_utils.RE_HTM,
+    assume_yes: bool = False,
 ):
     logger.info("Start downloading sheets")
 
     # ensure paths exist
     if not html_path.exists():
-        data_utils.ensure_path_exists(html_path)
+        data_utils.ensure_path_exists(html_path, assume_yes=assume_yes)
     if not sheet_path.exists():
-        data_utils.ensure_path_exists(sheet_path)
+        data_utils.ensure_path_exists(sheet_path, assume_yes=assume_yes)
 
     html_path, sheet_path = Path(html_path), Path(sheet_path)
     # collect htm files
