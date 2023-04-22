@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/metabase/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Analysis with metabase - bundestag</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Analysis with metabase";
+        var mkdocs_page_input_path = "metabase.md";
+        var mkdocs_page_url = "/bundestag/metabase/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../analysis-highlights/">Analysis highlights</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Analysis with metabase</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#installing-docker">Installing docker</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-data">The data</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installing-accessing-metabase">Installing &amp; accessing metabase</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#list-of-helpful-commands">List of helpful commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="#">data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/">abgeordnetenwatch</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/">abgeordnetenwatch</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/logging/">logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/poll_clustering/">poll_clustering</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/schemas/">schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/similarity/">similarity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/vote_prediction/">vote_prediction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Analysis with metabase</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/metabase.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="docker">Docker</h1>
+<p>Here some tips if you want to analyze the data using metabase. And a list of commands that may be helpful debugging.</p>
+<p>The setup here is based on <a href="https://www.metabase.com/docs/latest/installation-and-operation/running-metabase-on-docker">metabase's guide</a> and extends it to incorporate a mysql database (for votes/mandates/polls data) and adminer (to verify database accessibility across containers).</p>
+<h2 id="installing-docker">Installing docker</h2>
+<p>On windows with wsl you may need to get <code>systemd</code>: https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/</p>
+<p>Official guide to install the docker engine: https://docs.docker.com/engine/install</p>
+<h2 id="the-data">The data</h2>
+<p>Make sure you have <code>data/preprocessed/abgeordnetenwatch/*111.parquet</code> available.</p>
+<p>For this you need to <a href="../installation/">set up the repo</a> and then run</p>
+<pre><code class="language-shell">bundestag download huggingface
+</code></pre>
+<p>as described in <a href="../how-to-use/">how-to-use</a>.</p>
+<h2 id="installing-accessing-metabase">Installing &amp; accessing metabase</h2>
+<p>Run the below individually and verify correct start up using <code>sudo docker ps -a</code> and <code>sudo docker logs --follow &lt;container_id&gt;</code></p>
+<pre><code class="language-shell">sudo docker compose --profile mysql up -d
+sudo docker compose --profile postgres up -d
+sudo docker compose --profile adminer up -d
+sudo docker compose --profile ingestion up -d
+sudo docker compose --profile metabase up -d
+</code></pre>
+<p>This should build 5 containers: mysql, ingestion, postgres, adminer, metabase. This may take a few minutes. If you want to build them individually use <code>sudo docker compose --profile &lt;service_name&gt; up -d</code>, where <code>&lt;service_name&gt;</code> is mysql, ingestion, postgres, adminer or metabase.</p>
+<p>If everything started correctly, see <a href="#List-of-helpful-commands">List of helpful commands</a> below for helpful command line arguments to verify, you should be able to access adminer and metabase in your browser under:</p>
+<ul>
+<li>Adminer: <code>localhost:8888</code> and</li>
+<li>metabase: <code>localhost:3000</code>.</li>
+</ul>
+<p>The credentials can be found in <code>.env</code> for postgres and mysql respectively.</p>
+<p>Happy plotting!</p>
+<p><strong>On your first start up of metabase</strong>:</p>
+<ul>
+<li>you will be asked to create an account (just be creative but also write down the email / password combination you used for later) and</li>
+<li>you will also have to manually add the mysql connection.</li>
+</ul>
+<h2 id="list-of-helpful-commands">List of helpful commands</h2>
+<p>List containers</p>
+<pre><code class="language-shell">sudo docker ps -a
+</code></pre>
+<p>Stop containers</p>
+<pre><code class="language-shell">sudo docker stop &lt;container_id&gt;
+</code></pre>
+<p>Remove containers</p>
+<pre><code class="language-shell">sudo docker rm &lt;container_id&gt;
+</code></pre>
+<p>To list / remove volumes used to store data requried for mysql and postgresql:</p>
+<pre><code class="language-shell">sudo docker volume ls
+sudo docker volume rm &lt;name&gt;
+</code></pre>
+<p>To list / remove images</p>
+<pre><code class="language-shell">sudo docker images -a
+sudo docker rmi &lt;image_name&gt;
+</code></pre>
+<p>More useful commands like that here:
+https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes</p>
+<p>Composing a by profile (here the <code>mysql</code> container)</p>
+<pre><code class="language-shell">sudo docker compose --profile mysql up -d
+</code></pre>
+<p>Inspecting the logs of a container</p>
+<pre><code class="language-shell">sudo docker logs --tail 50 --follow --timestamps
+&lt;container_id&gt;
+</code></pre>
+<p>Remove dangling images: https://docs.docker.com/config/pruning/</p>
+<pre><code class="language-shell">sudo docker image prune
+</code></pre>
+<h2 id="references">References</h2>
+<p>[1] example for ingestion with metabase + mysql (<a href="https://medium.com/@stefentaime_10958/end-to-end-data-engineering-project-with-spark-mongodb-minio-postgres-and-metabase-2c400672b50d">blog</a>, <a href="https://github.com/Stefen-Taime/projet_data/tree/main/loader">github</a>)</p>
+<p>[2] example for a data stack (<a href="https://medium.com/@isochoa95/building-a-simple-data-stack-with-docker-aceeff4264b7">blog</a>, <a href="https://github.com/iagochoa/DataStack/blob/main/docker-compose.yaml">github</a>)</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../analysis-highlights/" class="btn btn-neutral float-left" title="Analysis highlights"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../bundestag/data/" class="btn btn-neutral float-right" title="__init__">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../analysis-highlights/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../bundestag/data/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
