@@ -1,3 +1,4 @@
+# requirements neccessary to use metabase via docker and read the parquets
 -r data-requirements.txt
 sqlalchemy
 pymysql

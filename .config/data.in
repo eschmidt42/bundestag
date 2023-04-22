@@ -1,4 +1,4 @@
-# some description that may yield an error?
+# core requirements for the project to enable data parsing
 pandas<2.0
 rich
 plotly

@@ -1,3 +1,4 @@
+# requirements for the machine learning tools used in this project
 -c data-requirements.txt
 spacy
 fastai

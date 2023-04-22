@@ -1,4 +1,7 @@
--c data-requirements.txt gui-requirements.txt ml-requirements.txt
+# dev requirements to enforce systematic code style and do tests
+-c data-requirements.txt
+-c gui-requirements.txt
+-c ml-requirements.txt
 jupyterlab
 black
 isort
