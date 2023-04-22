@@ -1,1 +1,4 @@
--r data-requirements.txt ml.requirements.txt gui.requirements.txt
+# collection of requirements to be able to deploy notebooks on mybinder.org
+-r data-requirements.txt
+-r ml-requirements.txt
+-r gui-requirements.txt
