@@ -61,7 +61,9 @@ class PartyInGovernmentTransformer(base.BaseEstimator, base.TransformerMixin):
 class BillProposedByGovernmentTransformer(
     base.BaseEstimator, base.TransformerMixin
 ):
-    def __init__(self, description_col: str = "poll_description"):
+    def __init__(
+        self, description_col: str = "poll_description_without_results"
+    ):
         self.description_col = description_col
 
     def fit(self, X: pd.DataFrame, y=None):
