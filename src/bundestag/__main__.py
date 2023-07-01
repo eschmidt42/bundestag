@@ -57,7 +57,6 @@ def download(
             legislature_id=legislature_id,
             dry=dry,
             raw_path=_paths.raw_abgeordnetenwatch,
-            preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
             max_mandates=max_mandates,
             max_polls=max_polls,
             assume_yes=y,
