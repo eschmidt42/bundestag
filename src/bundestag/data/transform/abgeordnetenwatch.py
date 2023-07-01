@@ -287,7 +287,9 @@ def run(
     # polls
     df = get_polls_data(legislature_id, path=raw_path)
     if not dry:
-        file = preprocessed_path / f"df_polls_{legislature_id}.parquet"
+        file = (
+            preprocessed_path / f"df_polls_{legislature_id}.parquet"
+        ).absolute()
         logger.debug(f"writing to {file}")
         df.to_parquet(path=file)
 
@@ -296,7 +298,9 @@ def run(
     df = transform_mandates_data(df)
 
     if not dry:
-        file = preprocessed_path / f"df_mandates_{legislature_id}.parquet"
+        file = (
+            preprocessed_path / f"df_mandates_{legislature_id}.parquet"
+        ).absolute()
         logger.debug(f"Writing to {file}")
         df.to_parquet(path=file)
 
@@ -315,7 +319,9 @@ def run(
 
         df_all_votes.to_csv(all_votes_path, index=False)
 
-        file = preprocessed_path / f"df_all_votes_{legislature_id}.parquet"
+        file = (
+            preprocessed_path / f"df_all_votes_{legislature_id}.parquet"
+        ).absolute()
         logger.debug(f"Writing to {file}")
         df_all_votes.to_parquet(path=file)
 

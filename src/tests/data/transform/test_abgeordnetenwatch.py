@@ -500,16 +500,22 @@ def test_run(
             _to_parquet.assert_has_calls(
                 [
                     call(
-                        path=preprocessed_path
-                        / f"df_polls_{legislature_id}.parquet"
+                        path=(
+                            preprocessed_path
+                            / f"df_polls_{legislature_id}.parquet"
+                        ).absolute()
                     ),
                     call(
-                        path=preprocessed_path
-                        / f"df_mandates_{legislature_id}.parquet"
+                        path=(
+                            preprocessed_path
+                            / f"df_mandates_{legislature_id}.parquet"
+                        ).absolute()
                     ),
                     call(
-                        path=preprocessed_path
-                        / f"df_all_votes_{legislature_id}.parquet"
+                        path=(
+                            preprocessed_path
+                            / f"df_all_votes_{legislature_id}.parquet"
+                        ).absolute()
                     ),
                 ]
             )
