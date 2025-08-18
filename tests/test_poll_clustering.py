@@ -175,9 +175,7 @@ class TestSpacyTransformer:
         )
 
         # line to test
-        ax = pc.pca_plot_lda_topics(
-            df_lda, self.st, self.col, nlp_feature_cols
-        )
+        ax = pc.pca_plot_lda_topics(df_lda, self.st, self.col, nlp_feature_cols)
 
         assert isinstance(ax, go.Figure)
 

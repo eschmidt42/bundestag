@@ -205,7 +205,7 @@ serve-docs:
 
 .PHONY: test
 test:
-	uv run pytest -vx --ignore src/legacy tests
+	uv run pytest -vx tests
 
 .PHONY: tarballs
 tarballs:

@@ -5,13 +5,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     strategy:
       matrix:
         python-version:
-          - "3.9"
+          - "3.10"
 
     steps:
     - name: Check out repository
@@ -34,9 +34,9 @@ jobs:
     - name: Run tests
       run: |-
           source .venv/bin/activate
-          coverage run -m pytest -v src/tests/
-          coverage report --omit="src/tests/*"
-          coverage xml --omit="src/tests/*"
+          coverage run -m pytest -v tests/
+          coverage report --omit="tests/*"
+          coverage xml --omit="tests/*"
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4

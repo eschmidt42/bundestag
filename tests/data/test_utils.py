@@ -11,9 +11,7 @@ def test_get_location():
     fname = "wup.csv"
     path = Path("file/location")
 
-    file = data_utils.get_location(
-        fname=fname, path=path, dry=True, mkdir=False
-    )
+    file = data_utils.get_location(fname=fname, path=path, dry=True, mkdir=False)
     assert file == path / fname
 
 
@@ -26,10 +24,7 @@ def test_mandates_file():
 
 
 def test_votes_file():
-    assert (
-        data_utils.votes_file(42, 21)
-        == "votes_legislature_42/poll_21_votes.json"
-    )
+    assert data_utils.votes_file(42, 21) == "votes_legislature_42/poll_21_votes.json"
 
 
 def test_get_sheet_fname():
@@ -107,10 +102,10 @@ def test_get_file_paths(suffix: str, pattern: re.Pattern):
         ([1], "fail", 1),
     ],
 )
-def test_get_user_path_creation_decision(
-    user_inputs, expected, max_tries: int
-):
-    with (patch("builtins.input", side_effect=user_inputs) as _input,):
+def test_get_user_path_creation_decision(user_inputs, expected, max_tries: int):
+    with (
+        patch("builtins.input", side_effect=user_inputs) as _input,
+    ):
         try:
             # line to test
             decision = data_utils.get_user_path_creation_decision(

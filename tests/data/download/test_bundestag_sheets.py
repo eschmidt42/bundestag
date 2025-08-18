@@ -1,15 +1,11 @@
 import re
-import typing as T
-import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
 
-import pandas as pd
 import pytest
 import requests
 
 import bundestag.data.download.bundestag_sheets as hp
-import bundestag.schemas as schemas
 
 
 @pytest.mark.parametrize(

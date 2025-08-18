@@ -1,13 +1,11 @@
 import json
 import typing as T
-import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, call, mock_open, patch
 
 import pandas as pd
 import pandera as pa
 import pytest
-import requests
 
 import bundestag.data.transform.abgeordnetenwatch as aw
 import bundestag.schemas as schemas
@@ -15,25 +13,21 @@ import bundestag.schemas as schemas
 
 @pytest.fixture(scope="module")
 def poll_response_raw() -> dict:
-    response = json.load(
-        open("src/tests/data_for_testing/polls_legislature_111.json", "r")
-    )
+    response = json.load(open("tests/data_for_testing/polls_legislature_111.json", "r"))
     return response
 
 
 @pytest.fixture(scope="module")
 def mandates_response_raw() -> dict:
     response = json.load(
-        open("src/tests/data_for_testing/mandates_legislature_111.json", "r")
+        open("tests/data_for_testing/mandates_legislature_111.json", "r")
     )
     return response
 
 
 @pytest.fixture(scope="module")
 def votes_response_raw() -> dict:
-    response = json.load(
-        open("src/tests/data_for_testing/poll_4217_votes.json", "r")
-    )
+    response = json.load(open("tests/data_for_testing/poll_4217_votes.json", "r"))
     return response
 
 
@@ -263,11 +257,7 @@ def test_get_mandates_df(mandates_response_raw: dict):
 
 @pytest.mark.parametrize(
     "has_none,validate",
-    [
-        (has_none, validate)
-        for has_none in [False, True]
-        for validate in [False, True]
-    ],
+    [(has_none, validate) for has_none in [False, True] for validate in [False, True]],
 )
 def test_get_votes_df(has_none: int, validate: bool, votes_response_raw: dict):
     data = votes_response_raw.copy()
@@ -442,9 +432,7 @@ def test_run(
             "pathlib.Path.exists",
             MagicMock(side_effect=[raw_path_exists, preprocessed_path_exists]),
         ) as _exists,
-        patch(
-            "bundestag.data.utils.ensure_path_exists", MagicMock()
-        ) as _ensure_exists,
+        patch("bundestag.data.utils.ensure_path_exists", MagicMock()) as _ensure_exists,
         patch("pandas.DataFrame.to_parquet", MagicMock()) as _to_parquet,
         patch("pandas.DataFrame.to_csv", MagicMock()) as _to_csv,
         patch(
@@ -480,12 +468,8 @@ def test_run(
         except ValueError as ex:
             if not dry and (raw_path is None or preprocessed_path is None):
                 pytest.xfail("ValueError for missing path")
-            elif not dry and (
-                not raw_path_exists or not preprocessed_path_exists
-            ):
-                pytest.xfail(
-                    "ValueError for existing raw and preprocessed data path"
-                )
+            elif not dry and (not raw_path_exists or not preprocessed_path_exists):
+                pytest.xfail("ValueError for existing raw and preprocessed data path")
             elif not raw_path_exists:
                 pytest.xfail("ValueError for missing raw data path")
             else:
@@ -499,13 +483,9 @@ def test_run(
         if not dry:
             _to_parquet.assert_has_calls(
                 [
+                    call(path=preprocessed_path / f"df_polls_{legislature_id}.parquet"),
                     call(
-                        path=preprocessed_path
-                        / f"df_polls_{legislature_id}.parquet"
-                    ),
-                    call(
-                        path=preprocessed_path
-                        / f"df_mandates_{legislature_id}.parquet"
+                        path=preprocessed_path / f"df_mandates_{legislature_id}.parquet"
                     ),
                     call(
                         path=preprocessed_path
@@ -525,9 +505,7 @@ def test_run(
 
         _get_polls_data.assert_called_once_with(legislature_id, path=raw_path)
 
-        _get_mandates_data.assert_called_once_with(
-            legislature_id, path=raw_path
-        )
+        _get_mandates_data.assert_called_once_with(legislature_id, path=raw_path)
         _transform_mandates_data.assert_called_once_with(MANDATES_DF)
 
         _compile_votes_data.assert_called_once_with(
