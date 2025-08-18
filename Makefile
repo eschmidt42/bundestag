@@ -59,24 +59,34 @@ prod-env-req := $(ml-req) $(data-req)
 
 # environment to generate documentation and development
 .PHONY: install-docs-env
-install-docs-env: venv
-	source .venv/bin/activate && \
-	pip-sync $(docs-env-req) && \
-	pip install -e . && \
-	python3 -m spacy download de_core_news_sm && \
-	pre-commit install
+install-docs-env:
+	uv sync --group ml --group gui --group style_and_test --group data --group docs && \
+	uv run python3 -m spacy download de_core_news_sm
+
+# .PHONY: install-docs-env
+# install-docs-env: venv
+# 	source .venv/bin/activate && \
+# 	pip-sync $(docs-env-req) && \
+# 	pip install -e . && \
+# 	python3 -m spacy download de_core_news_sm && \
+# 	pre-commit install
 
 # environment for development
 .PHONY: install-dev-env
 install-dev-env:
 	uv sync --group ml --group gui --group style_and_test --group data && \
 	uv run python3 -m spacy download de_core_news_sm && \
-	pre-commit install
+	uv run pre-commit install
 # 	source .venv/bin/activate && \
 # 	pip-sync $(dev-env-req) && \
 # 	pip install -e . && \
 # 	python3 -m spacy download de_core_news_sm && \
 # 	pre-commit install
+
+.PHONY: install-ci-env
+install-ci-env:
+	uv sync --group ml --group gui --group style_and_test --group data && \
+	uv run python3 -m spacy download de_core_news_sm
 
 # environment for production
 .PHONY: install-prod-env
@@ -151,7 +161,8 @@ compile-binder:
 
 .PHONY: update-dev-env
 update-dev-env:
-	uv sync --group ml --group gui --group style_and_test --group data
+	uv sync --group ml --group gui --group style_and_test --group data && \
+	uv run spacy download de_core_news_sm
 
 # environment for docs and development
 # .PHONY: update-docs-env
