@@ -105,9 +105,7 @@ def test_compute_similarity(df: pd.DataFrame):
     mdb_vs_parties = sim.align_mdb_with_parties(mdb_votes, pivoted)
 
     # line to test
-    res = sim.compute_similarity(
-        mdb_vs_parties, lsuffix="mdb", rsuffix="party"
-    )
+    res = sim.compute_similarity(mdb_vs_parties, lsuffix="mdb", rsuffix="party")
 
     assert all([v in res.columns for v in mdb_vs_parties.columns])
     assert "similarity" in res.columns

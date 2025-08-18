@@ -1,33 +1,49 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
     - id: check-yaml
-    - id: end-of-file-fixer
     - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 23.1.0
+    - id: check-added-large-files
+      args: ['--maxkb=3000']
+    - id: check-case-conflict
+    - id: check-executables-have-shebangs
+    - id: check-merge-conflict
+    - id: check-toml
+    - id: detect-private-key
+    - id: end-of-file-fixer
+    - id: name-tests-test
+      args: ['--pytest-test-first']
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.12.8
     hooks:
-    - id: black
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-  - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.6.1
-    hooks:
-    - id: nbqa-black
-    - id: nbqa-isort
-      args: ["--float-to-top"]
+    # Run the linter.
+    - id: ruff-check
+      types_or: [ python, pyi ]
+      args: [ --select, "I,F401", --fix ]
+    # Run the formatter.
+    - id: ruff-format
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.6.1
+    rev: 0.8.1
     hooks:
     - id: nbstripout
+      args:
+          [
+            "--extra-keys",
+            "metadata.interpreter metadata.kernelspec cell.metadata.pycharm",
+          ]
   - repo: local
     hooks:
-    - id: pytest
-      name: pytest
-      entry: python3 -m pytest -vx -m "not slow"
-      pass_filenames: false
+    - id: pip-audit-uv
+      name: pip-audit using uv's venv
       language: system
-      types: [python]
+      entry: uv run pip-audit
+      pass_filenames: false
+    - id: tests
+      name: tests
+      entry: make test
+      pass_filenames: false
+      require_serial: true
+      language: system
+      types_or: [python, pyi]

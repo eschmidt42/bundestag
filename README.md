@@ -34,8 +34,7 @@ If you want to see more check out [this site](docs/analysis-highlights.md) or [t
 ```shell
 git clone https://github.com/eschmidt42/bundestag
 cd bundestag
-make venv
-make install-dev
+make install-dev-env
 ```
 
 ## How to use
@@ -56,22 +55,22 @@ A tool to assist with the data processing.
 
 For an overview over commands run
 ```shell
-bundestag --help
+uv run bundestag --help
 ```
 
 To download data from abgeordnetenwatch, for a specific legislature id
 ```shell
-bundestag download abgeordnetenwatch 132
+uv run bundestag download abgeordnetenwatch 132
 ```
 
 To transform the downloaded data run
 ```shell
-bundestag transform abgeordnetenwatch 132
+uv run bundestag transform abgeordnetenwatch 132
 ```
 
 To find out the legislature id for the current Bundestag, visit [abgeordnetenwatch.de](https://www.abgeordnetenwatch.de/bundestag) and click on the "Open Data" button at the bottom of the page.
 
 To download prepared raw and transformed data from huggingface run
 ```shell
-bundestag download huggingface
+uv run bundestag download huggingface
 ```

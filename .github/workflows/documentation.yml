@@ -1,4 +1,5 @@
 name: documentation
+
 on:
   push:
     branches:
@@ -6,28 +7,38 @@ on:
   pull_request:
     branches:
     - main
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
+
+    strategy:
+      matrix:
+        python-version:
+          - "3.12"
+
     steps:
     - name: Check out repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Setup python
-      uses: actions/setup-python@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
       with:
-          python-version: '3.9.16'
+        version: "0.7.4"
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
 
     - name: Create virtal environment
       run: |-
-          make venv
           make install-docs-env
 
     - name: Download data
       run: |-
-          source .venv/bin/activate
-          bundestag download huggingface --y
+          uv run bundestag download huggingface --y
 
     - name: Build documentation
       run: |-
@@ -35,5 +46,4 @@ jobs:
 
     - name: Deploy documentation
       run: |-
-          source .venv/bin/activate
-          mkdocs gh-deploy --force
+          uv run mkdocs gh-deploy --force

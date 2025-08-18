@@ -5,5 +5,5 @@ If you want to develop run
 git clone https://github.com/eschmidt42/bundestag
 cd bundestag
 make venv
-make install-dev
+make install-dev-env
 ```

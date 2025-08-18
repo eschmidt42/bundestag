@@ -12,3 +12,9 @@ abgeordnetenwatch_data_test/
 *.egg-info
 data/preprocessed
 data/raw
+
+.envrc
+
+.vscode
+nbs/models
+data/

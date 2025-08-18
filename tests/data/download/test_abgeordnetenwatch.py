@@ -7,7 +7,6 @@ import pytest
 import requests
 
 import bundestag.data.download.abgeordnetenwatch as aw
-import bundestag.schemas as schemas
 
 
 @pytest.mark.parametrize(
@@ -27,17 +26,16 @@ def test_request_data(func: T.Callable, dry: bool, status_code: int):
     r = requests.Response()
     r.status_code = status_code
     r.url = "blub"
-    with patch(
-        "requests.get", MagicMock(return_value=r)
-    ) as _get, patch.object(r, "json", MagicMock()):
+    with (
+        patch("requests.get", MagicMock(return_value=r)) as _get,
+        patch.object(r, "json", MagicMock()),
+    ):
         # line to test
         try:
             func(42, dry=dry)
         except AssertionError as ex:
             if status_code != 200:
-                pytest.xfail(
-                    "Not 200 status_code value should raise an exception"
-                )
+                pytest.xfail("Not 200 status_code value should raise an exception")
             else:
                 raise ex
 
@@ -146,16 +144,10 @@ def test_list_votes_dirs(legislature_id: int, result: T.Dict[int, Path]):
         ),
     ],
 )
-def test_list_polls_files(
-    legislature_id: int, exists: bool, result: T.Dict[int, Path]
-):
+def test_list_polls_files(legislature_id: int, exists: bool, result: T.Dict[int, Path]):
     path = Path("dummy/path")
     glob_leg = (
-        [
-            Path(
-                f"dummy/path/votes_legislature_{legislature_id}/poll_11_votes.json"
-            )
-        ]
+        [Path(f"dummy/path/votes_legislature_{legislature_id}/poll_11_votes.json")]
         if legislature_id == 21
         else []
     )
@@ -179,12 +171,8 @@ def test_list_polls_files(
             21,
             {
                 21: {
-                    1: Path(
-                        "dummy/path/votes_legislature_21/poll_1_votes.json"
-                    ),
-                    2: Path(
-                        "dummy/path/votes_legislature_21/poll_2_votes.json"
-                    ),
+                    1: Path("dummy/path/votes_legislature_21/poll_1_votes.json"),
+                    2: Path("dummy/path/votes_legislature_21/poll_2_votes.json"),
                 }
             },
         ),
@@ -193,18 +181,10 @@ def test_list_polls_files(
             None,
             {
                 21: {
-                    1: Path(
-                        "dummy/path/votes_legislature_21/poll_1_votes.json"
-                    ),
-                    2: Path(
-                        "dummy/path/votes_legislature_21/poll_2_votes.json"
-                    ),
+                    1: Path("dummy/path/votes_legislature_21/poll_1_votes.json"),
+                    2: Path("dummy/path/votes_legislature_21/poll_2_votes.json"),
                 },
-                22: {
-                    1: Path(
-                        "dummy/path/votes_legislature_22/poll_1_votes.json"
-                    )
-                },
+                22: {1: Path("dummy/path/votes_legislature_22/poll_1_votes.json")},
             },
         ),
     ],
@@ -283,9 +263,7 @@ def test_get_user_download_decision(choice: str, result: bool):
 
 @pytest.fixture(scope="module")
 def poll_response_raw() -> dict:
-    response = json.load(
-        open("src/tests/data_for_testing/polls_legislature_111.json", "r")
-    )
+    response = json.load(open("tests/data_for_testing/polls_legislature_111.json", "r"))
     return response
 
 
@@ -307,9 +285,7 @@ def test_check_possible_poll_ids(
 ):
     data = poll_response_raw if not dry else {}
     with (
-        patch(
-            "bundestag.data.utils.load_json", MagicMock(return_value=data)
-        ) as _load,
+        patch("bundestag.data.utils.load_json", MagicMock(return_value=data)) as _load,
     ):
         # line to test
         tmp = aw.check_possible_poll_ids(42, path=Path("dummy/path"), dry=dry)
@@ -415,9 +391,7 @@ def test_get_all_remaining_vote_data(
             ask_user=ask_user,
         )
 
-        _check_stored.assert_called_once_with(
-            legislature_id=legislature_id, path=path
-        )
+        _check_stored.assert_called_once_with(legislature_id=legislature_id, path=path)
         _check_possible.assert_called_once_with(
             legislature_id=legislature_id, path=path, dry=dry
         )
@@ -425,9 +399,7 @@ def test_get_all_remaining_vote_data(
 
         if len(remaining_poll_ids) > 0:
             if ask_user:
-                _get_user_decision.assert_called_once_with(
-                    len(remaining_poll_ids)
-                )
+                _get_user_decision.assert_called_once_with(len(remaining_poll_ids))
             else:
                 _get_user_decision.assert_not_called()
 
@@ -462,12 +434,8 @@ def test_run(dry: bool, path_exists: bool, raw_path: Path, assume_yes: bool):
     ask_user = True
 
     with (
-        patch(
-            "pathlib.Path.exists", MagicMock(return_value=path_exists)
-        ) as _exists,
-        patch(
-            "bundestag.data.utils.ensure_path_exists", MagicMock()
-        ) as _ensure_exists,
+        patch("pathlib.Path.exists", MagicMock(return_value=path_exists)) as _exists,
+        patch("bundestag.data.utils.ensure_path_exists", MagicMock()) as _ensure_exists,
         patch(
             "bundestag.data.download.abgeordnetenwatch.request_poll_data",
             MagicMock(return_value={}),
@@ -510,9 +478,7 @@ def test_run(dry: bool, path_exists: bool, raw_path: Path, assume_yes: bool):
                 _exists.assert_called_once()
 
             if not path_exists and not dry:
-                _ensure_exists.assert_called_once_with(
-                    raw_path, assume_yes=assume_yes
-                )
+                _ensure_exists.assert_called_once_with(raw_path, assume_yes=assume_yes)
 
             _request_poll_data.assert_called_once_with(
                 legislature_id, dry=dry, num_polls=max_polls
