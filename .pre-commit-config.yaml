@@ -35,11 +35,11 @@ repos:
           ]
   - repo: local
     hooks:
-    # - id: pip-audit-uv
-    #   name: pip-audit using uv's venv
-    #   language: system
-    #   entry: uv run pip-audit
-    #   pass_filenames: false
+    - id: pip-audit-uv
+      name: pip-audit using uv's venv
+      language: system
+      entry: uv run pip-audit
+      pass_filenames: false
     - id: tests
       name: tests
       entry: make test
