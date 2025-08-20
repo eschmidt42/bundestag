@@ -8,20 +8,20 @@ logger = logging.logger
 
 @dataclass
 class Paths:
-    base: Path
+    root_path: Path
     raw: str = "raw"
     preprocessed: str = "preprocessed"
     abgeordnetenwatch: str = "abgeordnetenwatch"
     bundestag: str = "bundestag"
 
     def __post_init__(self):
-        self.raw_base = self.base / self.raw
+        self.raw_base = self.root_path / self.raw
         self.raw_abgeordnetenwatch = self.raw_base / self.abgeordnetenwatch
         self.raw_bundestag = self.raw_base / self.bundestag
         self.raw_bundestag_html = self.raw_bundestag / "htm_files"
         self.raw_bundestag_sheets = self.raw_bundestag / "sheets"
 
-        self.preprocessed_base = self.base / self.preprocessed
+        self.preprocessed_base = self.root_path / self.preprocessed
         self.preprocessed_abgeordnetenwatch = (
             self.preprocessed_base / self.abgeordnetenwatch
         )
@@ -51,9 +51,9 @@ class Paths:
         self.make_preprocessed_paths()
 
 
-def get_paths(base: str) -> Paths:
-    base = Path(base)
-    return Paths(base)
+def get_paths(root_path: str) -> Paths:
+    path = Path(root_path)
+    return Paths(path)
 
 
 PATHS = get_paths("data")

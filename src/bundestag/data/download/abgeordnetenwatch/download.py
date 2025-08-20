@@ -1,5 +1,4 @@
 import time
-import typing as T
 from pathlib import Path
 
 from scipy import stats
@@ -25,14 +24,14 @@ logger = logging.logger
 
 
 def identify_remaining_poll_ids(
-    possible_ids: T.List[int], known_ids: T.List[int]
-) -> T.List[int]:
+    possible_ids: list[int], known_ids: dict[int, Path]
+) -> list[int]:
     return [v for v in possible_ids if v not in known_ids]
 
 
 def request_and_store_poll_ids(
     dt_rv_scale: float,
-    remaining_poll_ids: T.List[int],
+    remaining_poll_ids: list[int],
     dry: bool,
     t_sleep: float,
     path: Path,
@@ -64,10 +63,10 @@ def request_and_store_poll_ids(
 
 def get_all_remaining_vote_data(
     legislature_id: int,
+    path: Path,
     dry: bool = False,
     t_sleep: float = 1,
     dt_rv_scale: float = 0.1,
-    path: Path = None,
     ask_user: bool = True,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
@@ -107,7 +106,7 @@ def get_all_remaining_vote_data(
 def run(
     legislature_id: int,
     dry: bool = False,
-    raw_path: Path | None = None,
+    raw_path: Path = Path("data/abgeordnetenwatch"),
     max_polls: int = 999,
     max_mandates: int = 999,
     t_sleep: float = 1,
@@ -137,10 +136,10 @@ def run(
     # votes
     get_all_remaining_vote_data(
         legislature_id,
+        raw_path,
         dry=dry,
         t_sleep=t_sleep,
         dt_rv_scale=dt_rv_scale,
-        path=raw_path,
         ask_user=ask_user,
     )
 

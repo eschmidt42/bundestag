@@ -75,7 +75,7 @@ def download(
     elif source == VALID_SOURCES[2]:
         # run steps for huggingface
         download_hf.run(
-            path=_paths.base,
+            path=_paths.root_path,
             dry=dry,
             assume_yes=y,
         )
