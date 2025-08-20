@@ -127,7 +127,7 @@ def test_store_vote_json(dry: bool):
         patch("json.dump", MagicMock()) as json_dump,
     ):
         # line to test
-        store_vote_json(votes, poll_id, dry=dry, path=path)
+        store_vote_json(path, votes, poll_id, dry=dry)
 
         if dry:
             assert _open.call_count == 0

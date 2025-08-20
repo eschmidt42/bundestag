@@ -47,7 +47,7 @@ def store_mandates_json(
         json.dump(mandates, f)
 
 
-def store_vote_json(votes: dict, poll_id: int, dry=False, path: Path = None):
+def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
     "Write votes data to file"
 
     if dry:
@@ -55,6 +55,8 @@ def store_vote_json(votes: dict, poll_id: int, dry=False, path: Path = None):
             f"Dry mode - Writing votes info to {data_utils.get_location(data_utils.votes_file(None, poll_id), path=path, dry=dry, mkdir=False)}"
         )
         return
+    if votes is None:
+        raise ValueError(f"votes cannot be None for {dry=}")
 
     legislature_id = votes["data"]["field_legislature"]["id"]
     file = data_utils.get_location(

@@ -56,7 +56,7 @@ def request_and_store_poll_ids(
         data = request_vote_data(poll_id, dry=dry)
 
         # store vote data
-        store_vote_json(data, poll_id, dry=dry, path=path)
+        store_vote_json(path, data, poll_id, dry=dry)
 
     logger.debug("Done with requests forr remaining polls")
 

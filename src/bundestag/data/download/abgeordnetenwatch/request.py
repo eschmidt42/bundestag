@@ -49,7 +49,7 @@ def request_mandates_data(
     return r.json()  # encoding=API_ENCODING
 
 
-def request_vote_data(poll_id: int, dry=False) -> dict:
+def request_vote_data(poll_id: int, dry=False) -> dict | None:
     "Request votes data from abgeordnetenwatch.de"
 
     url = f"https://www.abgeordnetenwatch.de/api/v2/polls/{poll_id}"
@@ -58,7 +58,7 @@ def request_vote_data(poll_id: int, dry=False) -> dict:
         logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
         return
 
-    r = requests.get(url, params=params)
+    r = httpx.get(url, params=params)
 
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
