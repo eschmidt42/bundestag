@@ -13,7 +13,10 @@ def extract_party_from_string(s: str) -> str:
     if not isinstance(s, str):
         raise ValueError(f"Expected {s=} to be of type string.")
     elif "seit" in s:
-        return PARTY_PATTERN.search(s).groups()[0]
+        match = PARTY_PATTERN.search(s)
+        if match is None:
+            raise ValueError(f"failed to match {PARTY_PATTERN=}/")
+        return match.groups()[0]
     else:
         return s
 
@@ -28,7 +31,7 @@ def get_parties_from_col(
         return [extract_party_from_string(s) for s in strings]
 
 
-def get_politician_names(df: pd.DataFrame, col="mandate"):
+def get_politician_names(df: pd.DataFrame, col: str = "mandate"):
     names = df[col].str.split(" ").str[:-4].str.join(" ")
     logger.debug(f"Parsing `{col}` to names. Found {names.nunique()} names")
     return names
