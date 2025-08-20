@@ -24,7 +24,8 @@ logger = logging.logger
 
 
 def identify_remaining_poll_ids(
-    possible_ids: list[int], known_ids: dict[int, Path]
+    possible_ids: list[int],
+    known_ids: dict[int, Path],
 ) -> list[int]:
     return [v for v in possible_ids if v not in known_ids]
 
@@ -35,6 +36,7 @@ def request_and_store_poll_ids(
     dry: bool,
     t_sleep: float,
     path: Path,
+    random_state: int = 42,
 ):
     "Loops over remaining poll ids and request them individually with random sleep times"
 
@@ -48,7 +50,7 @@ def request_and_store_poll_ids(
         remaining_poll_ids, total=len(remaining_poll_ids), desc="poll_id"
     ):
         # random sleep time
-        _t = t_sleep + abs(dt_rv.rvs())
+        _t = t_sleep + abs(dt_rv.rvs(random_state=random_state))
         if not dry:
             time.sleep(_t)
 
