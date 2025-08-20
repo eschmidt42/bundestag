@@ -9,18 +9,17 @@ from bs4 import BeautifulSoup
 
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
-import bundestag.schemas as schemas
 
 logger = logging.logger
 
-RE_HTM = re.compile("(\.html?)")
-RE_FNAME = re.compile("(\.xlsx?)")
+RE_HTM = re.compile(r"(\.html?)")
+RE_FNAME = re.compile(r"(\.xlsx?)")
 RE_SHEET = re.compile("(XLSX?)")
 
 
 def collect_sheet_uris(
-    html_file_paths: T.List[Path], pattern: re.Pattern = None
-) -> T.List[str]:
+    html_file_paths: T.List[Path], pattern: re.Pattern | None = None
+) -> dict[str, str]:
     """Extracting URIs to roll call votes stored in excel sheets
 
     Args:
@@ -44,17 +43,15 @@ def collect_sheet_uris(
 
         elements = soup.find_all("td", attrs={"data-th": "Dokument"})
         for element in elements:
-            title = element.div.p.strong.text.strip()
-            href = element.find("a", attrs={"title": pattern})
+            title = element.div.p.strong.text.strip()  # type: ignore
+            href = element.find("a", attrs={"title": pattern})  # type: ignore
             if href is None:
                 continue
-            uris[title] = href["href"]
+            uris[title] = href["href"]  # type:ignore
     return uris
 
 
-def download_sheet(
-    uri: str, sheet_path: T.Union[Path, str], dry: bool = False
-):
+def download_sheet(uri: str, sheet_path: Path, dry: bool = False):
     """Downloads a single excel sheet given `uri` and writes to `sheet_path`
 
     Args:
@@ -66,9 +63,7 @@ def download_sheet(
     "Downloads a single excel sheet given `uri` and writes to `sheet_path`"
     sheet_path.mkdir(exist_ok=True)
     file = Path(sheet_path) / uri.split("/")[-1]
-    logger.debug(
-        f"Writing requesting excel sheet: {uri} and writing to {file}"
-    )
+    logger.debug(f"Writing requesting excel sheet: {uri} and writing to {file}")
     if dry:
         return
     with open(file, "wb") as f:
@@ -78,9 +73,9 @@ def download_sheet(
 
 def download_multiple_sheets(
     uris: T.Dict[str, str],
-    sheet_path: T.Union[Path, str],
+    sheet_path: Path,
     t_sleep: float = 0.01,
-    nmax: int = None,
+    nmax: int | None = None,
     dry: bool = False,
 ):
     """Downloads multiple excel sheets containing roll call votes using `uris`, writing to `sheet_path`
@@ -118,7 +113,7 @@ def run(
     html_path: Path,
     sheet_path: Path,
     t_sleep: float = 0.01,
-    nmax: int = None,
+    nmax: int | None = None,
     dry: bool = False,
     pattern: re.Pattern = data_utils.RE_HTM,
     assume_yes: bool = False,
