@@ -1,5 +1,4 @@
 import typer
-from rich import print as pprint
 
 import bundestag.data.download.abgeordnetenwatch as download_aw
 import bundestag.data.download.bundestag_sheets as download_bs
@@ -57,7 +56,6 @@ def download(
             legislature_id=legislature_id,
             dry=dry,
             raw_path=_paths.raw_abgeordnetenwatch,
-            preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
             max_mandates=max_mandates,
             max_polls=max_polls,
             assume_yes=y,
@@ -88,9 +86,7 @@ def download(
 
 @app.command(help="Transform data for a chosen source")
 def transform(
-    source: str = typer.Argument(
-        VALID_SOURCES[0], help=f"One of {VALID_SOURCES}"
-    ),
+    source: str = typer.Argument(VALID_SOURCES[0], help=f"One of {VALID_SOURCES}"),
     legislature_id: int = typer.Argument(
         111,
         help="Bundestag legislature id value, see https://www.abgeordnetenwatch.de/bundestag -> Button 'Open Data'",
