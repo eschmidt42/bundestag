@@ -3,7 +3,6 @@ import typing as T
 from pathlib import Path
 from unittest.mock import MagicMock, call, mock_open, patch
 
-import httpx
 import pytest
 
 from bundestag.data.download.abgeordnetenwatch.cli import get_user_download_decision
@@ -12,11 +11,6 @@ from bundestag.data.download.abgeordnetenwatch.download import (
     identify_remaining_poll_ids,
     request_and_store_poll_ids,
     run,
-)
-from bundestag.data.download.abgeordnetenwatch.request import (
-    request_mandates_data,
-    request_poll_data,
-    request_vote_data,
 )
 from bundestag.data.download.abgeordnetenwatch.store import (
     check_possible_poll_ids,
@@ -27,43 +21,6 @@ from bundestag.data.download.abgeordnetenwatch.store import (
     store_polls_json,
     store_vote_json,
 )
-
-
-@pytest.mark.skip("broken because requests -> httpx swith")
-@pytest.mark.parametrize(
-    "func,dry,status_code",
-    [
-        (func, dry, status_code)
-        for func in [
-            request_poll_data,
-            request_mandates_data,
-            request_vote_data,
-        ]
-        for dry in [True, False]
-        for status_code in [200, 201]
-    ],
-)
-def test_request_data(func: T.Callable, dry: bool, status_code: int):
-    r = httpx.Response(status_code=status_code)
-    r.status_code = status_code
-    r.url = "blub"
-    with (
-        patch("httpx.get", MagicMock(return_value=r)) as _get,
-        patch.object(r, "json", MagicMock()),
-    ):
-        # line to test
-        try:
-            func(42, dry=dry)
-        except AssertionError as ex:
-            if status_code != 200:
-                pytest.xfail("Not 200 status_code value should raise an exception")
-            else:
-                raise ex
-
-        if dry:
-            assert _get.call_count == 0
-        else:
-            assert _get.call_count == 1
 
 
 @pytest.mark.parametrize("dry", [True, False])

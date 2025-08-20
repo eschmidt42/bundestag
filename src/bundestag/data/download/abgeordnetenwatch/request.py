@@ -25,7 +25,7 @@ def request_poll_data(
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
-    return r.json()  # encoding=API_ENCODING
+    return r.json()
 
 
 def request_mandates_data(
@@ -46,7 +46,7 @@ def request_mandates_data(
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
-    return r.json()  # encoding=API_ENCODING
+    return r.json()
 
 
 def request_vote_data(poll_id: int, dry=False) -> dict | None:
@@ -63,4 +63,4 @@ def request_vote_data(poll_id: int, dry=False) -> dict | None:
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
-    return r.json()  # encoding=API_ENCODING
+    return r.json()
