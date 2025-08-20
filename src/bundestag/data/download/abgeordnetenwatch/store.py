@@ -111,7 +111,7 @@ def list_polls_files(legislature_id: int, path: Path) -> dict[int, Path]:
 
 
 def check_stored_vote_ids(
-    legislature_id: int, path: Path
+    legislature_id: int | None, path: Path
 ) -> T.Dict[int, T.Dict[int, Path]]:
     "Check which vote ids are already stored"
 
@@ -127,7 +127,10 @@ def check_stored_vote_ids(
         logger.error(
             f"Given legislature_id {legislature_id} is unknown. Known ids: {sorted(list(legislature_ids.keys()))}"
         )
-        return {legislature_id: {}}
+        if legislature_id is not None:
+            return {legislature_id: {}}
+        else:
+            return {}
 
     elif legislature_id is not None:
         # if the legislature id is known, return the associated files
