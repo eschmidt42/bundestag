@@ -13,10 +13,9 @@ from bundestag.data.download.abgeordnetenwatch.store import check_stored_vote_id
 logger = logging.logger
 
 
-def load_polls_json(legislature_id: int, path: Path = None, dry: bool = False):
-    file = data_utils.get_location(
-        data_utils.polls_file(legislature_id), path=path, dry=dry, mkdir=False
-    )
+def load_polls_json(legislature_id: int, path: Path, dry: bool = False):
+    polls_fname = data_utils.polls_file(legislature_id)
+    file = data_utils.get_location(polls_fname, path=path, dry=dry, mkdir=False)
     logger.debug(f"Reading poll info from {file}")
     with open(file, "r", encoding="utf8") as f:
         info = json.load(f)
@@ -43,18 +42,17 @@ def parse_poll_data(poll: schemas.Poll) -> dict:
     return d
 
 
-def get_polls_data(legislature_id: int, path: Path = None) -> pd.DataFrame:
+def get_polls_data(legislature_id: int, path: Path) -> pd.DataFrame:
     "Parses info from poll json files for `legislature_id`"
     info = load_polls_json(legislature_id, path=path)
     polls = schemas.PollResponse(**info)
     return pd.DataFrame([parse_poll_data(v) for v in polls.data])
 
 
-def load_mandate_json(
-    legislature_id: int, path: Path = None, dry: bool = False
-) -> dict:
+def load_mandate_json(legislature_id: int, path: Path, dry: bool = False) -> dict:
+    mandates_fname = data_utils.mandates_file(legislature_id)
     file = data_utils.get_location(
-        data_utils.mandates_file(legislature_id),
+        mandates_fname,
         path=path,
         dry=dry,
         mkdir=False,
@@ -106,7 +104,7 @@ def parse_mandate_data(mandate: schemas.Mandate, missing: str = "unknown") -> di
     return d
 
 
-def get_mandates_data(legislature_id: int, path: Path = None) -> pd.DataFrame:
+def get_mandates_data(legislature_id: int, path: Path) -> pd.DataFrame:
     "Parses info from mandate json file(s) for `legislature_id`"
     info = load_mandate_json(legislature_id, path=path)
     mandates = schemas.MandatesResponse(**info)
@@ -114,9 +112,10 @@ def get_mandates_data(legislature_id: int, path: Path = None) -> pd.DataFrame:
     return df
 
 
-def load_vote_json(legislature_id: int, poll_id: int, path: Path = None) -> dict:
+def load_vote_json(legislature_id: int, poll_id: int, path: Path) -> dict:
+    votes_fname = data_utils.votes_file(legislature_id, poll_id)
     file = data_utils.get_location(
-        data_utils.votes_file(legislature_id, poll_id),
+        votes_fname,
         path=path,
         dry=False,
         mkdir=False,
@@ -144,7 +143,7 @@ def parse_vote_data(vote: schemas.Vote) -> dict:
 def get_votes_data(
     legislature_id: int,
     poll_id: int,
-    path: Path = None,
+    path: Path,
     validate: bool = False,
 ) -> pd.DataFrame:
     "Parses info from vote json files for `legislature_id` and `poll_id`"
@@ -169,7 +168,7 @@ def get_votes_data(
     return df
 
 
-def compile_votes_data(legislature_id: int, path: Path = None, validate: bool = False):
+def compile_votes_data(legislature_id: int, path: Path, validate: bool = False):
     "Compiles the individual politicians' votes for a specific legislature period"
 
     known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
