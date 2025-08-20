@@ -51,9 +51,11 @@ def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
     "Write votes data to file"
 
     if dry:
-        logger.debug(
-            f"Dry mode - Writing votes info to {data_utils.get_location(data_utils.votes_file(None, poll_id), path=path, dry=dry, mkdir=False)}"
+        _votes_file = data_utils.votes_file(42, poll_id)
+        _location = data_utils.get_location(
+            _votes_file, path=path, dry=dry, mkdir=False
         )
+        logger.debug(f"Dry mode - Writing votes info to {_location}")
         return
     if votes is None:
         raise ValueError(f"votes cannot be None for {dry=}")
@@ -72,7 +74,7 @@ def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
         json.dump(votes, f)
 
 
-def list_votes_dirs(path: Path = None) -> T.Dict[int, T.List[Path]]:
+def list_votes_dirs(path: Path) -> dict[int, Path]:
     "List all votes_legislature_* directories"
 
     dir2int = lambda x: int(str(x).split("_")[-1])
@@ -89,7 +91,7 @@ def list_votes_dirs(path: Path = None) -> T.Dict[int, T.List[Path]]:
     return legislature_ids
 
 
-def list_polls_files(legislature_id: int, path: Path = None) -> T.List[Path]:
+def list_polls_files(legislature_id: int, path: Path) -> dict[int, Path]:
     "List all polls_legislature_* files"
 
     file2int = lambda x: int(str(x).split("_")[-2])
@@ -145,7 +147,7 @@ def check_stored_vote_ids(
 
 
 def check_possible_poll_ids(
-    legislature_id: int, path: Path = None, dry: bool = False
+    legislature_id: int, path: Path, dry: bool = False
 ) -> T.List[int]:
     """Collect available poll ids for given legislature id
 
