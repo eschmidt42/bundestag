@@ -1,21 +1,15 @@
 import json
 import re
-import sys
-import time
-import typing as T
 from pathlib import Path
 
 import pandas as pd
-import requests
 from bs4 import BeautifulSoup
-from pydantic import BaseModel, Field
-from scipy import stats
 from tqdm import tqdm
 
-import bundestag.data.download.abgeordnetenwatch as download_aw
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
 import bundestag.schemas as schemas
+from bundestag.data.download.abgeordnetenwatch.store import check_stored_vote_ids
 
 logger = logging.logger
 
@@ -73,9 +67,7 @@ def load_mandate_json(
     return info
 
 
-def parse_mandate_data(
-    mandate: schemas.Mandate, missing: str = "unknown"
-) -> dict:
+def parse_mandate_data(mandate: schemas.Mandate, missing: str = "unknown") -> dict:
     d = {
         "legislature_id": mandate.parliament_period.id,
         "legislature_period": mandate.parliament_period.label,
@@ -98,9 +90,7 @@ def parse_mandate_data(
         d_fraction = {
             "fraction_names": [_m.label for _m in mandate.fraction_membership],
             "fraction_ids": [_m.id for _m in mandate.fraction_membership],
-            "fraction_starts": [
-                _m.valid_from for _m in mandate.fraction_membership
-            ],
+            "fraction_starts": [_m.valid_from for _m in mandate.fraction_membership],
             "fraction_ends": [
                 "" if _m.valid_until is None else _m.valid_until
                 for _m in mandate.fraction_membership
@@ -153,9 +143,7 @@ def transform_mandates_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def load_vote_json(
-    legislature_id: int, poll_id: int, path: Path = None
-) -> dict:
+def load_vote_json(legislature_id: int, poll_id: int, path: Path = None) -> dict:
     file = data_utils.get_location(
         data_utils.votes_file(legislature_id, poll_id),
         path=path,
@@ -201,12 +189,8 @@ def get_votes_df(
         df.append(vote)
 
     if n_none > 0:
-        logger.warning(
-            f"Removed {n_none} votes because of their id being None"
-        )
-    df = pd.DataFrame(
-        df
-    )  # [parse_vote_data(v) for v in votes.data.related_data.votes]
+        logger.warning(f"Removed {n_none} votes because of their id being None")
+    df = pd.DataFrame(df)  # [parse_vote_data(v) for v in votes.data.related_data.votes]
 
     if validate:
         schemas.VOTES.validate(df)
@@ -214,14 +198,10 @@ def get_votes_df(
     return df
 
 
-def compile_votes_data(
-    legislature_id: int, path: Path = None, validate: bool = False
-):
+def compile_votes_data(legislature_id: int, path: Path = None, validate: bool = False):
     "Compiles the individual politicians' votes for a specific legislature period"
 
-    known_id_combos = download_aw.check_stored_vote_ids(
-        legislature_id=legislature_id, path=path
-    )
+    known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
 
     # TODO: figure out why some mandate_id entries are duplicate in vote_json files
 
@@ -233,12 +213,10 @@ def compile_votes_data(
     ):
         df = get_votes_df(legislature_id, poll_id, path=path, validate=False)
 
-        ids = df.loc[
-            df.duplicated(subset=["mandate_id"]), "mandate_id"
-        ].unique()
+        ids = df.loc[df.duplicated(subset=["mandate_id"]), "mandate_id"].unique()
         if len(ids) > 0:
             logger.warning(
-                f'Dropping duplicates for mandate_ids ({ids}):\n{df.loc[df["mandate_id"].isin(ids)]}'
+                f"Dropping duplicates for mandate_ids ({ids}):\n{df.loc[df['mandate_id'].isin(ids)]}"
             )
             df = df.drop_duplicates(subset=["mandate_id"])
 
@@ -278,9 +256,7 @@ def run(
 
     # ensure paths exist
     if not dry and not raw_path.exists():
-        raise ValueError(
-            f"{raw_path=} doesn't exist, terminating transformation."
-        )
+        raise ValueError(f"{raw_path=} doesn't exist, terminating transformation.")
     if not dry and not preprocessed_path.exists():
         data_utils.ensure_path_exists(preprocessed_path)
 
@@ -301,15 +277,12 @@ def run(
         df.to_parquet(path=file)
 
     # votes
-    df_all_votes = compile_votes_data(
-        legislature_id, path=raw_path, validate=validate
-    )
+    df_all_votes = compile_votes_data(legislature_id, path=raw_path, validate=validate)
     df_all_votes = transform_votes_data(df_all_votes)
 
     if not dry:
         all_votes_path = (
-            preprocessed_path
-            / f"compiled_votes_legislature_{legislature_id}.csv"
+            preprocessed_path / f"compiled_votes_legislature_{legislature_id}.csv"
         )
         logger.debug(f"Writing to {all_votes_path}")
 

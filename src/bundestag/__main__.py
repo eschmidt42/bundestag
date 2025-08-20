@@ -1,6 +1,6 @@
 import typer
 
-import bundestag.data.download.abgeordnetenwatch as download_aw
+import bundestag.data.download.abgeordnetenwatch.download as download_aw
 import bundestag.data.download.bundestag_sheets as download_bs
 import bundestag.data.download.huggingface as download_hf
 import bundestag.data.transform.abgeordnetenwatch as transform_aw
