@@ -127,11 +127,11 @@ def run(
 
     # polls
     data = request_poll_data(legislature_id, dry=dry, num_polls=max_polls)
-    store_polls_json(data, legislature_id, dry=dry, path=raw_path)
+    store_polls_json(raw_path, data, legislature_id, dry=dry)
 
     # mandates
     data = request_mandates_data(legislature_id, dry=dry, num_mandates=max_mandates)
-    store_mandates_json(data, legislature_id, dry=dry, path=raw_path)
+    store_mandates_json(raw_path, data, legislature_id, dry=dry)
 
     # votes
     get_all_remaining_vote_data(

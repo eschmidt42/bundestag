@@ -10,7 +10,7 @@ logger = logging.logger
 
 
 def store_polls_json(
-    polls: dict, legislature_id: int, dry: bool = False, path: Path = None
+    path: Path, polls: dict | None, legislature_id: int, dry: bool = False
 ):
     "Write poll data to file"
 
@@ -21,13 +21,14 @@ def store_polls_json(
     if dry:
         logger.debug(f"Dry mode - Writing poll info to {file}")
         return
+
     logger.debug(f"Writing poll info to {file}")
     with open(file, "w", encoding="utf8") as f:
         json.dump(polls, f)
 
 
 def store_mandates_json(
-    mandates: dict, legislature_id: int, dry: bool = False, path: Path = None
+    path: Path, mandates: dict | None, legislature_id: int, dry: bool = False
 ):
     "Write mandates data to file"
 

@@ -1,4 +1,4 @@
-import requests
+import httpx
 
 import bundestag.logging as logging
 
@@ -7,7 +7,7 @@ logger = logging.logger
 
 def request_poll_data(
     legislature_id: int, dry: bool = False, num_polls: int = 999
-) -> dict:
+) -> dict | None:
     "Request poll data from abgeordnetenwatch.de"
 
     url = "https://www.abgeordnetenwatch.de/api/v2/polls"
@@ -20,7 +20,7 @@ def request_poll_data(
         logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
         return
 
-    r = requests.get(url, params=params)
+    r = httpx.get(url, params=params)
 
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
@@ -30,7 +30,7 @@ def request_poll_data(
 
 def request_mandates_data(
     legislature_id: int, dry=False, num_mandates: int = 999
-) -> dict:
+) -> dict | None:
     "Request mandates data from abgeordnetenwatch.de"
 
     url = f"https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates"
@@ -42,7 +42,7 @@ def request_mandates_data(
         logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
         return
 
-    r = requests.get(url, params=params)
+    r = httpx.get(url, params=params)
     logger.debug(f"Requested {r.url}")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
