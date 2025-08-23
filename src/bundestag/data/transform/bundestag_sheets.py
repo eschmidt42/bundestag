@@ -1,6 +1,5 @@
-import re
-import typing as T
 from pathlib import Path
+from typing import Callable
 
 import pandas as pd
 import tqdm
@@ -15,13 +14,9 @@ logger = logging.logger
 VOTE_COLS = ["ja", "nein", "Enthaltung", "ungültig", "nichtabgegeben"]
 
 
-def get_file2poll_maps(
-    uris: T.Dict[str, str], sheet_path: T.Union[str, Path]
-) -> T.Dict[str, str]:
+def get_file2poll_maps(uris: dict[str, str], sheet_path: str | Path) -> dict[str, str]:
     "Creates a file name (so file needs to exist) to poll title map"
-    known_sheets = data_utils.get_file_paths(
-        sheet_path, pattern=data_utils.RE_FNAME
-    )
+    known_sheets = data_utils.get_file_paths(sheet_path, pattern=data_utils.RE_FNAME)
     file2poll = {}
     for poll_title, uri in uris.items():
         fname = data_utils.get_sheet_fname(uri)
@@ -31,7 +26,7 @@ def get_file2poll_maps(
     return file2poll
 
 
-def is_date(s: str, fun: T.Callable):
+def is_date(s: str, fun: Callable):
     try:
         _ = fun(s)
         return True
@@ -60,10 +55,10 @@ def read_excel(file: Path, engine: str = "xlrd") -> pd.DataFrame:
 
 
 def get_sheet_df(
-    sheet_file: T.Union[str, Path],
-    file_title_maps: T.Dict[str, str] = None,
+    sheet_file: str | Path,
+    file_title_maps: dict[str, str] | None = None,
     validate: bool = False,
-) -> pd.DataFrame:
+) -> pd.DataFrame | None:
     "Parsing xlsx and xls files into dataframes"
 
     sheet_file = Path(sheet_file)
@@ -76,19 +71,17 @@ def get_sheet_df(
 
     # sanity check that there is only one sheet
     if len(dfs) > 1:
-        raise ValueError(
-            f"{sheet_file=} has more than one page, that's unexpected."
-        )
+        raise ValueError(f"{sheet_file=} has more than one page, that's unexpected.")
 
     # assigning sheet name to the dataframe
     for name, df in dfs.items():
         df["sheet_name"] = name
 
     # verifying that all vote columns (ja, nein, Enthaltung, ungültig, nichtabgegeben) are plausible
-    mask = df[VOTE_COLS].sum(axis=1) != 1
+    mask = df.loc[:, VOTE_COLS].sum(axis=1) != 1
     if mask.any():
         logger.error(
-            f"{sheet_file=} has rows with more than one vote:\n{df.loc[mask,:]}"
+            f"{sheet_file=} has rows with more than one vote:\n{df.loc[mask, :]}"
         )
 
     # assinging date and title columns
@@ -112,7 +105,7 @@ def get_sheet_df(
 
 def handle_title_and_date(
     full_title: str, sheet_file: Path
-) -> T.Tuple[str, pd.DatetimeTZDtype]:
+) -> tuple[str, pd.DatetimeTZDtype]:
     "Extracting the title of the roll call vote and the date"
     title = full_title.split(":")
     date = title[0]
@@ -139,21 +132,19 @@ PARTY_MAP = {
 
 
 def disambiguate_party(
-    df: pd.DataFrame, col: str = "Fraktion/Gruppe", party_map: dict = None
+    df: pd.DataFrame, col: str = "Fraktion/Gruppe", party_map: dict | None = None
 ) -> pd.DataFrame:
     if party_map is None:
         party_map = PARTY_MAP
-    df[col] = df[col].apply(
-        lambda x: x if x not in party_map else party_map[x]
-    )
+    df[col] = df[col].apply(lambda x: x if x not in party_map else party_map[x])
     return df
 
 
 def get_squished_dataframe(
     df: pd.DataFrame,
     id_col: str = "Bezeichnung",
-    feature_cols: T.List[str] = VOTE_COLS,
-    other_cols: T.List = None,
+    feature_cols: list[str] = VOTE_COLS,
+    other_cols: list | None = None,
     validate: bool = False,
 ) -> pd.DataFrame:
     "Reformats `df` by squishing the vote columns (ja, nein, Enthaltung, ...) into one column"
@@ -169,7 +160,7 @@ def get_squished_dataframe(
         .stack()
         .reset_index()
         .drop(labels=0, axis=1)
-        .rename(columns={f"level_{2+len(other_cols)}": "vote"})
+        .rename(columns={f"level_{2 + len(other_cols)}": "vote"})
     )
     df = df.join(
         tmp.set_index(["Bezeichnung", "date", "title"]),
@@ -200,9 +191,7 @@ DTYPES = {
 }
 
 
-def set_sheet_dtypes(
-    df: pd.DataFrame, dtypes: T.Dict[str, T.Union[str, object]] = None
-):
+def set_sheet_dtypes(df: pd.DataFrame, dtypes: dict[str, str | object] | None = None):
     dtypes = DTYPES if dtypes is None else dtypes
     for col, dtype in dtypes.items():
         df[col] = df[col].astype(dtype)
@@ -210,17 +199,15 @@ def set_sheet_dtypes(
 
 
 def get_multiple_sheets_df(
-    sheet_files: T.List[T.Union[Path, str]],
-    file_title_maps: T.Dict[str, str] = None,
+    sheet_files: list[Path | str],
+    file_title_maps: dict[str, str] | None = None,
     validate: bool = False,
 ):
     "Loads, processes and concatenates multiple vote sheets"
     logger.info("Loading processing and concatenating multiple vote sheets")
     df = []
     n_skipped = 0
-    for sheet_file in tqdm.tqdm(
-        sheet_files, total=len(sheet_files), desc="Sheets"
-    ):
+    for sheet_file in tqdm.tqdm(sheet_files, total=len(sheet_files), desc="Sheets"):
         sheet_df = get_sheet_df(
             sheet_file, file_title_maps=file_title_maps, validate=validate
         )
@@ -256,28 +243,20 @@ def run(
 
     # ensuring path exists
     if not dry and not html_path.exists():
-        raise ValueError(
-            f"{html_path=} doesn't exist, terminating transformation."
-        )
+        raise ValueError(f"{html_path=} doesn't exist, terminating transformation.")
     if not dry and not sheet_path.exists():
-        raise ValueError(
-            f"{sheet_path=} doesn't exist, terminating transformation."
-        )
+        raise ValueError(f"{sheet_path=} doesn't exist, terminating transformation.")
     if not dry and not preprocessed_path.exists():
         data_utils.ensure_path_exists(preprocessed_path)
 
     html_path, sheet_path = Path(html_path), Path(sheet_path)
     # collect htm files
-    html_file_paths = data_utils.get_file_paths(
-        html_path, pattern=data_utils.RE_HTM
-    )
+    html_file_paths = data_utils.get_file_paths(html_path, pattern=data_utils.RE_HTM)
     # extract excel sheet uris from htm files
     sheet_uris = download_sheets.collect_sheet_uris(html_file_paths)
 
     # locate downloaded excel files
-    sheet_files = data_utils.get_file_paths(
-        sheet_path, pattern=data_utils.RE_FNAME
-    )
+    sheet_files = data_utils.get_file_paths(sheet_path, pattern=data_utils.RE_FNAME)
     # process excel files
     file_title_maps = get_file2poll_maps(sheet_uris, sheet_path)
     df = get_multiple_sheets_df(
