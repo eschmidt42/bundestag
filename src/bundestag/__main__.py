@@ -64,8 +64,8 @@ def download(
     elif source == VALID_SOURCES[1]:
         # run steps for bundestag sheets
         download_bs.run(
-            html_path=_paths.raw_bundestag_html,
-            sheet_path=_paths.raw_bundestag_sheets,
+            html_dir=_paths.raw_bundestag_html,
+            sheet_dir=_paths.raw_bundestag_sheets,
             nmax=nmax,
             dry=dry,
             pattern=data_utils.RE_SHEET,
