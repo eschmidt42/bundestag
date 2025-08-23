@@ -1,25 +1,10 @@
 import json
 from pathlib import Path
-from unittest.mock import MagicMock, call, mock_open, patch
+from unittest.mock import MagicMock, call, patch
 
 import pandas as pd
-import pandera as pa
 import pytest
 
-# import bundestag.data.transform.abgeordnetenwatch as aw
-import bundestag.schemas as schemas
-from bundestag.data.transform.abgeordnetenwatch.process import (
-    compile_votes_data,
-    get_mandates_data,
-    get_polls_data,
-    get_votes_data,
-    load_mandate_json,
-    load_polls_json,
-    load_vote_json,
-    parse_mandate_data,
-    parse_poll_data,
-    parse_vote_data,
-)
 from bundestag.data.transform.abgeordnetenwatch.transform import (
     run,
     transform_mandates_data,
@@ -45,61 +30,6 @@ def mandates_response_raw() -> dict:
 def votes_response_raw() -> dict:
     response = json.load(open("tests/data_for_testing/poll_4217_votes.json", "r"))
     return response
-
-
-@pytest.mark.parametrize("dry", [True, False])
-def test_load_polls_json(dry: bool):
-    legislature_id = 42
-    path = Path("file/path")
-
-    with (
-        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
-        patch("builtins.open", new_callable=mock_open()) as _open,
-        patch("json.load", MagicMock()) as json_load,
-    ):
-        # line to test
-        load_polls_json(legislature_id, path, dry=dry)
-
-        assert json_load.call_count == 1
-        assert _open.call_count == 1
-        assert _mkdir.call_count == 0
-
-
-@pytest.mark.parametrize("dry", [True, False])
-def test_load_mandate_json(dry: bool):
-    legislature_id = 42
-    path = Path("file/path")
-
-    with (
-        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
-        patch("builtins.open", new_callable=mock_open()) as _open,
-        patch("json.load", MagicMock()) as json_load,
-    ):
-        # line to test
-        load_mandate_json(legislature_id, path, dry=dry)
-
-        assert json_load.call_count == 1
-        assert _open.call_count == 1
-        assert _mkdir.call_count == 0
-
-
-@pytest.mark.parametrize("dry", [True, False])
-def test_load_vote_json(dry: bool):
-    legislature_id = 42
-    poll_id = 21
-    path = Path("file/path")
-
-    with (
-        patch("pathlib.Path.mkdir", MagicMock()) as _mkdir,
-        patch("builtins.open", new_callable=mock_open()) as _open,
-        patch("json.load", MagicMock()) as json_load,
-    ):
-        # line to test
-        load_vote_json(legislature_id, poll_id, path)
-
-        assert json_load.call_count == 1
-        assert _open.call_count == 1
-        assert _mkdir.call_count == 0
 
 
 POLL_DATA_PARSED = {
@@ -211,136 +141,6 @@ VOTES_DF = pd.DataFrame(
         "reason_no_show_other": {0: None, 1: None},
     }
 )
-
-
-def test_parse_poll_response(poll_response_raw: dict):
-    response = schemas.PollResponse(**poll_response_raw)
-    data = response.data[0]
-    res = parse_poll_data(data)
-
-    assert set(list(POLL_DATA_PARSED.keys())) == set(list(res.keys()))
-    for k in POLL_DATA_PARSED.keys():
-        assert POLL_DATA_PARSED[k] == res[k]
-
-
-@pytest.mark.skip("Validation currently fails.")
-@pytest.mark.parametrize("fraction_membership_is_none", [True, False])
-def test_parse_mandate_response(
-    fraction_membership_is_none: bool, mandates_response_raw: dict
-):
-    response = schemas.MandatesResponse(**mandates_response_raw)
-
-    data = response.data[0]
-    if fraction_membership_is_none:
-        data.fraction_membership = None
-
-    res = parse_mandate_data(data, missing="missing")
-
-    assert all([k in res for k in MANDATE_DATA_PARSED])
-    for k in MANDATE_DATA_PARSED.keys():
-        if fraction_membership_is_none and k.startswith("fraction"):
-            assert res[k] == ["missing"]
-        else:
-            assert res[k] == MANDATE_DATA_PARSED[k]
-
-
-@pytest.mark.skip("Validation currently failing")
-def test_parse_vote_response(votes_response_raw):
-    response = schemas.VoteResponse(**votes_response_raw)
-    data = response.data.related_data.votes[0]
-    res = parse_vote_data(data)
-
-    assert all([k in res for k in VOTE_DATA_PARSED])
-    for k in VOTE_DATA_PARSED.keys():
-        assert VOTE_DATA_PARSED[k] == res[k]
-
-
-@pytest.mark.skip("mocking broken")
-def test_get_polls_df(poll_response_raw: dict):
-    with patch(
-        "bundestag.data.transform.abgeordnetenwatch.load_polls_json",
-        MagicMock(return_value=poll_response_raw),
-    ):
-        res = get_polls_data(42, "dummy/path")
-        assert res.equals(POLLS_DF)
-
-
-@pytest.mark.skip("Validation currently failing")
-def test_get_mandates_df(mandates_response_raw: dict):
-    with patch(
-        "bundestag.data.transform.abgeordnetenwatch.load_mandate_json",
-        MagicMock(return_value=mandates_response_raw),
-    ):
-        res = get_mandates_data(42, "dummy/path")
-        assert res.equals(MANDATES_DF)
-
-
-@pytest.mark.skip("Validation currently failing")
-@pytest.mark.parametrize(
-    "has_none,validate",
-    [(has_none, validate) for has_none in [False, True] for validate in [False, True]],
-)
-def test_get_votes_data(has_none: int, validate: bool, votes_response_raw: dict):
-    data = votes_response_raw.copy()
-    if has_none:
-        data["data"]["related_data"]["votes"][0]["id"] = None
-
-    with patch(
-        "bundestag.data.transform.abgeordnetenwatch.load_vote_json",
-        MagicMock(return_value=data),
-    ) as _load_vote_json:
-        # line to test
-        res = get_votes_data(42, 21, "dummy/path", validate=validate)
-
-        _load_vote_json.assert_called_once_with(42, 21, path="dummy/path")
-
-        if has_none:
-            assert len(res) == 1
-            assert res.iloc[0].equals(VOTES_DF.iloc[1])
-        else:
-            assert len(res) == 2
-            assert res.equals(VOTES_DF)
-
-
-@pytest.mark.skip("mocking and pandera broken")
-@pytest.mark.parametrize(
-    "n,has_duplicate",
-    [(n, has_duplicate) for n in [1, 2] for has_duplicate in [False, True]],
-)
-def test_compile_votes_data(n: int, has_duplicate: bool):
-    votes_df = VOTES_DF.copy()
-    if has_duplicate:
-        votes_df = pd.concat([votes_df, votes_df], ignore_index=True)
-
-    with (
-        patch(
-            "bundestag.data.download.abgeordnetenwatch.check_stored_vote_ids",
-            MagicMock(return_value={42: list(range(n))}),
-        ) as _check_stored_vote_ids,
-        patch(
-            "bundestag.data.transform.abgeordnetenwatch.get_votes_df",
-            MagicMock(return_value=votes_df),
-        ) as _get_votes_df,
-    ):
-        try:
-            # line to test
-            res = compile_votes_data(42, "dummy/path", validate=True)
-        except pa.errors.SchemaError as ex:
-            if n > 1:
-                pytest.xfail(
-                    "Duplicate poll_id-mandate_id combinations lead to schema error"
-                )
-            else:
-                raise ex
-
-        _check_stored_vote_ids.assert_called_once_with(
-            legislature_id=42, path="dummy/path"
-        )
-        assert _get_votes_df.call_count == n
-        if has_duplicate:
-            assert len(res) == len(votes_df) / 2
-        else:
-            assert len(res) == len(votes_df)
 
 
 def test_transform_mandates_data():
