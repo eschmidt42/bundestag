@@ -91,17 +91,13 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
 
         elif resp is None or len(resp) == 0:
             do_creation = True
-            _msg = (
-                "proceeding with download" if do_creation else "terminating."
-            )
+            _msg = "proceeding with download" if do_creation else "terminating."
             logger.info(f"Received: {resp}, {_msg}")
             return do_creation
 
         elif resp.lower() in ["y", "n"]:
             do_creation = resp.lower() == "y"
-            _msg = (
-                "proceeding with download" if do_creation else "terminating."
-            )
+            _msg = "proceeding with download" if do_creation else "terminating."
             logger.info(f"Received: {resp}, {_msg}")
             return do_creation
 
@@ -111,11 +107,9 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
     raise ValueError(f"Received {max_tries} incorrect inputs, terminating.")
 
 
-def ensure_path_exists(path: Path, assume_yes: bool = False):
+def ensure_path_exists(path: Path, assume_yes: bool):
     do_creation = (
-        get_user_path_creation_decision(path, max_tries=3)
-        if not assume_yes
-        else True
+        get_user_path_creation_decision(path, max_tries=3) if not assume_yes else True
     )
 
     if do_creation:

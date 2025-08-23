@@ -50,13 +50,13 @@ def base_path() -> Path:
 
 @pytest.fixture(scope="module")
 def df_all_votes(base_path: Path) -> Path:
-    file = base_path / "df_all_votes_111.parquet"
+    file = base_path / "votes_111.parquet"
     return pd.read_parquet(file)
 
 
 @pytest.fixture(scope="module")
 def df_mandates(base_path: Path) -> Path:
-    file = base_path / "df_mandates_111.parquet"
+    file = base_path / "mandates_111.parquet"
     df_mandates = pd.read_parquet(file)
     df_mandates["party_original"] = df_mandates["party"].copy()
     df_mandates["party"] = df_mandates["party"].apply(lambda x: x[-1])
@@ -65,7 +65,7 @@ def df_mandates(base_path: Path) -> Path:
 
 @pytest.fixture(scope="module")
 def df_polls(base_path: Path) -> Path:
-    file = base_path / "df_polls_111.parquet"
+    file = base_path / "polls_111.parquet"
     return pd.read_parquet(file)
 
 

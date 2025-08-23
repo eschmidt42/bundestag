@@ -1,5 +1,4 @@
 # from dotenv import load_dotenv
-import os
 import sys
 import time
 
@@ -39,27 +38,19 @@ def main():
     print(f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}")
     sys.stdout.flush()
 
-    engine = create_engine(
-        f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
-    )
+    engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}")
     pd.io.parquet.get_engine("auto")
 
     print("Reading data...")
     sys.stdout.flush()
-    df_all_votes = pd.read_parquet(
-        "./data/abgeordnetenwatch/df_all_votes_111.parquet"
-    )
-    df_mandates = pd.read_parquet(
-        "./data/abgeordnetenwatch/df_mandates_111.parquet"
-    )
-    df_polls = pd.read_parquet("./data/abgeordnetenwatch/df_polls_111.parquet")
+    df_all_votes = pd.read_parquet("./data/abgeordnetenwatch/votes_111.parquet")
+    df_mandates = pd.read_parquet("./data/abgeordnetenwatch/mandates_111.parquet")
+    df_polls = pd.read_parquet("./data/abgeordnetenwatch/polls_111.parquet")
 
     print("Inserting data...")
     sys.stdout.flush()
     df_all_votes.to_sql(name=table_name_votes, con=engine, if_exists="append")
-    df_mandates.to_sql(
-        name=table_name_mandates, con=engine, if_exists="append"
-    )
+    df_mandates.to_sql(name=table_name_mandates, con=engine, if_exists="append")
     df_polls.to_sql(name=table_name_polls, con=engine, if_exists="append")
 
     print("Done!")

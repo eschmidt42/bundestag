@@ -3,7 +3,7 @@ import typer
 import bundestag.data.download.abgeordnetenwatch.download as download_aw
 import bundestag.data.download.bundestag_sheets as download_bs
 import bundestag.data.download.huggingface as download_hf
-import bundestag.data.transform.abgeordnetenwatch as transform_aw
+import bundestag.data.transform.abgeordnetenwatch.transform as transform_aw
 import bundestag.data.transform.bundestag_sheets as transform_bs
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
@@ -104,9 +104,9 @@ def transform(
         # run steps for abgeordetenwatch
         transform_aw.run(
             legislature_id=legislature_id,
-            dry=dry,
             raw_path=_paths.raw_abgeordnetenwatch,
             preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
+            dry=dry,
         )
 
     elif source == VALID_SOURCES[1]:

@@ -28,13 +28,30 @@ def transform_votes_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def get_votes_parquet_path(legislature_id: int, preprocessed_path: Path):
+    return preprocessed_path / f"votes_{legislature_id}.parquet"
+
+
+def get_votes_csv_path(legislature_id: int, preprocessed_path: Path):
+    return preprocessed_path / f"votes_{legislature_id}.csv"
+
+
+def get_mandates_parquet_path(legislature_id: int, preprocessed_path: Path):
+    return preprocessed_path / f"mandates_{legislature_id}.parquet"
+
+
+def get_polls_parquet_path(legislature_id: int, preprocessed_path: Path):
+    return preprocessed_path / f"polls_{legislature_id}.parquet"
+
+
 def run(
     legislature_id: int,
-    dry: bool = False,
-    raw_path: Path = None,
-    preprocessed_path: Path = None,
+    raw_path: Path,
+    preprocessed_path: Path,
+    dry: bool,
     validate: bool = False,
-) -> pd.DataFrame:
+    assume_yes: bool = False,
+):
     logger.info("Start transforming abgeordnetenwatch data")
 
     if not dry and (raw_path is None or preprocessed_path is None):
@@ -46,12 +63,12 @@ def run(
     if not dry and not raw_path.exists():
         raise ValueError(f"{raw_path=} doesn't exist, terminating transformation.")
     if not dry and not preprocessed_path.exists():
-        data_utils.ensure_path_exists(preprocessed_path)
+        data_utils.ensure_path_exists(preprocessed_path, assume_yes=assume_yes)
 
     # polls
     df = get_polls_data(legislature_id, path=raw_path)
     if not dry:
-        file = preprocessed_path / f"df_polls_{legislature_id}.parquet"
+        file = get_polls_parquet_path(legislature_id, preprocessed_path)
         logger.debug(f"writing to {file}")
         df.to_parquet(path=file)
 
@@ -60,23 +77,21 @@ def run(
     df = transform_mandates_data(df)
 
     if not dry:
-        file = preprocessed_path / f"df_mandates_{legislature_id}.parquet"
+        file = get_mandates_parquet_path(legislature_id, preprocessed_path)
         logger.debug(f"Writing to {file}")
         df.to_parquet(path=file)
 
     # votes
-    df_all_votes = compile_votes_data(legislature_id, path=raw_path, validate=validate)
+    df_all_votes = compile_votes_data(legislature_id, raw_path, validate=validate)
     df_all_votes = transform_votes_data(df_all_votes)
 
     if not dry:
-        all_votes_path = (
-            preprocessed_path / f"compiled_votes_legislature_{legislature_id}.csv"
-        )
+        all_votes_path = get_votes_csv_path(legislature_id, preprocessed_path)
         logger.debug(f"Writing to {all_votes_path}")
 
         df_all_votes.to_csv(all_votes_path, index=False)
 
-        file = preprocessed_path / f"df_all_votes_{legislature_id}.parquet"
+        file = get_votes_parquet_path(legislature_id, preprocessed_path)
         logger.debug(f"Writing to {file}")
         df_all_votes.to_parquet(path=file)
 
