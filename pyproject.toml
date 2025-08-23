@@ -51,6 +51,8 @@ ml = [
 ]
 style_and_test = [
     "coverage>=7.2.3",
+    "dirty-equals>=0.9.0",
+    "inline-snapshot>=0.27.2",
     "jupyterlab>=3.6.3",
     "pip-audit>=2.5.5",
     "pre-commit>=3.2.2",
