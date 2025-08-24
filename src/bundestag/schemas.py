@@ -1,5 +1,3 @@
-import typing as T
-
 import pandas as pd
 import pandera as pa
 from pandera import Check, Column, DataFrameSchema, Index
@@ -40,11 +38,11 @@ class Poll(BaseModel):
     label: str
     api_url: str
     field_legislature: FieldLegislature
-    field_topics: T.List[FieldTopic] = None
-    field_committees: T.List[FieldCommittee] = None
+    field_topics: list[FieldTopic] | None = None
+    field_committees: list[FieldCommittee] | None = None
     field_intro: str
     field_poll_date: str
-    field_related_links: T.List[RelatedLink] = None
+    field_related_links: list[RelatedLink] | None = None
 
 
 class AbgeordnetenwatchAPI(BaseModel):
@@ -71,7 +69,7 @@ class AbgeordnetenwatchMeta(BaseModel):
 
 class PollResponse(BaseModel):
     meta: AbgeordnetenwatchMeta
-    data: T.List[Poll]
+    data: list[Poll]
 
 
 class ParliamentPeriod(BaseModel):
@@ -146,12 +144,12 @@ class Mandate(BaseModel):
     end_date: str | None = None
     info: str | None = None
     electoral_data: ElectoralData
-    fraction_membership: T.List[FractionMembership]
+    fraction_membership: list[FractionMembership]
 
 
 class MandatesResponse(BaseModel):
     meta: AbgeordnetenwatchMeta
-    data: T.List[Mandate]
+    data: list[Mandate]
 
 
 class VoteMandate(BaseModel):
@@ -182,7 +180,7 @@ class Vote(BaseModel):
 
 
 class RelatedData(BaseModel):
-    votes: T.List[Vote]
+    votes: list[Vote]
 
 
 class VoteData(BaseModel):
@@ -191,11 +189,11 @@ class VoteData(BaseModel):
     label: str
     api_url: str
     field_legislature: FieldLegislature
-    field_topics: T.List[FieldTopic] = None
-    field_committees: T.List[FieldCommittee] = None
+    field_topics: list[FieldTopic] | None = None
+    field_committees: list[FieldCommittee] | None = None
     field_intro: str
     field_poll_date: str
-    field_related_links: T.List[RelatedLink] = None
+    field_related_links: list[RelatedLink] | None = None
     related_data: RelatedData
 
 
