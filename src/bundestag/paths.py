@@ -51,7 +51,7 @@ class Paths:
         self.make_preprocessed_paths()
 
 
-def get_paths(root_path: str) -> Paths:
+def get_paths(root_path: str | Path) -> Paths:
     path = Path(root_path)
     return Paths(path)
 
