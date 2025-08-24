@@ -4,6 +4,7 @@ import pandas as pd
 import tqdm
 import xlrd
 
+import bundestag.data.download.bundestag_sheets as download_sheets
 import bundestag.logging as logging
 import bundestag.schemas as schemas
 from bundestag.data.utils import (
@@ -266,8 +267,6 @@ def run(
     validate: bool = False,
     assume_yes: bool = False,
 ):
-    import bundestag.data.download.bundestag_sheets as download_sheets
-
     logger.info("Start parsing sheets")
 
     # ensuring path exists
