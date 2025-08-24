@@ -1,10 +1,8 @@
-import sys
-import typing as T
+from typing import Any, Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import plotly.express as px
 import seaborn as sns
 from scipy import spatial
 
@@ -33,9 +31,7 @@ def get_votes_by_party(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     votes = (
-        vote_fraction.join(vote_count)
-        .reset_index()
-        .rename(columns={"level_3": "vote"})
+        vote_fraction.join(vote_count).reset_index().rename(columns={"level_3": "vote"})
     )
     return votes
 
@@ -56,13 +52,9 @@ def prepare_votes_of_mdb(df: pd.DataFrame, mdb: str) -> pd.DataFrame:
 
     mdb_votes = df.loc[mask, ["date", "title", "vote"]]
     mdb_votes["vote"] = mdb_votes["vote"].astype("category")
-    mdb_votes["vote"] = mdb_votes["vote"].cat.set_categories(
-        transform_bs.VOTE_COLS
-    )
+    mdb_votes["vote"] = mdb_votes["vote"].cat.set_categories(transform_bs.VOTE_COLS)
 
-    mdb_votes = pd.get_dummies(
-        mdb_votes, columns=["vote"], prefix="", prefix_sep=""
-    )
+    mdb_votes = pd.get_dummies(mdb_votes, columns=["vote"], prefix="", prefix_sep="")
     return mdb_votes
 
 
@@ -79,14 +71,14 @@ def align_mdb_with_parties(
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     "Computes the cosine similarity between two vectors, i.e. perpendicular vectors have a similarity of zero and parallel vectors similarity of one."
-    return 1 - spatial.distance.cosine(a, b)
+    return float(1 - spatial.distance.cosine(a, b))
 
 
 def compute_similarity(
     df: pd.DataFrame,
     lsuffix: str,
     rsuffix: str,
-    similarity_metric: T.Callable = cosine_similarity,
+    similarity_metric: Callable = cosine_similarity,
 ) -> pd.DataFrame:
     """Computes similarities based on `lsuffix` and `rsuffix` using the metric passed in `similarity_metric`.
 
@@ -113,9 +105,7 @@ def align_party_with_party(
     mask_a = tmp["Fraktion/Gruppe"] == party_a
     mask_b = tmp["Fraktion/Gruppe"] == party_b
     return (
-        tmp.loc[mask_a]
-        .join(tmp.loc[mask_b], lsuffix="_a", rsuffix="_b")
-        .reset_index()
+        tmp.loc[mask_a].join(tmp.loc[mask_b], lsuffix="_a", rsuffix="_b").reset_index()
     )
 
 
@@ -123,13 +113,9 @@ def align_party_with_all_parties(
     party_votes: pd.DataFrame, party_a: str
 ) -> pd.DataFrame:
     partyA_vs_rest = []
-    parties = [
-        p for p in party_votes["Fraktion/Gruppe"].unique() if p != party_a
-    ]
+    parties = [p for p in party_votes["Fraktion/Gruppe"].unique() if p != party_a]
     for party_b in parties:
-        tmp = align_party_with_party(
-            party_votes, party_a=party_a, party_b=party_b
-        )
+        tmp = align_party_with_party(party_votes, party_a=party_a, party_b=party_b)
         partyA_vs_rest.append(tmp)
     partyA_vs_rest = pd.concat(partyA_vs_rest, ignore_index=True)
     notna = partyA_vs_rest["Fraktion/Gruppe_b"].notna()
@@ -162,8 +148,8 @@ def plot_overall_similarity(
     x: str,
     title: str = "",
     ax=None,
-    palette: T.Dict[str, str] = None,
-) -> plt.Axes:
+    palette: dict[str, str] | None = None,
+) -> Any:
     if ax is None:
         fig, ax = plt.subplots(figsize=(12, 4))
     palette = PALETTE if palette is None else palette
@@ -177,16 +163,14 @@ def plot_overall_similarity(
 def plot_similarity_over_time(
     df: pd.DataFrame,
     party_col: str,
+    title: str,
     time_bin: str = "y",
-    title: str = None,
-    ax=None,
-    palette: T.Dict[str, str] = None,
-) -> plt.Axes:
+    ax: Any | None = None,
+    palette: dict[str, str] | None = None,
+) -> Any:
     y = "avg. similarity"
     tmp = (
-        df.groupby([pd.Grouper(key="date", freq=time_bin), party_col])[
-            "similarity"
-        ]
+        df.groupby([pd.Grouper(key="date", freq=time_bin), party_col])["similarity"]
         .mean()
         .to_frame(y)
         .reset_index()
@@ -194,9 +178,7 @@ def plot_similarity_over_time(
     palette = PALETTE if palette is None else palette
     if ax is None:
         fig, ax = plt.subplots(figsize=(12, 4))
-    sns.lineplot(
-        data=tmp, x="date", y=y, hue=party_col, ax=ax, palette=palette
-    )
+    sns.lineplot(data=tmp, x="date", y=y, hue=party_col, ax=ax, palette=palette)
     ax.set(
         xlabel=f"Time [{time_bin}]",
         ylabel=f"{y} (0 = dissimilar, 1 = identical)",
