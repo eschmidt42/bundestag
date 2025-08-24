@@ -1,89 +1,128 @@
+import json
 import re
 from pathlib import Path
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import patch
 
 import pytest
 
-import bundestag.data.utils as data_utils
+from bundestag.data.utils import (
+    ensure_path_exists,
+    get_file_paths,
+    get_location,
+    get_mandates_filename,
+    get_polls_filename,
+    get_sheet_filename,
+    get_user_path_creation_decision,
+    get_votes_filename,
+    load_json,
+)
 
 
 def test_get_location():
     fname = "wup.csv"
     path = Path("file/location")
 
-    file = data_utils.get_location(fname=fname, path=path, dry=True, mkdir=False)
+    file = get_location(fname=fname, path=path, dry=True, mkdir=False)
     assert file == path / fname
 
 
-def test_polls_file():
-    assert data_utils.polls_file(42) == "polls_legislature_42.json"
+def test_polls_filename():
+    assert get_polls_filename(42) == "polls_legislature_42.json"
 
 
-def test_mandates_file():
-    assert data_utils.mandates_file(42) == "mandates_legislature_42.json"
+def test_mandates_filename():
+    assert get_mandates_filename(42) == "mandates_legislature_42.json"
 
 
-def test_votes_file():
-    assert data_utils.votes_file(42, 21) == "votes_legislature_42/poll_21_votes.json"
+def test_votes_filename():
+    assert get_votes_filename(42, 21) == "votes_legislature_42/poll_21_votes.json"
 
 
-def test_get_sheet_fname():
+def test_get_sheet_filename():
     s = "wup/petty"
 
     # line to test
-    r = data_utils.get_sheet_fname(s)
+    r = get_sheet_filename(s)
 
     assert r == "petty"
 
 
 @pytest.mark.parametrize("dry", [True, False])
-def test_load_json(dry: bool):
-    path = Path("file/path/name.json")
+def test_load_json(dry: bool, tmp_path: Path):
+    path = tmp_path / "name.json"
 
-    with (
-        patch("builtins.open", new_callable=mock_open()) as _open,
-        patch("json.load", MagicMock()) as json_load,
-    ):
-        # line to test
-        data_utils.load_json(path, dry=dry)
+    expected = {"wupptey": 42}
+    with path.open("w") as f:
+        json.dump(expected, f)
 
-        assert json_load.call_count == (0 if dry else 1)
-        assert _open.call_count == (0 if dry else 1)
+    info = load_json(path, dry=dry)
+
+    match dry:
+        case True:
+            assert info == {}
+        case False:
+            assert info == expected
 
 
-PATTERN = re.compile("\.txt")
+PATTERN = re.compile(r"\.txt")
 
 
 @pytest.mark.parametrize(
-    "suffix,pattern",
+    "suffix, pattern_str, files_to_create, expected_files, should_fail",
     [
-        ("*.txt", None),
-        (None, PATTERN),
-        (None, None),
-        ("*.txt", PATTERN),
+        # Test case 1: Suffix search
+        (
+            "*.txt",
+            None,
+            ["f1.txt", "f2.txt", "sub/f3.txt", "f4.log"],
+            ["f1.txt", "f2.txt", "sub/f3.txt"],
+            False,
+        ),
+        # Test case 2: Pattern search
+        (
+            None,
+            r"\.txt$",
+            ["f1.txt", "f2.txt", "f3.txxt", "sub/f4.txt"],
+            ["f1.txt", "f2.txt", "sub/f4.txt"],
+            False,
+        ),
+        # Test case 3: No suffix or pattern
+        (None, None, [], [], True),
+        # Test case 4: Suffix takes precedence over pattern
+        (
+            "*.txt",
+            r"\.log$",
+            ["f1.txt", "f2.log", "sub/f3.txt"],
+            ["f1.txt", "sub/f3.txt"],
+            False,
+        ),
+        # Test case 5: Empty result
+        ("*.md", None, ["f1.txt", "f2.log"], [], False),
     ],
 )
-def test_get_file_paths(suffix: str, pattern: re.Pattern):
-    path = Path("dummy/path")
-    files = [path / "f1.txt", path / "f2.txt", path / "f3.txxt"]
-    file0, file1, file2 = files
+def test_get_file_paths(
+    suffix: str | None,
+    pattern_str: str | None,
+    files_to_create: list[str],
+    expected_files: list[str],
+    should_fail: bool,
+    tmp_path: Path,
+):
+    """This test does not use any mocking."""
+    for f_str in files_to_create:
+        f_path = tmp_path / f_str
+        f_path.parent.mkdir(parents=True, exist_ok=True)
+        f_path.touch()
 
-    with (
-        patch("pathlib.Path.rglob", return_value=[file0, file1]) as rglob,
-        patch("pathlib.Path.glob", return_value=files) as glob,
-    ):
-        # line to test
-        try:
-            found_files = data_utils.get_file_paths(
-                path, suffix=suffix, pattern=pattern
-            )
-        except NotImplementedError as ex:
-            if suffix is None and pattern is None:
-                pytest.xfail("Expected fail due to missing pattern and suffix")
-            else:
-                raise ex
+    pattern = re.compile(pattern_str) if pattern_str else None
 
-    assert set(found_files) == set([file0, file1])
+    if should_fail:
+        with pytest.raises(NotImplementedError):
+            get_file_paths(tmp_path, pattern=pattern, suffix=suffix)
+    else:
+        found_files = get_file_paths(tmp_path, pattern=pattern, suffix=suffix)
+        expected_paths = {tmp_path / f for f in expected_files}
+        assert set(found_files) == expected_paths
 
 
 @pytest.mark.parametrize(
@@ -103,12 +142,10 @@ def test_get_file_paths(suffix: str, pattern: re.Pattern):
     ],
 )
 def test_get_user_path_creation_decision(user_inputs, expected, max_tries: int):
-    with (
-        patch("builtins.input", side_effect=user_inputs) as _input,
-    ):
+    with patch("builtins.input", side_effect=user_inputs):
         try:
             # line to test
-            decision = data_utils.get_user_path_creation_decision(
+            decision = get_user_path_creation_decision(
                 Path("dummy/path"), max_tries=max_tries
             )
         except ValueError as ex:
@@ -130,22 +167,19 @@ def test_get_user_path_creation_decision(user_inputs, expected, max_tries: int):
         for assume_yes in [True, False]
     ],
 )
-def test_ensure_path_exists(user_decision: bool, assume_yes: bool):
-    path = Path("dummy/path")
-    with (
-        patch(
-            "bundestag.data.utils.get_user_path_creation_decision",
-            return_value=user_decision,
-        ) as _get_user_path_creation_decision,
-        patch("pathlib.Path.mkdir") as _mkdir,
-    ):
+def test_ensure_path_exists(user_decision: bool, assume_yes: bool, tmp_path: Path):
+    path = tmp_path / "created-dir"
+    input_value = "y" if user_decision else "n"
+    with patch("builtins.input", side_effect=(input_value,)):
         # line to test
-        data_utils.ensure_path_exists(path, assume_yes=assume_yes)
+        ensure_path_exists(path, assume_yes=assume_yes)
 
-        if assume_yes:
-            assert _get_user_path_creation_decision.call_count == 0
-            _mkdir.assert_called_once()
-        else:
-            assert _get_user_path_creation_decision.call_count == 1
-            assert _get_user_path_creation_decision.call_args[0][0] == path
-            assert _mkdir.call_count == (1 if user_decision else 0)
+        match (assume_yes, user_decision):
+            case (False, True):
+                assert path.exists()
+            case (False, False):
+                assert not path.exists()
+            case (True, True):
+                assert path.exists()
+            case (True, False):
+                assert path.exists()

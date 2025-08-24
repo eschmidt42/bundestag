@@ -1,32 +1,33 @@
 import json
 import re
-import typing as T
 from pathlib import Path
 
 import bundestag.logging as logging
 
 logger = logging.logger
 
-RE_HTM = re.compile("(\.html?)")
-RE_FNAME = re.compile("(\.xlsx?)")
-RE_SHEET = re.compile("(XLSX?)")
+RE_HTM = re.compile(r"(\.html?)")
+RE_FNAME = re.compile(r"(\.xlsx?)")
+RE_SHEET = re.compile(r"(XLSX?)")
 
 
 def get_file_paths(
-    path: T.Union[Path, str], suffix: str = None, pattern: re.Pattern = None
-) -> T.List[Path]:
+    path: Path | str,
+    pattern: re.Pattern | None = None,
+    suffix: str | None = None,
+) -> list[Path]:
     """Collecting files with matching suffix or pattern
 
     Args:
-        path (T.Union[Path, str]): Location to search for files
+        path (Path | str): Location to search for files
+        pattern (re.Pattern): Pattern to search for. Defaults to None.
         suffix (str, optional): Suffix to search for. Defaults to None.
-        pattern (re.Pattern, optional): Pattern to search for. Defaults to None.
 
     Raises:
         NotImplementedError: Function fails if neither suffix nor pattern are provided
 
     Returns:
-        T.List[Path]: List of matched files
+        list[Path]: List of matched files
     """
 
     path = Path(path)
@@ -35,7 +36,8 @@ def get_file_paths(
         files = list(path.rglob(suffix))
     elif pattern is not None:
         logger.debug(f"Collecting using {pattern=}")
-        files = [f for f in path.glob("**/*") if pattern.search(f.name)]
+        all_files = [f for f in path.glob("**/*") if f.is_file()]
+        files = [f for f in all_files if pattern.search(f.name)]
     else:
         raise NotImplementedError(
             f"Either suffix or pattern need to be passed to this function."
@@ -44,19 +46,19 @@ def get_file_paths(
     return files
 
 
-def get_sheet_fname(uri: str) -> str:
+def get_sheet_filename(uri: str) -> str:
     return uri.split("/")[-1]
 
 
-def polls_file(legislature_id: int):
+def get_polls_filename(legislature_id: int):
     return f"polls_legislature_{legislature_id}.json"
 
 
-def mandates_file(legislature_id: int):
+def get_mandates_filename(legislature_id: int):
     return f"mandates_legislature_{legislature_id}.json"
 
 
-def votes_file(legislature_id: int, poll_id: int):
+def get_votes_filename(legislature_id: int, poll_id: int):
     return f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
 
 
@@ -69,7 +71,7 @@ def get_location(
     return file
 
 
-def load_json(path: Path = None, dry: bool = False):
+def load_json(path: Path, dry: bool = False) -> dict:
     logger.debug(f"Reading json info from {path=}")
     if dry:
         return {}
@@ -90,18 +92,13 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
             continue
 
         elif resp is None or len(resp) == 0:
-            do_creation = True
-            _msg = (
-                "proceeding with download" if do_creation else "terminating."
-            )
+            _msg = "proceeding with download"
             logger.info(f"Received: {resp}, {_msg}")
-            return do_creation
+            return True
 
         elif resp.lower() in ["y", "n"]:
             do_creation = resp.lower() == "y"
-            _msg = (
-                "proceeding with download" if do_creation else "terminating."
-            )
+            _msg = "proceeding with download" if do_creation else "terminating."
             logger.info(f"Received: {resp}, {_msg}")
             return do_creation
 
@@ -111,12 +108,11 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
     raise ValueError(f"Received {max_tries} incorrect inputs, terminating.")
 
 
-def ensure_path_exists(path: Path, assume_yes: bool = False):
-    do_creation = (
-        get_user_path_creation_decision(path, max_tries=3)
-        if not assume_yes
-        else True
-    )
+def ensure_path_exists(path: Path, assume_yes: bool):
+    if assume_yes:
+        do_creation = True
+    else:
+        do_creation = get_user_path_creation_decision(path, max_tries=3)
 
     if do_creation:
         path.mkdir(exist_ok=True, parents=True)

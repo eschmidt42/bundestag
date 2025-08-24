@@ -1,190 +1,413 @@
-import typing as T
 from pathlib import Path
-from unittest.mock import MagicMock, call, patch
+from typing import Any, Callable
 
 import pandas as pd
 import pytest
-import xlrd
 
-import bundestag.data.transform.bundestag_sheets as transform_bs
-import bundestag.data.utils as data_utils
 import bundestag.schemas as schemas
+from bundestag.data.transform.bundestag_sheets import (
+    PARTY_MAP,
+    ExcelReadException,
+    assign_date_and_title_columns,
+    disambiguate_party,
+    file_size_is_zero,
+    get_file2poll_maps,
+    get_multiple_sheets_df,
+    get_sheet_df,
+    get_squished_dataframe,
+    handle_title_and_date,
+    is_date,
+    read_excel,
+    run,
+    set_sheet_dtypes,
+    verify_vote_columns,
+)
 
 
 def test_get_file2poll_maps():
     uris = {
-        "title1": "uri/1.xlsx",
+        "title1": "uri/20201126_3_xls-data.xlsx",
         "title2": "uri/2.xlsx",
     }
-    sheet_path = Path("dummy/path")
-    known_sheets = [sheet_path / "1.xlsx"]
+    sheet_dir = Path("tests/data_for_testing")
 
-    with patch(
-        "bundestag.data.utils.get_file_paths",
-        MagicMock(return_value=known_sheets),
-    ) as get_file_paths:
-        # line to test
-        file2poll = transform_bs.get_file2poll_maps(uris, sheet_path)
+    # line to test
+    file2poll_map = get_file2poll_maps(uris, sheet_dir)
 
-        assert len(file2poll) == 1
-        assert "1.xlsx" in file2poll
-        assert file2poll["1.xlsx"] == "title1"
+    assert len(file2poll_map) == 1
+    assert "20201126_3_xls-data.xlsx" in file2poll_map
+    assert file2poll_map["20201126_3_xls-data.xlsx"] == "title1"
 
 
 def test_is_date():
-    assert transform_bs.is_date("123", pd.to_datetime) == False
-    assert transform_bs.is_date("2022-02-02", pd.to_datetime) == True
+    assert is_date("123", False) == False
+    assert is_date("2022-02-02", True) == True
 
 
 @pytest.mark.parametrize(
-    "st_size,expected",
-    [(st_size, expected) for st_size, expected in zip([0, 1], [True, False])],
+    "is_zero",
+    [True, False],
 )
-def test_file_size_is_zero(st_size: int, expected: bool):
-    path = Path("dummy/path")
-    with patch(
-        "pathlib.Path.stat", MagicMock(return_value=MagicMock(st_size=st_size))
-    ) as stat:
-        # line to test
-        assert transform_bs.file_size_is_zero(path) == expected
+def test_file_size_is_zero(tmp_path: Path, is_zero: bool):
+    path = tmp_path / "some-random-file"
+    path.touch()
+    if not is_zero:
+        with path.open("w") as f:
+            f.write("blub")
+    assert file_size_is_zero(path) is is_zero
 
 
-@pytest.mark.parametrize(
-    "case,side_effect,expected",
-    [
-        (0, (pd.DataFrame({"a": [1]}),), pd.DataFrame({"a": [1]})),
-        (1, (ValueError, pd.DataFrame({"a": [1]})), pd.DataFrame({"a": [1]})),
-        (2, xlrd.XLRDError, None),
-    ],
-)
-def test_read_excel(case: int, side_effect, expected):
-    path = Path("dummy/path")
-
-    with patch("pandas.read_excel", MagicMock(side_effect=side_effect)) as read_excel:
-        # line to test
-        res = transform_bs.read_excel(path)
-
-        if case == 0:
-            assert res.equals(expected)
-            read_excel.assert_called_once_with(path, sheet_name=None, engine="xlrd")
-        elif case == 1:
-            assert res.equals(expected)
-            read_excel.assert_has_calls(
-                [
-                    call(path, sheet_name=None, engine="xlrd"),
-                    call(path, sheet_name=None, engine="openpyxl"),
-                ]
-            )
-        elif case == 2:
-            assert res is None
-            read_excel.assert_called_once_with(path, sheet_name=None, engine="xlrd")
+# ========================= read_excel =========================
 
 
-@pytest.mark.parametrize(
-    "file_size_is_zero,n_dfs,validate,invalid_votes,file_title_maps_is_none",
-    [
-        (
-            file_size_is_zero,
-            n_dfs,
-            validate,
-            invalid_votes,
-            file_title_maps_is_none,
-        )
-        for file_size_is_zero in [True, False]
-        for n_dfs in [0, 1, 2]
-        for validate in [True, False]
-        for invalid_votes in [True, False]
-        for file_title_maps_is_none in [True, False]
-    ],
-)
-def test_get_sheet_df_with_mock(
-    file_size_is_zero: bool,
-    n_dfs: int,
-    validate: bool,
-    invalid_votes: bool,
-    file_title_maps_is_none: bool,
-):
-    sheet_file = Path("some/file.xlsx")
-    sheet_name = "wup"
-    date = pd.to_datetime("1950-01-01")
-    title = "wup"
-    full_title = title
-    file_title_maps = (
-        None
-        if file_title_maps_is_none
-        else {
-            "file.xlsx": "wup",
-        }
+def test_read_excel_xls_fail():
+    file_path = Path(
+        "tests/data_for_testing/raw/bundestag/sheets/20140625_2_xls-data.xls"
     )
-    validate = True
-    df = pd.DataFrame(
-        {
-            "Wahlperiode": [0],
-            "Sitzungnr": [0],
-            "Abstimmnr": [0],
-            "Fraktion/Gruppe": ["wup"],
-            "Name": ["wup"],
-            "Vorname": ["wup"],
-            "Titel": [""],
-            "ja": [1 if invalid_votes else 0],
-            "nein": [1],
-            "Enthaltung": [0],
-            "ungültig": [0],
-            "nichtabgegeben": [0],
-            "Bezeichnung": ["wup"],
-            "Bemerkung": [""],
-            "date": [date],
-            "title": [title],
-            "sheet_name": [sheet_name],
-        }
+    with pytest.raises(ExcelReadException):
+        _ = read_excel(file_path)
+
+
+def test_read_excel_xlsx():
+    file_path = Path(
+        "tests/data_for_testing/raw/bundestag/sheets/20201126_3_xls-data.xlsx"
     )
 
-    dfs = {i: df for i in range(n_dfs)} if n_dfs > 0 else None
+    res = read_excel(file_path)
+    assert res is not None
+    assert "sheet_name" in res.columns
 
-    with (
-        patch(
-            "bundestag.data.transform.bundestag_sheets.file_size_is_zero",
-            MagicMock(return_value=file_size_is_zero),
-        ) as _file_size_is_zero,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.read_excel",
-            MagicMock(return_value=dfs),
-        ) as _read_excel,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.disambiguate_party",
-            MagicMock(return_value=df),
-        ) as _disambiguate_party,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.handle_title_and_date",
-            MagicMock(return_value=[title, date]),
-        ) as _handle_title_and_date,
-        patch("bundestag.schemas.SHEET.validate", MagicMock()) as _validate,
-    ):
-        try:
-            # line to test
-            res = transform_bs.get_sheet_df(sheet_file, file_title_maps, validate)
-        except ValueError as ex:
-            if len(dfs) > 1:
-                pytest.xfail(f"ValueError raised because of multiple sheets: {ex}")
 
-        _file_size_is_zero.assert_called_once_with(sheet_file)
-        if file_size_is_zero:
-            assert res is None
-            _read_excel.assert_not_called()
-        else:
-            _read_excel.assert_called_once_with(sheet_file)
-            if n_dfs == 0:
-                assert res is None
-                _disambiguate_party.assert_not_called()
-            else:
-                if file_title_maps is not None:
-                    _handle_title_and_date.assert_called_once_with(
-                        full_title, sheet_file
-                    )
-                assert isinstance(res, pd.DataFrame)
-                _disambiguate_party.assert_called_once_with(df)
-                if validate:
-                    _validate.assert_called_once()
+# @pytest.mark.parametrize(
+#         "case,side_effect", [(0,None),(1,ValueError),(2,xlrd.biffh.XLRDError)]
+# )
+# def test_read_excel(case: int, side_effect):
+#     path = Path("dummy/path")
+#     df = pd.DataFrame({"a": [1]})
+#     match case:
+#         case 0:
+#             se = ({"b": df.copy(deep=True)},)
+#         case 1:
+#             se = (side_effect, df.copy(deep=True))
+#         case 2:
+#             se = (side_effect,)
+#         case _:
+#             raise ValueError
+
+#     with patch("pandas.read_excel", MagicMock(side_effect=se)) as _read_excel:
+#         # line to test
+#         res = read_excel(path)
+
+#         match case:
+#             case 0:
+#                 assert res is not None
+#                 assert "sheet_name" in res.columns
+#                 res = res.drop(columns=["sheet_name"])
+#                 assert res.equals(df)
+#                 _read_excel.assert_has_calls(
+#                     [
+#                         call(path, sheet_name=None, engine="openpyxl"),
+#                     ]
+#                 )
+#             case 1:
+#                 assert res is not None
+#                 assert "sheet_name" not in res.columns
+#                 assert res.equals(df)
+#                 _read_excel.assert_has_calls([
+#                     call(path, sheet_name=None, engine="openpyxl"),
+#                     call(path, engine="xlrd")
+#                 ])
+#             case 2:
+#                 assert res is None
+#                 _read_excel.assert_called_once_with(path, engine="xlrd")
+
+# ========================= verify_vote_columns =========================
+
+
+def test_verify_vote_columns_valid():
+    """Tests that verify_vote_columns does not raise an error for a valid DataFrame."""
+    data = {
+        "ja": [1, 0, 0],
+        "nein": [0, 1, 0],
+        "Enthaltung": [0, 0, 1],
+        "ungültig": [0, 0, 0],
+        "nichtabgegeben": [0, 0, 0],
+    }
+    df = pd.DataFrame(data)
+    sheet_file = Path("dummy_sheet.xlsx")
+
+    try:
+        verify_vote_columns(sheet_file, df)
+    except ValueError:
+        pytest.fail("verify_vote_columns raised ValueError unexpectedly!")
+
+
+def test_verify_vote_columns_invalid_sum_greater_than_1():
+    """Tests that verify_vote_columns raises a ValueError when a row has more than one vote."""
+    data = {
+        "ja": [1, 1, 0],  # second row is invalid
+        "nein": [0, 1, 0],
+        "Enthaltung": [0, 0, 1],
+        "ungültig": [0, 0, 0],
+        "nichtabgegeben": [0, 0, 0],
+    }
+    df = pd.DataFrame(data)
+    sheet_file = Path("dummy_sheet.xlsx")
+
+    with pytest.raises(ValueError):
+        verify_vote_columns(sheet_file, df)
+
+
+def test_verify_vote_columns_invalid_sum_is_zero():
+    """Tests that verify_vote_columns raises a ValueError when a row has no vote."""
+    data = {
+        "ja": [1, 0, 0],
+        "nein": [0, 0, 0],
+        "Enthaltung": [0, 0, 1],
+        "ungültig": [0, 0, 0],
+        "nichtabgegeben": [0, 0, 0],  # second row is invalid
+    }
+    df = pd.DataFrame(data)
+    sheet_file = Path("dummy_sheet.xlsx")
+
+    with pytest.raises(ValueError):
+        verify_vote_columns(sheet_file, df)
+
+
+@pytest.fixture
+def sample_df():
+    return pd.DataFrame({"col1": [1, 2, 3]})
+
+
+# ========================= assign_date_and_title_columns =========================
+
+
+def test_assign_date_and_title_columns_with_file_title_maps(sample_df):
+    sheet_file = Path("20230101_some_vote.xlsx")
+    file_title_maps = {sheet_file.name: "01.01.2023: Some Vote Title"}
+    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), file_title_maps)
+    assert "date" in df.columns
+    assert "title" in df.columns
+    assert pd.to_datetime(df["date"].iloc[0]) == pd.Timestamp("2023-01-01")
+    assert df["title"].iloc[0] == "Some Vote Title"
+
+
+def test_assign_date_and_title_columns_with_date_in_filename(sample_df):
+    sheet_file = Path("20230101_some_vote.xlsx")
+    file_title_maps = {sheet_file.name: "Some Vote Title Without Date"}
+    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), file_title_maps)
+    assert "date" in df.columns
+    assert "title" in df.columns
+    assert pd.to_datetime(df["date"].iloc[0]) == pd.Timestamp("2023-01-01")
+    assert df["title"].iloc[0] == "Some Vote Title Without Date"
+
+
+def test_assign_date_and_title_columns_no_date(sample_df):
+    sheet_file = Path("some_vote.xlsx")
+    file_title_maps = {sheet_file.name: "Some Vote Title Without Date"}
+    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), file_title_maps)
+    assert "date" in df.columns
+    assert "title" in df.columns
+    assert df["date"].iloc[0] is None
+    assert df["title"].iloc[0] == "Some Vote Title Without Date"
+
+
+def test_assign_date_and_title_columns_no_file_title_maps(sample_df):
+    sheet_file = Path("20230101_some_vote.xlsx")
+    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), None)
+    assert "date" in df.columns
+    assert "title" in df.columns
+    assert df["date"].iloc[0] is None
+    assert df["title"].iloc[0] is None
+
+
+# ========================= handle_title_and_date =========================
+
+
+def test_handle_title_and_date_with_date_in_title():
+    """
+    Tests extraction when the date is present at the beginning of the title string.
+    """
+    full_title = "26.11.2020: Entschließungsantrag zu dem Antrag auf Zustimmung zu dem Fünften Gesetz zur Änderung des Öko-Landbaugesetzes"
+    sheet_file = Path("some_other_name.xlsx")
+    title, date = handle_title_and_date(full_title, sheet_file)
+    assert (
+        title
+        == "Entschließungsantrag zu dem Antrag auf Zustimmung zu dem Fünften Gesetz zur Änderung des Öko-Landbaugesetzes"
+    )
+    assert date == pd.Timestamp("2020-11-26")
+
+
+def test_handle_title_and_date_with_multiple_colons():
+    """
+    Tests that only the first part is treated as a date, even with multiple colons.
+    """
+    full_title = "26.11.2020: Title: with colons"
+    sheet_file = Path("some_other_name.xlsx")
+    title, date = handle_title_and_date(full_title, sheet_file)
+    assert title == "Title: with colons"
+    assert date == pd.Timestamp("2020-11-26")
+
+
+def test_handle_title_and_date_with_date_in_filename():
+    """
+    Tests extraction when the date is not in the title but in the filename.
+    """
+    full_title = "Entschließungsantrag zu dem Antrag auf Zustimmung zu dem Fünften Gesetz zur Änderung des Öko-Landbaugesetzes"
+    sheet_file = Path("20201126_3_xls-data.xlsx")
+    title, date = handle_title_and_date(full_title, sheet_file)
+    assert (
+        title
+        == "Entschließungsantrag zu dem Antrag auf Zustimmung zu dem Fünften Gesetz zur Änderung des Öko-Landbaugesetzes"
+    )
+    assert date == pd.Timestamp("2020-11-26")
+
+
+def test_handle_title_and_date_no_date():
+    """
+    Tests behavior when no date is found in the title or filename.
+    """
+    full_title = "A title without a date"
+    sheet_file = Path("a_file_without_a_date.xlsx")
+    title, date = handle_title_and_date(full_title, sheet_file)
+    assert title == "A title without a date"
+    assert date is None
+
+
+def test_handle_title_and_date_strips_whitespace():
+    """
+    Tests that leading/trailing whitespace is stripped from the title.
+    """
+    full_title = "  A title with whitespace   "
+    sheet_file = Path("a_file.xlsx")
+    title, date = handle_title_and_date(full_title, sheet_file)
+    assert title == "A title with whitespace"
+    assert date is None
+
+    full_title_with_date = " 01.01.2021: A title with a date and whitespace  "
+    title, date = handle_title_and_date(full_title_with_date, sheet_file)
+    assert title == "A title with a date and whitespace"
+    assert date == pd.Timestamp("2021-01-01")
+
+
+# ========================= disambiguate_party =========================
+
+
+def test_disambiguate_party():
+    col = "Fraktion/Gruppe"
+    known = list(PARTY_MAP.keys())
+    unknown = ["wuppety"]
+    df = pd.DataFrame({col: known + unknown})
+
+    # line to test
+    df2 = disambiguate_party(df.copy(), col=col, party_map=PARTY_MAP)
+
+    assert df2[col].iloc[-1] == df[col].iloc[-1]
+    assert not df2[col].iloc[:-1].equals(df[col].iloc[:-1])
+
+
+# ========================= get_sheet_df =========================
+
+# @pytest.fixture
+# def data_dir(tmp_path: Path) -> Path:
+#     data_dir = tmp_path / "data"
+#     data_dir.mkdir()
+#     return data_dir
+
+
+@pytest.fixture
+def create_dummy_excel(tmp_path: Path):
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+
+    def wrapped(fname: str, data: dict) -> Path:
+        path = data_dir / fname
+        file_size_zero = len(data) == 0
+        if file_size_zero:
+            path.touch()
+            return path
+        df = pd.DataFrame(data)
+        df.to_excel(path, index=False, engine="openpyxl")
+        return path
+
+    return wrapped
+
+
+def test_get_sheet_df_valid_file(create_dummy_excel: Callable):
+    data = {
+        "Fraktion/Gruppe": ["CDU/CSU", "SPD", "BÜNDNIS`90/DIE GRÜNEN"],
+        "ja": [1, 0, 0],
+        "nein": [0, 1, 0],
+        "Enthaltung": [0, 0, 1],
+        "ungültig": [0, 0, 0],
+        "nichtabgegeben": [0, 0, 0],
+        "Bezeichnung": ["a", "b", "c"],
+    }
+    sheet_file = create_dummy_excel("test.xlsx", data)
+
+    df = get_sheet_df(sheet_file)
+    assert df is not None
+    assert len(df) == 3
+    assert "BÜ90/GR" in df["Fraktion/Gruppe"].values
+
+
+def test_get_sheet_df_invalid_vote_columns(create_dummy_excel: Callable):
+    data = {
+        "Fraktion/Gruppe": ["CDU/CSU"],
+        "ja": [1],
+        "nein": [1],
+        "Enthaltung": [0],
+        "ungültig": [0],
+        "nichtabgegeben": [0],
+        "Bezeichnung": ["a"],
+    }
+    sheet_file = create_dummy_excel("empty.xlsx", data)
+
+    with pytest.raises(ValueError, match="has rows with more than one vote"):
+        get_sheet_df(sheet_file)
+
+
+def test_get_sheet_df_with_file_title_maps(create_dummy_excel: Callable):
+    data = {
+        "Fraktion/Gruppe": ["CDU/CSU"],
+        "ja": [1],
+        "nein": [0],
+        "Enthaltung": [0],
+        "ungültig": [0],
+        "nichtabgegeben": [0],
+        "Bezeichnung": ["a"],
+    }
+
+    sheet_file = create_dummy_excel("20230101_1_test.xlsx", data)
+
+    file_title_maps = {sheet_file.name: "01.01.2023: Test Title"}
+
+    df = get_sheet_df(sheet_file, file_title_maps=file_title_maps)
+    assert df is not None
+    assert "title" in df.columns
+    assert "date" in df.columns
+    assert df["title"].iloc[0] == "Test Title"
+    assert df["date"].iloc[0] == pd.Timestamp("2023-01-01")
+
+
+def test_get_sheet_df_disambiguate_party(create_dummy_excel: Callable):
+    data = {
+        "Fraktion/Gruppe": ["BÜNDNIS`90/DIE GRÜNEN", "DIE LINKE", "fraktionslos"],
+        "ja": [1, 0, 0],
+        "nein": [0, 1, 0],
+        "Enthaltung": [0, 0, 1],
+        "ungültig": [0, 0, 0],
+        "nichtabgegeben": [0, 0, 0],
+        "Bezeichnung": ["a", "b", "c"],
+    }
+    sheet_file = create_dummy_excel("party_test.xlsx", data)
+
+    df = get_sheet_df(sheet_file)
+    assert df is not None
+    parties = df["Fraktion/Gruppe"].tolist()
+    assert "BÜ90/GR" in parties
+    assert "DIE LINKE." in parties
+    assert "Fraktionslos" in parties
 
 
 def test_get_sheet_df_with_actual_data():
@@ -198,66 +421,9 @@ def test_get_sheet_df_with_actual_data():
     }
 
     # line to test
-    df = transform_bs.get_sheet_df(path, file_title_maps=file_title_maps, validate=True)
+    df = get_sheet_df(path, file_title_maps=file_title_maps, validate=True)
 
 
-@pytest.mark.parametrize(
-    "full_title,sheet_file,exp_title,exp_date",
-    [
-        (
-            "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
-            Path("some/file/bla.csv"),
-            "Übereinkommen über ein Einheitliches Patentgericht",
-            pd.to_datetime("2020-11-26"),
-        ),
-        (
-            "Übereinkommen über ein Einheitliches Patentgericht",
-            Path("some/file/2020-11-26_bla.csv"),
-            "Übereinkommen über ein Einheitliches Patentgericht",
-            pd.to_datetime("2020-11-26"),
-        ),
-        (
-            "Übereinkommen über ein Einheitliches Patentgericht",
-            Path("some/file/bla.csv"),
-            "Übereinkommen über ein Einheitliches Patentgericht",
-            None,
-        ),
-    ],
-)
-def test_handle_title_and_date(
-    full_title: str,
-    sheet_file: Path,
-    exp_title: str,
-    exp_date: pd.DatetimeTZDtype,
-):
-    # full_title = "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht"
-    # sheet_file = Path("some/file/2020-11-26_bla.csv")
-
-    # line to test
-    title, date = transform_bs.handle_title_and_date(full_title, sheet_file)
-    assert title == exp_title
-    if exp_date is None:
-        assert date is None
-    else:
-        assert date == exp_date
-
-
-def test_disambiguate_party():
-    col = "Fraktion/Gruppe"
-    known = list(transform_bs.PARTY_MAP.keys())
-    unknown = ["wuppety"]
-    df = pd.DataFrame({col: known + unknown})
-
-    # line to test
-    df2 = transform_bs.disambiguate_party(
-        df.copy(), col=col, party_map=transform_bs.PARTY_MAP
-    )
-
-    assert df2[col].iloc[-1] == df[col].iloc[-1]
-    assert not df2[col].iloc[:-1].equals(df[col].iloc[:-1])
-
-
-@pytest.mark.skip("Data from get_squished_dataframe None for some reason")
 @pytest.mark.parametrize("validate", [True, False])
 def test_get_squished_dataframe(validate: bool):
     path = Path("tests/data_for_testing/20201126_3_xls-data.xlsx")
@@ -269,12 +435,12 @@ def test_get_squished_dataframe(validate: bool):
         "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
     }
 
-    df = transform_bs.get_sheet_df(
-        path, file_title_maps=file_title_maps, validate=validate
-    )
+    df = get_sheet_df(path, file_title_maps=file_title_maps, validate=validate)
 
-    # line to test
-    df = transform_bs.get_squished_dataframe(df, validate=validate)
+    if df is None:
+        raise ValueError(f"df cannot be None here.")
+
+    df = get_squished_dataframe(df, validate=validate)
 
 
 @pytest.mark.parametrize(
@@ -286,17 +452,16 @@ def test_get_squished_dataframe(validate: bool):
     ],
     ids=["object", "object2", "str"],
 )
-def test_set_sheet_dtypes(dtypes: T.Dict[str, T.Any]):
+def test_set_sheet_dtypes(dtypes: dict[str, Any]):
     df = pd.DataFrame({"a": [1, 2, 3], "b": [1.0, 2.0, 3.0], "c": ["a", "b", "c"]})
     df_target = pd.DataFrame({"a": [1, 2, 3], "b": [1, 2, 3], "c": ["a", "b", "c"]})
 
     # line to test
-    df2 = transform_bs.set_sheet_dtypes(df.copy(), dtypes)
+    df2 = set_sheet_dtypes(df.copy(), dtypes)
     assert df2.dtypes.equals(df_target.dtypes)
 
 
-@pytest.mark.skip("Data from get_squished_dataframe None for some reason")
-def test_get_final_sheet_df():
+def test_bits_of_get_multiple_sheets_df():
     path = Path("tests/data_for_testing/20201126_3_xls-data.xlsx")
     file_title_maps = {
         "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
@@ -306,158 +471,69 @@ def test_get_final_sheet_df():
         "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
     }
 
-    df = transform_bs.get_sheet_df(
-        path, file_title_maps=file_title_maps, validate=False
-    )
+    df = get_sheet_df(path, file_title_maps=file_title_maps, validate=False)
+
+    if df is None:
+        raise ValueError(f"df cannot be None here.")
 
     # lines to test
-    df = transform_bs.get_squished_dataframe(df)
-    df = transform_bs.set_sheet_dtypes(df)
+    df = get_squished_dataframe(df)
+    df = set_sheet_dtypes(df)
     schemas.SHEET_FINAL.validate(df)
+
+
+# TODO - CONTINUE HERE: test failing
 
 
 @pytest.mark.parametrize("one_fails", [True, False])
 def test_get_multiple_sheets(one_fails: bool):
     sheet_files = [
-        Path("tests/data_for_testing/20201126_3_xls-data.xlsx"),
-        Path("tests/data_for_testing/20201126_2_xls-data.xlsx"),
+        Path("tests/data_for_testing/raw/bundestag/sheets/20201126_3_xls-data.xlsx"),
+        Path("tests/data_for_testing/raw/bundestag/sheets/20201126_2_xls-data.xlsx"),
     ]
-    file_title_maps = None
-    dfs = [pd.DataFrame({"a": [1]}), pd.DataFrame({"a": [2]})]
-    if one_fails:
-        dfs[0] = None
-    fine_dfs = [df for df in dfs if df is not None]
+    file_title_maps = {
+        "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
+        "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",
+    }
 
-    with (
-        patch(
-            "bundestag.data.transform.bundestag_sheets.get_sheet_df",
-            side_effect=dfs,
-        ) as _get_sheet_df,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.get_squished_dataframe",
-            side_effect=fine_dfs,
-        ) as _get_squished_dataframe,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.set_sheet_dtypes",
-            side_effect=fine_dfs,
-        ) as _set_sheet_types,
-    ):
-        # line to test
-        df = transform_bs.get_multiple_sheets_df(
-            sheet_files, file_title_maps=file_title_maps
-        )
-
-        assert _get_sheet_df.call_count == len(sheet_files)
-        if one_fails:
-            assert _get_squished_dataframe.call_count == 1
-            assert _set_sheet_types.call_count == 1
-        else:
-            assert _get_squished_dataframe.call_count == 2
-            assert _set_sheet_types.call_count == 2
+    df = get_multiple_sheets_df(
+        sheet_files, file_title_maps=file_title_maps, validate=True
+    )
 
 
 @pytest.mark.parametrize(
-    "dry,html_path_exists,sheet_path_exists,preprocessed_path_exists,html_path,sheet_path,preprocessed_path,validate",
+    "dry,validate",
     [
         (
             dry,
-            html_path_exists,
-            sheet_path_exists,
-            preprocessed_path_exists,
-            html_path,
-            sheet_path,
-            preprocessed_path,
             validate,
         )
         for dry in [True, False]
-        for html_path_exists in [True, False]
-        for sheet_path_exists in [True, False]
-        for preprocessed_path_exists in [True, False]
-        for html_path in [
-            Path("raw/path"),
-        ]
-        for sheet_path in [
-            Path("raw/path"),
-        ]
-        for preprocessed_path in [
-            Path("preprocessed/path"),
-        ]
         for validate in [True, False]
     ],
 )
 def test_run(
     dry: bool,
-    html_path_exists: bool,
-    sheet_path_exists: bool,
-    preprocessed_path_exists: bool,
-    html_path: Path,
-    sheet_path: Path,
-    preprocessed_path: Path,
     validate: bool,
+    tmp_path: Path,
 ):
-    with (
-        patch(
-            "pathlib.Path.exists",
-            MagicMock(
-                side_effect=[
-                    html_path_exists,
-                    sheet_path_exists,
-                    preprocessed_path_exists,
-                ]
-            ),
-        ) as _exists,
-        patch("bundestag.data.utils.ensure_path_exists", MagicMock()) as _ensure_exists,
-        patch("pandas.DataFrame.to_parquet", MagicMock()) as _to_parquet,
-        patch(
-            "bundestag.data.utils.get_file_paths", MagicMock(return_value=[])
-        ) as _get_file_paths,
-        patch(
-            "bundestag.data.download.bundestag_sheets.collect_sheet_uris",
-            MagicMock(return_value=[]),
-        ) as _collect_sheet_uris,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.get_file2poll_maps",
-            MagicMock(return_value={}),
-        ) as _get_file2poll_maps,
-        patch(
-            "bundestag.data.transform.bundestag_sheets.get_multiple_sheets_df",
-            MagicMock(return_value=pd.DataFrame({"a": [1]})),
-        ) as _get_multiple_sheets_df,
-    ):
-        try:
-            # line to test
-            transform_bs.run(
-                html_path=html_path,
-                sheet_path=sheet_path,
-                preprocessed_path=preprocessed_path,
-                dry=dry,
-                validate=validate,
-            )
-        except ValueError as ex:
-            if not dry and (not html_path_exists or not sheet_path_exists):
-                pytest.xfail("ValueError for missing path")
-            else:
-                raise ex
+    html_path = Path("tests/data_for_testing")
+    sheet_path = Path("tests/data_for_testing/raw/bundestag/sheets")
+    preprocessed_path = tmp_path / "preprocessed"
+    assume_yes = True
 
-        if not dry:
-            assert _exists.call_count == 3
-        if not dry and not preprocessed_path_exists:
-            _ensure_exists.assert_called_once_with(preprocessed_path)
+    run(
+        html_path=html_path,
+        sheet_path=sheet_path,
+        preprocessed_path=preprocessed_path,
+        dry=dry,
+        validate=validate,
+        assume_yes=assume_yes,
+    )
 
-        if not dry:
-            _to_parquet.assert_has_calls(
-                [call(preprocessed_path / "bundestag.de_votes.parquet")]
-            )
-
-        _get_file_paths.assert_has_calls(
-            [
-                call(html_path, pattern=data_utils.RE_HTM),
-                call(sheet_path, pattern=data_utils.RE_FNAME),
-            ]
-        )
-
-        _collect_sheet_uris.assert_called_once_with([])
-        _get_file2poll_maps.assert_called_once_with([], sheet_path)
-        _get_multiple_sheets_df.assert_called_once_with(
-            [], file_title_maps={}, validate=validate
-        )
+    if dry:
+        assert not preprocessed_path.exists()
+    else:
+        assert preprocessed_path.exists()
+        output_file = preprocessed_path / "bundestag.de_votes.parquet"
+        assert output_file.exists()

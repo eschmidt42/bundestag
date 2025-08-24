@@ -82,7 +82,7 @@ serve-docs:
 
 .PHONY: test
 test:
-	uv run pytest -vx tests
+	uv run pytest tests
 
 
 # ==============================================================================

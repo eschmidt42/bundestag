@@ -1,10 +1,9 @@
 import typer
-from rich import print as pprint
 
-import bundestag.data.download.abgeordnetenwatch as download_aw
+import bundestag.data.download.abgeordnetenwatch.download as download_aw
 import bundestag.data.download.bundestag_sheets as download_bs
 import bundestag.data.download.huggingface as download_hf
-import bundestag.data.transform.abgeordnetenwatch as transform_aw
+import bundestag.data.transform.abgeordnetenwatch.transform as transform_aw
 import bundestag.data.transform.bundestag_sheets as transform_bs
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
@@ -57,7 +56,6 @@ def download(
             legislature_id=legislature_id,
             dry=dry,
             raw_path=_paths.raw_abgeordnetenwatch,
-            preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
             max_mandates=max_mandates,
             max_polls=max_polls,
             assume_yes=y,
@@ -66,8 +64,8 @@ def download(
     elif source == VALID_SOURCES[1]:
         # run steps for bundestag sheets
         download_bs.run(
-            html_path=_paths.raw_bundestag_html,
-            sheet_path=_paths.raw_bundestag_sheets,
+            html_dir=_paths.raw_bundestag_html,
+            sheet_dir=_paths.raw_bundestag_sheets,
             nmax=nmax,
             dry=dry,
             pattern=data_utils.RE_SHEET,
@@ -77,7 +75,7 @@ def download(
     elif source == VALID_SOURCES[2]:
         # run steps for huggingface
         download_hf.run(
-            path=_paths.base,
+            path=_paths.root_path,
             dry=dry,
             assume_yes=y,
         )
@@ -88,9 +86,7 @@ def download(
 
 @app.command(help="Transform data for a chosen source")
 def transform(
-    source: str = typer.Argument(
-        VALID_SOURCES[0], help=f"One of {VALID_SOURCES}"
-    ),
+    source: str = typer.Argument(VALID_SOURCES[0], help=f"One of {VALID_SOURCES}"),
     legislature_id: int = typer.Argument(
         111,
         help="Bundestag legislature id value, see https://www.abgeordnetenwatch.de/bundestag -> Button 'Open Data'",
@@ -108,9 +104,9 @@ def transform(
         # run steps for abgeordetenwatch
         transform_aw.run(
             legislature_id=legislature_id,
-            dry=dry,
             raw_path=_paths.raw_abgeordnetenwatch,
             preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
+            dry=dry,
         )
 
     elif source == VALID_SOURCES[1]:

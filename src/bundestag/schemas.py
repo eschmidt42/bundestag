@@ -1,8 +1,6 @@
-import typing as T
-
 import pandas as pd
 import pandera as pa
-from pandera import Check, Column, DataFrameSchema, Index, MultiIndex
+from pandera import Check, Column, DataFrameSchema, Index
 from pydantic import BaseModel
 
 
@@ -40,11 +38,11 @@ class Poll(BaseModel):
     label: str
     api_url: str
     field_legislature: FieldLegislature
-    field_topics: T.List[FieldTopic] = None
-    field_committees: T.List[FieldCommittee] = None
+    field_topics: list[FieldTopic] | None = None
+    field_committees: list[FieldCommittee] | None = None
     field_intro: str
     field_poll_date: str
-    field_related_links: T.List[RelatedLink] = None
+    field_related_links: list[RelatedLink] | None = None
 
 
 class AbgeordnetenwatchAPI(BaseModel):
@@ -71,7 +69,7 @@ class AbgeordnetenwatchMeta(BaseModel):
 
 class PollResponse(BaseModel):
     meta: AbgeordnetenwatchMeta
-    data: T.List[Poll]
+    data: list[Poll]
 
 
 class ParliamentPeriod(BaseModel):
@@ -108,19 +106,19 @@ class ElectoralData(BaseModel):
     id: int
     entity_type: str
     label: str
-    electoral_list: ElectoralList = None
-    list_position: int = None
-    constituency: Constituency = None
-    constituency_result: float = None
-    constituency_result_count: float = None
-    mandate_won: str = None
+    electoral_list: ElectoralList | None = None
+    list_position: int | None = None
+    constituency: Constituency | None = None
+    constituency_result: float | None = None
+    constituency_result_count: float | None = None
+    mandate_won: str | None = None
 
 
 class Fraction(BaseModel):
-    id: int = None
-    entity_type: str = None
-    label: str = None
-    api_url: str = None
+    id: int | None = None
+    entity_type: str | None = None
+    label: str | None = None
+    api_url: str | None = None
 
 
 class FractionMembership(BaseModel):
@@ -128,8 +126,8 @@ class FractionMembership(BaseModel):
     entity_type: str
     label: str
     fraction: Fraction
-    valid_from: str = None
-    valid_until: str = None
+    valid_from: str | None = None
+    valid_until: str | None = None
 
 
 class Mandate(BaseModel):
@@ -137,21 +135,21 @@ class Mandate(BaseModel):
     entity_type: str
     label: str
     api_url: str
-    id_external_administration: str = None
-    id_external_administration_description: str = None
+    id_external_administration: str | None = None
+    id_external_administration_description: str | None = None
     type: str
     parliament_period: ParliamentPeriod
     politician: Politician
-    start_date: str = None
-    end_date: str = None
-    info: str = None
+    start_date: str | None = None
+    end_date: str | None = None
+    info: str | None = None
     electoral_data: ElectoralData
-    fraction_membership: T.List[FractionMembership]
+    fraction_membership: list[FractionMembership]
 
 
 class MandatesResponse(BaseModel):
     meta: AbgeordnetenwatchMeta
-    data: T.List[Mandate]
+    data: list[Mandate]
 
 
 class VoteMandate(BaseModel):
@@ -169,20 +167,20 @@ class VotePoll(BaseModel):
 
 
 class Vote(BaseModel):
-    id: int = None
+    id: int | None = None
     entity_type: str
     label: str
     api_url: str
     mandate: VoteMandate
     poll: VotePoll
     vote: str
-    reason_no_show: str = None
-    reason_no_show_other: str = None
-    fraction: Fraction = None
+    reason_no_show: str | None = None
+    reason_no_show_other: str | None = None
+    fraction: Fraction | None = None
 
 
 class RelatedData(BaseModel):
-    votes: T.List[Vote]
+    votes: list[Vote]
 
 
 class VoteData(BaseModel):
@@ -191,11 +189,11 @@ class VoteData(BaseModel):
     label: str
     api_url: str
     field_legislature: FieldLegislature
-    field_topics: T.List[FieldTopic] = None
-    field_committees: T.List[FieldCommittee] = None
+    field_topics: list[FieldTopic] | None = None
+    field_committees: list[FieldCommittee] | None = None
     field_intro: str
     field_poll_date: str
-    field_related_links: T.List[RelatedLink] = None
+    field_related_links: list[RelatedLink] | None = None
     related_data: RelatedData
 
 

@@ -3,24 +3,23 @@ import time
 import typing as T
 from pathlib import Path
 
-import requests
+import httpx
 import tqdm
 from bs4 import BeautifulSoup
 
 import bundestag.data.utils as data_utils
 import bundestag.logging as logging
-import bundestag.schemas as schemas
 
 logger = logging.logger
 
-RE_HTM = re.compile("(\.html?)")
-RE_FNAME = re.compile("(\.xlsx?)")
+RE_HTM = re.compile(r"(\.html?)")
+RE_FNAME = re.compile(r"(\.xlsx?)")
 RE_SHEET = re.compile("(XLSX?)")
 
 
 def collect_sheet_uris(
-    html_file_paths: T.List[Path], pattern: re.Pattern = None
-) -> T.List[str]:
+    html_file_paths: T.List[Path], pattern: re.Pattern | None = None
+) -> dict[str, str]:
     """Extracting URIs to roll call votes stored in excel sheets
 
     Args:
@@ -44,17 +43,19 @@ def collect_sheet_uris(
 
         elements = soup.find_all("td", attrs={"data-th": "Dokument"})
         for element in elements:
-            title = element.div.p.strong.text.strip()
-            href = element.find("a", attrs={"title": pattern})
+            title = element.div.p.strong.text.strip()  # type: ignore
+            href = element.find("a", attrs={"title": pattern})  # type: ignore
             if href is None:
                 continue
-            uris[title] = href["href"]
+            uris[title] = href["href"]  # type:ignore
     return uris
 
 
-def download_sheet(
-    uri: str, sheet_path: T.Union[Path, str], dry: bool = False
-):
+def get_sheet_path(uri: str, sheet_dir: str | Path) -> Path:
+    return Path(sheet_dir) / data_utils.get_sheet_filename(uri)
+
+
+def download_sheet(uri: str, sheet_dir: Path, dry: bool = False):
     """Downloads a single excel sheet given `uri` and writes to `sheet_path`
 
     Args:
@@ -64,23 +65,25 @@ def download_sheet(
     """
 
     "Downloads a single excel sheet given `uri` and writes to `sheet_path`"
-    sheet_path.mkdir(exist_ok=True)
-    file = Path(sheet_path) / uri.split("/")[-1]
-    logger.debug(
-        f"Writing requesting excel sheet: {uri} and writing to {file}"
-    )
+
     if dry:
         return
-    with open(file, "wb") as f:
-        r = requests.get(uri)
+
+    r = httpx.get(uri)
+
+    sheet_path = get_sheet_path(uri, sheet_dir)
+    logger.debug(f"Writing requesting excel sheet: {uri} and writing to {sheet_path}")
+
+    sheet_dir.mkdir(exist_ok=True, parents=True)
+    with sheet_path.open("wb") as f:
         f.write(r.content)
 
 
 def download_multiple_sheets(
-    uris: T.Dict[str, str],
-    sheet_path: T.Union[Path, str],
+    uris: dict[str, str],
+    sheet_dir: Path,
     t_sleep: float = 0.01,
-    nmax: int = None,
+    nmax: int | None = None,
     dry: bool = False,
 ):
     """Downloads multiple excel sheets containing roll call votes using `uris`, writing to `sheet_path`
@@ -95,30 +98,30 @@ def download_multiple_sheets(
 
     n = min(nmax, len(uris)) if nmax else len(uris)
     logger.info(
-        f"Downloading {n} excel sheets and storing under {sheet_path} (dry = {dry})"
+        f"Downloading {n} excel sheets and storing under {sheet_dir} (dry = {dry})"
     )
-    known_sheets = data_utils.get_file_paths(sheet_path, pattern=RE_FNAME)
+    known_sheets = data_utils.get_file_paths(sheet_dir, pattern=RE_FNAME)
 
-    c = 1
-    for _, uri in tqdm.tqdm(uris.items(), desc="File", total=n):
-        if nmax is not None and c > nmax:
+    for i, (_, uri) in tqdm.tqdm(enumerate(uris.items()), desc="File", total=n):
+        if nmax is not None and i > nmax - 1:
             break
-        fname = data_utils.get_sheet_fname(uri)
-        file = Path(sheet_path) / fname
-        if file in known_sheets:
+
+        sheet_path = get_sheet_path(uri, sheet_dir)
+
+        sheet_is_known = sheet_path in known_sheets
+        if sheet_is_known:
             continue
 
-        download_sheet(uri, sheet_path=sheet_path, dry=dry)
-        c += 1
+        download_sheet(uri, sheet_dir=sheet_dir, dry=dry)
 
         time.sleep(t_sleep)
 
 
 def run(
-    html_path: Path,
-    sheet_path: Path,
+    html_dir: Path,
+    sheet_dir: Path,
     t_sleep: float = 0.01,
-    nmax: int = None,
+    nmax: int | None = None,
     dry: bool = False,
     pattern: re.Pattern = data_utils.RE_HTM,
     assume_yes: bool = False,
@@ -126,19 +129,15 @@ def run(
     logger.info("Start downloading sheets")
 
     # ensure paths exist
-    if not html_path.exists():
-        data_utils.ensure_path_exists(html_path, assume_yes=assume_yes)
-    if not sheet_path.exists():
-        data_utils.ensure_path_exists(sheet_path, assume_yes=assume_yes)
+    if not html_dir.exists():
+        data_utils.ensure_path_exists(html_dir, assume_yes=assume_yes)
+    if not sheet_dir.exists():
+        data_utils.ensure_path_exists(sheet_dir, assume_yes=assume_yes)
 
-    html_path, sheet_path = Path(html_path), Path(sheet_path)
-    # collect htm files
-    html_file_paths = data_utils.get_file_paths(html_path, pattern=pattern)
-    # extract excel sheet uris from htm files
+    html_file_paths = data_utils.get_file_paths(html_dir, pattern=pattern)
     sheet_uris = collect_sheet_uris(html_file_paths)
-    # download excel files
     download_multiple_sheets(
-        sheet_uris, sheet_path=sheet_path, t_sleep=t_sleep, nmax=nmax, dry=dry
+        sheet_uris, sheet_dir=sheet_dir, t_sleep=t_sleep, nmax=nmax, dry=dry
     )
 
     logger.info("Done downloading sheets")

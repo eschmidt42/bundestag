@@ -1,12 +1,12 @@
 [project]
 name = "bundestag"
-version = "0.1.0"
+version = "0.1.1"
 description = "Download, parse and analyse votes in the german federal parliament, aka 'Bundestag'"
 readme = "README.md"
 authors = [
     { name = "eschmidt42", email = "11818904+eschmidt42@users.noreply.github.com" }
 ]
-requires-python = ">=3.9.16"
+requires-python = ">=3.10.0"
 dependencies = [
 
 ]
@@ -51,6 +51,8 @@ ml = [
 ]
 style_and_test = [
     "coverage>=7.2.3",
+    "dirty-equals>=0.9.0",
+    "inline-snapshot>=0.27.2",
     "jupyterlab>=3.6.3",
     "pip-audit>=2.5.5",
     "pre-commit>=3.2.2",
@@ -87,6 +89,7 @@ database = [
     "fonttools>=4.39.3",
     "frictionless>=5.11.1",
     "fsspec>=2023.4.0",
+    "httpx>=0.28.1",
     "humanize>=4.6.0",
     "idna>=3.4",
     "importlib-resources>=5.12.0",
@@ -108,6 +111,7 @@ database = [
     "pillow>=9.5.0",
     "plotly>=5.14.1",
     "pydantic>=1.10.7",
+    "pydantic-settings>=2.10.1",
     "pygments>=2.15.0",
     "pymysql>=1.0.3",
     "pyparsing>=3.0.9",
