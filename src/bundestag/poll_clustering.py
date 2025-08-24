@@ -1,5 +1,5 @@
-import sys
-import typing as T
+import itertools
+from typing import Any
 
 import gensim
 import gensim.corpora as corpora
@@ -9,45 +9,49 @@ import pandas as pd
 import plotly.express as px
 import seaborn as sns
 import spacy
-from fastcore.all import *
 from sklearn import decomposition
 
 import bundestag.logging as logging
-
-# from bundestag import abgeordnetenwatch as aw
 
 logger = logging.logger
 
 
 def remove_stopwords_and_punctuation(
     text: str, nlp: spacy.language.Language
-) -> T.List[str]:
+) -> list[str]:
     return [str(w) for w in nlp(text) if not (w.is_stop or w.is_punct)]
 
 
-def remove_numeric_and_empty(text: str) -> T.List[str]:
+def remove_numeric_and_empty(text: list[str]) -> list[str]:
     return [w for w in text if not (w.isnumeric() or w.isspace())]
 
 
-def make_topic_scores_dense(
-    scores: T.List[T.List[T.Tuple[int, float]]]
-) -> np.ndarray:
+def make_topic_scores_dense(scores: list[list[tuple[int, Any]]]) -> np.ndarray:
     "Transforms `scores` (result of lda_model[corpus]) to a numpy array of shape (Ndoc,Ntopic)"
-    ntopic = max([v[0] for d in scores for v in d])
+    # ntopic = max([v[0] for d in scores for v in d])
+    topic_ids = [v for (v, _) in itertools.chain(*scores)]
+    non_int_topic_ids = [v for v in topic_ids if not isinstance(v, int)]
+    if len(non_int_topic_ids) > 0:
+        raise ValueError(
+            f"Unexpectedly received non-int topic ids: {non_int_topic_ids}"
+        )
+
+    ntopic = int(max(topic_ids))  # type: ignore
     ndoc = len(scores)
+
     logger.debug(
         f"Densifying list of {ntopic} topic scores to {ndoc}-by-{ntopic} array"
     )
-    dense = np.zeros((ndoc, ntopic))
+
+    dense = np.zeros(shape=(ndoc, ntopic + 1))
+
     for i, doc in enumerate(scores):
-        for j, score in doc:
-            dense[i, j - 1] = score
+        for topic_id, score in doc:
+            dense[i, topic_id] = score
     return dense
 
 
-def clean_text(
-    df: pd.DataFrame, nlp: spacy.language.Language, col: str = "poll_title"
-):
+def clean_text(df: pd.DataFrame, nlp: spacy.language.Language, col: str = "poll_title"):
     logger.debug("Cleaning texts")
     return list(
         df[col]
@@ -65,13 +69,13 @@ class SpacyTransformer:
     def __init__(self, language: str = "de_core_news_sm"):
         self.nlp: spacy.language.Language = spacy.load(language)
 
-    def model_preprocessing(self, documents):
+    def model_preprocessing(self, documents: list[list[str]]):
         "Basic preprocessing steps required for gensim models"
         logger.debug("Performing basic model preprocessing steps")
         self.dictionary = corpora.Dictionary(documents)
         self.corpus = [self.dictionary.doc2bow(doc) for doc in documents]
 
-    def fit_lda(self, documents, num_topics: int = 10):
+    def fit_lda(self, documents: list[list[str]], num_topics: int = 10):
         "Fits `num_topics` LDA topic models to `documents` (iterable of iterable of strings)"
         self.model_preprocessing(documents)
 
@@ -81,21 +85,15 @@ class SpacyTransformer:
         )
         self.lda_topics = {
             i: descr
-            for (i, descr) in self.lda_model.print_topics(
-                num_topics=num_topics
-            )
+            for (i, descr) in self.lda_model.print_topics(num_topics=num_topics)
         }
-
-    def fit(self, documents, mode="lda", **kwargs):
-        assert mode in ["lda"]
-        getattr(self, f"fit_{mode}")(documents, **kwargs)
 
     def transform_documents(self, documents: pd.Series, label: str = "nlp"):
         "Transforming `documents` to an ndoc-by-ndim matrix"
         logger.debug("Transforming `documents` to a dense real matrix")
         corpus = [self.dictionary.doc2bow(doc) for doc in documents]
         scores = list(self.lda_model[corpus])
-        dense = make_topic_scores_dense(scores)
+        dense = make_topic_scores_dense(scores)  # type: ignore
         return pd.DataFrame(
             dense,
             columns=[f"{label}_dim{i}" for i in range(dense.shape[1])],
