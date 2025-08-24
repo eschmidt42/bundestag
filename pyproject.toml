@@ -1,6 +1,6 @@
 [project]
 name = "bundestag"
-version = "0.1.0"
+version = "0.1.1"
 description = "Download, parse and analyse votes in the german federal parliament, aka 'Bundestag'"
 readme = "README.md"
 authors = [
@@ -111,6 +111,7 @@ database = [
     "pillow>=9.5.0",
     "plotly>=5.14.1",
     "pydantic>=1.10.7",
+    "pydantic-settings>=2.10.1",
     "pygments>=2.15.0",
     "pymysql>=1.0.3",
     "pyparsing>=3.0.9",
