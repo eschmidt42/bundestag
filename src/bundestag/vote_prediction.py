@@ -1,4 +1,4 @@
-import typing as T
+# import typing as T
 
 import numpy as np
 import pandas as pd
@@ -9,7 +9,6 @@ from fastai.tabular.all import TabularLearner
 from sklearn import decomposition
 
 import bundestag.logging as logging
-import bundestag.similarity as sim
 
 logger = logging.logger
 
@@ -28,8 +27,8 @@ def poll_splitter(
     poll_col: str = "poll_id",
     valid_pct: float = 0.2,
     shuffle: bool = True,
-    seed: int = None,
-) -> T.Tuple[T.List[int], T.List[int]]:
+    seed: int | None = None,
+) -> tuple[list[int], list[int]]:
     "Split the polls into train and test set."
 
     polls = df[poll_col].unique()
@@ -43,7 +42,7 @@ def poll_splitter(
     polls1 = rng.choice(polls, size=int(n * valid_pct))
 
     logger.debug(
-        f"Splitting votes by polls (num train = {n-len(polls1)}, num valid = {len(polls1)})"
+        f"Splitting votes by polls (num train = {n - len(polls1)}, num valid = {len(polls1)})"
     )
 
     mask1 = df[poll_col].isin(polls1)
@@ -62,7 +61,7 @@ def plot_predictions(
     df_all_votes: pd.DataFrame,
     df_mandates: pd.DataFrame,
     df_polls: pd.DataFrame,
-    splits: T.Tuple[T.List[int], T.List[int]],
+    splits: tuple[list[int], list[int]],
     y_col: str = "vote",
     n_worst_politicians: int = 20,
     n_worst_polls: int = 5,
@@ -71,13 +70,11 @@ def plot_predictions(
 
     from IPython.display import display
 
-    y_pred, y_targ = learn.get_preds()
+    y_pred, _ = learn.get_preds()
     make_numpy = lambda x: x.detach().numpy()
     y_pred = make_numpy(y_pred)
 
-    make_pred_readable = lambda x: [
-        learn.dls.vocab[i] for i in x.argmax(axis=1)
-    ]
+    make_pred_readable = lambda x: [learn.dls.vocab[i] for i in x.argmax(axis=1)]
 
     pred_col = f"{y_col}_pred"
     df_valid = df_all_votes.iloc[splits[1], :].assign(
@@ -98,14 +95,12 @@ def plot_predictions(
     df_valid["prediction_correct"] = df_valid["vote"] == df_valid["vote_pred"]
 
     acc = df_valid["prediction_correct"].sum() / len(df_valid)
-    logger.info(f"Overall accuracy = {acc*100:.2f} %")
+    logger.info(f"Overall accuracy = {acc * 100:.2f} %")
 
     df_valid = df_valid.join(
         df_mandates[["politician", "party"]].set_index("politician"),
         on="politician name",
-    ).join(
-        df_polls[["poll_id", "poll_title"]].set_index("poll_id"), on="poll_id"
-    )
+    ).join(df_polls[["poll_id", "poll_title"]].set_index("poll_id"), on="poll_id")
 
     print(f"\n{n_worst_politicians} most inaccurately predicted politicians:")
     tmp = (
@@ -133,20 +128,21 @@ def get_embeddings(
     transform_func=lambda x: decomposition.PCA(n_components=2).fit_transform(
         x.detach().numpy()
     ),
-) -> T.Dict[str, pd.DataFrame]:
+) -> dict[str, pd.DataFrame]:
     """Collects embeddings from tabular_learner.model and returns them with optional transformation
     via `transform_func` (e.g. sklearn.decomposition.PCA)"""
     embeddings = {}
+
     for i, name in enumerate(learn.dls.classes):
-        emb = learn.model.embeds[i](
-            torch.tensor(range(len(learn.dls.classes[name])))
-        )
+        t = torch.tensor(range(len(learn.dls.classes[name])))
+        emb = learn.model.embeds[i](t)  # type: ignore
         if callable(transform_func):
             emb = transform_func(emb)
         embeddings[name] = pd.DataFrame(
-            emb,
+            emb,  # type: ignore
             columns=[
-                f"{name}__emb_component_{i}" for i in range(emb.shape[1])
+                f"{name}__emb_component_{i}"
+                for i in range(emb.shape[1])  # type: ignore
             ],
         ).assign(**{name: learn.dls.classes[name]})
 
@@ -158,18 +154,17 @@ def get_poll_proponents(
 ) -> pd.DataFrame:
     "Computes which party most strongly endorsed (% yes votes of party) a poll"
 
+    votes_slim = df_all_votes[["poll_id", "vote", "politician name"]]
+    politician_votes = votes_slim.join(
+        df_mandates[["politician", "party"]].set_index("politician"),
+        on="politician name",
+    )
+
     poll_agreement = (
-        df_all_votes[["poll_id", "vote", "politician name"]]
-        .join(
-            df_mandates[["politician", "party"]].set_index("politician"),
-            on="politician name",
-        )
-        .groupby(["poll_id", "party"])
+        politician_votes.groupby(["poll_id", "party"])
         .agg(
-            **{
-                "yesses": pd.NamedAgg("vote", lambda x: (x == "yes").sum()),
-                "total": pd.NamedAgg("vote", "count"),
-            }
+            yesses=pd.NamedAgg("vote", lambda x: (x == "yes").sum()),
+            total=pd.NamedAgg("vote", "count"),
         )
         .assign(**{"yes %": lambda x: x["yesses"] / x["total"] * 100})
     )
@@ -191,7 +186,7 @@ def plot_poll_embeddings(
     embeddings: dict,
     df_mandates: pd.DataFrame,
     col: str = "poll_id",
-    palette: T.Dict[str, str] = None,
+    palette: dict[str, str] | None = None,
 ) -> go.Figure:
     tmp = (
         df_all_votes.drop_duplicates(subset=col)
@@ -221,9 +216,9 @@ def plot_poll_embeddings(
 def plot_politician_embeddings(
     df_all_votes: pd.DataFrame,
     df_mandates: pd.DataFrame,
-    embeddings: T.Dict[str, pd.DataFrame],
+    embeddings: dict[str, pd.DataFrame],
     col: str = "politician name",
-    palette: T.Dict[str, str] = None,
+    palette: dict[str, str] | None = None,
 ) -> go.Figure:
     tmp = (
         df_all_votes.drop_duplicates(subset="mandate_id")
