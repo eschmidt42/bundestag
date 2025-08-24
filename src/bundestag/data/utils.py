@@ -1,32 +1,33 @@
 import json
 import re
-import typing as T
 from pathlib import Path
 
 import bundestag.logging as logging
 
 logger = logging.logger
 
-RE_HTM = re.compile("(\.html?)")
-RE_FNAME = re.compile("(\.xlsx?)")
-RE_SHEET = re.compile("(XLSX?)")
+RE_HTM = re.compile(r"(\.html?)")
+RE_FNAME = re.compile(r"(\.xlsx?)")
+RE_SHEET = re.compile(r"(XLSX?)")
 
 
 def get_file_paths(
-    path: T.Union[Path, str], suffix: str = None, pattern: re.Pattern = None
-) -> T.List[Path]:
+    path: Path | str,
+    pattern: re.Pattern,
+    suffix: str | None = None,
+) -> list[Path]:
     """Collecting files with matching suffix or pattern
 
     Args:
-        path (T.Union[Path, str]): Location to search for files
+        path (Path | str): Location to search for files
+        pattern (re.Pattern): Pattern to search for. Defaults to None.
         suffix (str, optional): Suffix to search for. Defaults to None.
-        pattern (re.Pattern, optional): Pattern to search for. Defaults to None.
 
     Raises:
         NotImplementedError: Function fails if neither suffix nor pattern are provided
 
     Returns:
-        T.List[Path]: List of matched files
+        list[Path]: List of matched files
     """
 
     path = Path(path)

@@ -74,9 +74,7 @@ def test_get_file_paths(suffix: str, pattern: re.Pattern):
     ):
         # line to test
         try:
-            found_files = data_utils.get_file_paths(
-                path, suffix=suffix, pattern=pattern
-            )
+            found_files = data_utils.get_file_paths(path, pattern, suffix=suffix)
         except NotImplementedError as ex:
             if suffix is None and pattern is None:
                 pytest.xfail("Expected fail due to missing pattern and suffix")
