@@ -70,7 +70,7 @@ def get_location(
     return file
 
 
-def load_json(path: Path = None, dry: bool = False):
+def load_json(path: Path, dry: bool = False) -> dict:
     logger.debug(f"Reading json info from {path=}")
     if dry:
         return {}
@@ -91,10 +91,9 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
             continue
 
         elif resp is None or len(resp) == 0:
-            do_creation = True
-            _msg = "proceeding with download" if do_creation else "terminating."
+            _msg = "proceeding with download"
             logger.info(f"Received: {resp}, {_msg}")
-            return do_creation
+            return True
 
         elif resp.lower() in ["y", "n"]:
             do_creation = resp.lower() == "y"
