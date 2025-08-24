@@ -1,24 +1,23 @@
-# from dotenv import load_dotenv
 import sys
 import time
 
 import pandas as pd
-from pydantic import BaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import create_engine
 
 
 class Settings(BaseSettings):
-    MY_SQL_USER: str
-    MY_SQL_PASSWORD: str
-    MY_SQL_HOST: str
-    MY_SQL_PORT: int
-    MY_SQL_DATABASE: str
-    MY_SQL_TABLE_NAME_VOTES: str
-    MY_SQL_TABLE_NAME_MANDATES: str
-    MY_SQL_TABLE_NAME_POLLS: str
+    MY_SQL_USER: str = Field(default=...)
+    MY_SQL_PASSWORD: str = Field(default=...)
+    MY_SQL_HOST: str = Field(default=...)
+    MY_SQL_PORT: int = Field(default=...)
+    MY_SQL_DATABASE: str = Field(default=...)
+    MY_SQL_TABLE_NAME_VOTES: str = Field(default=...)
+    MY_SQL_TABLE_NAME_MANDATES: str = Field(default=...)
+    MY_SQL_TABLE_NAME_POLLS: str = Field(default=...)
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 def main():
@@ -39,7 +38,7 @@ def main():
     sys.stdout.flush()
 
     engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}")
-    pd.io.parquet.get_engine("auto")
+    # pandas.io.parquet.get_engine("auto")
 
     print("Reading data...")
     sys.stdout.flush()
