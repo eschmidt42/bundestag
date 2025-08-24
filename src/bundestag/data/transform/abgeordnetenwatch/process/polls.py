@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_polls_json(legislature_id: int, path: Path, dry: bool = False) -> dict:
-    polls_fname = data_utils.polls_file(legislature_id)
+    polls_fname = data_utils.get_polls_filename(legislature_id)
     file = data_utils.get_location(polls_fname, path=path, dry=dry, mkdir=False)
     logger.debug(f"Reading poll info from {file}")
     with open(file, "r", encoding="utf8") as f:

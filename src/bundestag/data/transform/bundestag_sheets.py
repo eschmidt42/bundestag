@@ -12,7 +12,7 @@ from bundestag.data.utils import (
     RE_HTM,
     ensure_path_exists,
     get_file_paths,
-    get_sheet_fname,
+    get_sheet_filename,
 )
 
 logger = logging.logger
@@ -25,7 +25,7 @@ def get_file2poll_maps(uris: dict[str, str], sheet_dir: Path) -> dict[str, str]:
     known_sheets = get_file_paths(sheet_dir, pattern=RE_FNAME)
     file2poll = {}
     for poll_title, uri in uris.items():
-        fname = get_sheet_fname(uri)
+        fname = get_sheet_filename(uri)
         sheet_path = sheet_dir / fname
         if sheet_path in known_sheets:
             file2poll[fname] = poll_title

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_mandate_json(legislature_id: int, path: Path, dry: bool = False) -> dict:
-    mandates_fname = data_utils.mandates_file(legislature_id)
+    mandates_fname = data_utils.get_mandates_filename(legislature_id)
     file = data_utils.get_location(
         mandates_fname,
         path=path,

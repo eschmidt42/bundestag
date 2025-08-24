@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_vote_json(legislature_id: int, poll_id: int, path: Path) -> dict:
-    votes_fname = data_utils.votes_file(legislature_id, poll_id)
+    votes_fname = data_utils.get_votes_filename(legislature_id, poll_id)
     file = data_utils.get_location(
         votes_fname,
         path=path,

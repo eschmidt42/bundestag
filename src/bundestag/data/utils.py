@@ -13,7 +13,7 @@ RE_SHEET = re.compile(r"(XLSX?)")
 
 def get_file_paths(
     path: Path | str,
-    pattern: re.Pattern,
+    pattern: re.Pattern | None = None,
     suffix: str | None = None,
 ) -> list[Path]:
     """Collecting files with matching suffix or pattern
@@ -36,7 +36,8 @@ def get_file_paths(
         files = list(path.rglob(suffix))
     elif pattern is not None:
         logger.debug(f"Collecting using {pattern=}")
-        files = [f for f in path.glob("**/*") if pattern.search(f.name)]
+        all_files = [f for f in path.glob("**/*") if f.is_file()]
+        files = [f for f in all_files if pattern.search(f.name)]
     else:
         raise NotImplementedError(
             f"Either suffix or pattern need to be passed to this function."
@@ -45,19 +46,19 @@ def get_file_paths(
     return files
 
 
-def get_sheet_fname(uri: str) -> str:
+def get_sheet_filename(uri: str) -> str:
     return uri.split("/")[-1]
 
 
-def polls_file(legislature_id: int):
+def get_polls_filename(legislature_id: int):
     return f"polls_legislature_{legislature_id}.json"
 
 
-def mandates_file(legislature_id: int):
+def get_mandates_filename(legislature_id: int):
     return f"mandates_legislature_{legislature_id}.json"
 
 
-def votes_file(legislature_id: int, poll_id: int):
+def get_votes_filename(legislature_id: int, poll_id: int):
     return f"votes_legislature_{legislature_id}/poll_{poll_id}_votes.json"
 
 
@@ -108,9 +109,10 @@ def get_user_path_creation_decision(path: Path, max_tries: int = 3) -> bool:
 
 
 def ensure_path_exists(path: Path, assume_yes: bool):
-    do_creation = (
-        get_user_path_creation_decision(path, max_tries=3) if not assume_yes else True
-    )
+    if assume_yes:
+        do_creation = True
+    else:
+        do_creation = get_user_path_creation_decision(path, max_tries=3)
 
     if do_creation:
         path.mkdir(exist_ok=True, parents=True)

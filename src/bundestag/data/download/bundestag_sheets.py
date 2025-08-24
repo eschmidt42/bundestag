@@ -52,7 +52,7 @@ def collect_sheet_uris(
 
 
 def get_sheet_path(uri: str, sheet_dir: str | Path) -> Path:
-    return Path(sheet_dir) / data_utils.get_sheet_fname(uri)
+    return Path(sheet_dir) / data_utils.get_sheet_filename(uri)
 
 
 def download_sheet(uri: str, sheet_dir: Path, dry: bool = False):

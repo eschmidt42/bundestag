@@ -15,7 +15,7 @@ def store_polls_json(
     "Write poll data to file"
 
     file = data_utils.get_location(
-        data_utils.polls_file(legislature_id), path=path, dry=dry, mkdir=False
+        data_utils.get_polls_filename(legislature_id), path=path, dry=dry, mkdir=False
     )
 
     if dry:
@@ -33,7 +33,7 @@ def store_mandates_json(
     "Write mandates data to file"
 
     file = data_utils.get_location(
-        data_utils.mandates_file(legislature_id),
+        data_utils.get_mandates_filename(legislature_id),
         path=path,
         dry=dry,
         mkdir=False,
@@ -51,7 +51,7 @@ def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
     "Write votes data to file"
 
     if dry:
-        _votes_file = data_utils.votes_file(42, poll_id)
+        _votes_file = data_utils.get_votes_filename(42, poll_id)
         _location = data_utils.get_location(
             _votes_file, path=path, dry=dry, mkdir=False
         )
@@ -62,7 +62,7 @@ def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
 
     legislature_id = votes["data"]["field_legislature"]["id"]
     file = data_utils.get_location(
-        data_utils.votes_file(legislature_id, poll_id),
+        data_utils.get_votes_filename(legislature_id, poll_id),
         path=path,
         dry=dry,
         mkdir=True,
@@ -162,7 +162,7 @@ def check_possible_poll_ids(
     Returns:
         T.List[int]: List of poll identifiers
     """
-    polls_file = data_utils.polls_file(legislature_id)
+    polls_file = data_utils.get_polls_filename(legislature_id)
     polls_file = path / polls_file
 
     logger.debug(f"Reading {polls_file=}")
