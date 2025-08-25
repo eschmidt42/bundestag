@@ -10,10 +10,12 @@ def setup_logging(
 ):
     # If logging is already configured with a single RichHandler at the
     # requested level, do nothing (idempotent).
-    is_same_leve = logging.root.level == root_level
+    is_same_level = logging.root.level == root_level
     is_same_root_count = len(logging.root.handlers) == 1
-    is_rich_handler = isinstance(logging.root.handlers[0], RichHandler)
-    if is_same_root_count and is_rich_handler and is_same_leve:
+    is_same_rich_handler = is_same_root_count and isinstance(
+        logging.root.handlers[0], RichHandler
+    )
+    if is_same_rich_handler and is_same_level:
         return
 
     # Detect pytest's capture handler (LogCaptureHandler) by name and
