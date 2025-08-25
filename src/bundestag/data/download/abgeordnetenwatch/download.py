@@ -5,7 +5,6 @@ from pathlib import Path
 from scipy import stats
 from tqdm import tqdm
 
-import bundestag.data.utils as data_utils
 from bundestag.data.download.abgeordnetenwatch.cli import get_user_download_decision
 from bundestag.data.download.abgeordnetenwatch.request import (
     request_mandates_data,
@@ -19,6 +18,7 @@ from bundestag.data.download.abgeordnetenwatch.store import (
     store_polls_json,
     store_vote_json,
 )
+from bundestag.data.utils import ensure_path_exists
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ def request_and_store_poll_ids(
 
     dt_rv = stats.norm(scale=dt_rv_scale)
 
-    logger.debug(
+    logger.info(
         f"Starting requests for {len(remaining_poll_ids)} remaining polls ({dry=})"
     )
 
@@ -60,7 +60,7 @@ def request_and_store_poll_ids(
         # store vote data
         store_vote_json(path, data, poll_id, dry=dry)
 
-    logger.debug("Done with requests forr remaining polls")
+    logger.info("Done with requests for remaining polls")
 
 
 def get_all_remaining_vote_data(
@@ -72,6 +72,7 @@ def get_all_remaining_vote_data(
     ask_user: bool = True,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
+    logger.info("Collecting remaining vote data")
 
     # Get known legislature_id / poll_id combinations
     known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
@@ -86,7 +87,7 @@ def get_all_remaining_vote_data(
     remaining_poll_ids = identify_remaining_poll_ids(possible_poll_ids, known_poll_ids)
 
     n = len(remaining_poll_ids)
-    logger.debug(
+    logger.info(
         f"remaining poll_ids (legislature_id = {legislature_id}) = {n}:\n{remaining_poll_ids}"
     )
     if n == 0:
@@ -118,14 +119,14 @@ def run(
 ):
     "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
 
-    logger.info("Start downloading abgeordnetenwatch data")
+    logger.info(f"Start downloading abgeordnetenwatch data for {legislature_id=}")
 
     if not dry and (raw_path is None):
         raise ValueError(f"When {dry=} `raw_path` cannot be None.")
 
     # ensure paths exist
     if not dry and not raw_path.exists():
-        data_utils.ensure_path_exists(raw_path, assume_yes=assume_yes)
+        ensure_path_exists(raw_path, assume_yes=assume_yes)
 
     # polls
     data = request_poll_data(legislature_id, dry=dry, num_polls=max_polls)
@@ -145,4 +146,4 @@ def run(
         ask_user=ask_user,
     )
 
-    logger.info("Done downloading abgeordnetenwatch data!")
+    logger.info(f"Done downloading abgeordnetenwatch data for {legislature_id=}!")

@@ -13,6 +13,7 @@ dependencies = [
 
 [project.scripts]
 bundestag = "bundestag.__main__:app"
+get_xlsx_uris = "bundestag.get_xlsx_uris:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -124,6 +125,7 @@ database = [
     "rfc3986>=2.0.0",
     "rich>=12.6.0",
     "seaborn>=0.12.2",
+    "selenium>=4.35.0",
     "shellingham>=1.5.0.post1",
     "simpleeval>=0.9.13",
     "six>=1.16.0",

@@ -523,8 +523,8 @@ def test_run(
     assume_yes = True
 
     run(
-        html_path=html_path,
-        sheet_path=sheet_path,
+        html_dir=html_path,
+        sheet_dir=sheet_path,
         preprocessed_path=preprocessed_path,
         dry=dry,
         validate=validate,

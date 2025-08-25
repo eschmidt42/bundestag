@@ -1,3 +1,4 @@
+import json
 import logging
 from pathlib import Path
 
@@ -6,7 +7,7 @@ import tqdm
 import xlrd
 
 import bundestag.schemas as schemas
-from bundestag.data.download.bundestag_sheets import collect_sheet_uris
+from bundestag.data.download.bundestag_sheets import Source, collect_sheet_uris
 from bundestag.data.utils import (
     RE_FNAME,
     RE_HTM,
@@ -103,7 +104,7 @@ def handle_title_and_date(
 def assign_date_and_title_columns(
     sheet_file: Path, df: pd.DataFrame, file_title_maps: dict[str, str] | None = None
 ) -> pd.DataFrame:
-    if file_title_maps is not None:
+    if file_title_maps is not None and sheet_file.name in file_title_maps:
         title, date = handle_title_and_date(
             file_title_maps[sheet_file.name], sheet_file
         )
@@ -224,7 +225,7 @@ def set_sheet_dtypes(df: pd.DataFrame, dtypes: dict[str, str | object] | None = 
 
 def get_multiple_sheets_df(
     sheet_files: list[Path],
-    file_title_maps: dict[str, str] | None = None,
+    file_title_maps: dict[str, str],
     validate: bool = False,
 ):
     "Loads, processes and concatenates multiple vote sheets"
@@ -236,6 +237,8 @@ def get_multiple_sheets_df(
         if file_size_is_zero(sheet_file):
             n_empty += 1
             continue
+        if sheet_file.name not in file_title_maps:
+            continue
         try:
             sheet_df = get_sheet_df(
                 sheet_file, file_title_maps=file_title_maps, validate=validate
@@ -244,7 +247,10 @@ def get_multiple_sheets_df(
             n_errors += 1
             continue
 
-        sheet_df = get_squished_dataframe(sheet_df, validate=validate)
+        try:
+            sheet_df = get_squished_dataframe(sheet_df, validate=validate)
+        except ValueError as ex:
+            raise ValueError(f"Parsing failed for {sheet_file} with ValueError: {ex}")
         sheet_df = set_sheet_dtypes(sheet_df)
 
         df.append(sheet_df)
@@ -259,34 +265,54 @@ def get_multiple_sheets_df(
     return pd.concat(df, ignore_index=True)
 
 
+def get_sheet_uris_from_json(source: Source, json_path: Path) -> dict[str, str]:
+    if not json_path.exists():
+        raise ValueError(
+            f"Running this function with {source=} requires that {json_path=} exists."
+        )
+    with json_path.open("r") as f:
+        sheet_uris = json.load(f)
+    return sheet_uris
+
+
 def run(
-    html_path: Path,
-    sheet_path: Path,
+    html_dir: Path,
+    sheet_dir: Path,
     preprocessed_path: Path,
     dry: bool = False,
     validate: bool = False,
     assume_yes: bool = False,
+    source: Source = Source.html_file,
+    json_filename: str = "xlsx_uris.json",
 ):
     logger.info("Start parsing sheets")
 
     # ensuring path exists
-    if not dry and not html_path.exists():
-        raise ValueError(f"{html_path=} doesn't exist, terminating transformation.")
-    if not dry and not sheet_path.exists():
-        raise ValueError(f"{sheet_path=} doesn't exist, terminating transformation.")
+    if not dry and not html_dir.exists():
+        raise ValueError(f"{html_dir=} doesn't exist, terminating transformation.")
+    if not dry and not sheet_dir.exists():
+        raise ValueError(f"{sheet_dir=} doesn't exist, terminating transformation.")
     if not dry and not preprocessed_path.exists():
         ensure_path_exists(preprocessed_path, assume_yes=assume_yes)
 
-    html_path, sheet_path = Path(html_path), Path(sheet_path)
-    # collect htm files
-    html_file_paths = get_file_paths(html_path, pattern=RE_HTM)
-    # extract excel sheet uris from htm files
-    sheet_uris = collect_sheet_uris(html_file_paths)
+    html_dir, sheet_dir = Path(html_dir), Path(sheet_dir)
+
+    match source:
+        case Source.json_file:
+            json_path = html_dir.parent / json_filename
+
+            sheet_uris = get_sheet_uris_from_json(source, json_path)
+
+        case Source.html_file:
+            # collect htm files
+            html_file_paths = get_file_paths(html_dir, pattern=RE_HTM)
+            # extract excel sheet uris from htm files
+            sheet_uris = collect_sheet_uris(html_file_paths)
 
     # locate downloaded excel files
-    sheet_files = get_file_paths(sheet_path, pattern=RE_FNAME)
+    sheet_files = get_file_paths(sheet_dir, pattern=RE_FNAME)
     # process excel files
-    file_title_maps = get_file2poll_maps(sheet_uris, sheet_path)
+    file_title_maps = get_file2poll_maps(sheet_uris, sheet_dir)
     df = get_multiple_sheets_df(
         sheet_files, file_title_maps=file_title_maps, validate=validate
     )

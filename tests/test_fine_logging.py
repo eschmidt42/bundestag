@@ -5,7 +5,7 @@ from _pytest.logging import LogCaptureHandler
 from inline_snapshot import snapshot
 from rich.logging import RichHandler
 
-from bundestag.logging import setup_logging
+from bundestag.fine_logging import setup_logging
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,7 @@ def test_log_a_message_with_setup_logging(caplog: pytest.LogCaptureFixture):
     log_messages()
 
     assert caplog.text == snapshot(
-        "INFO     tests.test_logging:test_logging.py:64 This is a dummy info log message.\n"
+        "INFO     tests.test_fine_logging:test_fine_logging.py:64 This is a dummy info log message.\n"
     )
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == "INFO"
@@ -91,9 +91,9 @@ def test_log_a_message_with_setup_logging(caplog: pytest.LogCaptureFixture):
     log_messages()
 
     assert caplog.text == snapshot("""\
-INFO     tests.test_logging:test_logging.py:64 This is a dummy info log message.
-INFO     tests.test_logging:test_logging.py:64 This is a dummy info log message.
-DEBUG    tests.test_logging:test_logging.py:65 This is a dummy debug log message.
+INFO     tests.test_fine_logging:test_fine_logging.py:64 This is a dummy info log message.
+INFO     tests.test_fine_logging:test_fine_logging.py:64 This is a dummy info log message.
+DEBUG    tests.test_fine_logging:test_fine_logging.py:65 This is a dummy debug log message.
 """)
 
     assert len(caplog.records) == 3

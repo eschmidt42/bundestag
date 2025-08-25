@@ -59,7 +59,7 @@ class TestRequestMandatesData:
         assert result == {"mandates": "data"}
         mock_get.assert_called_once_with(
             "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates",
-            params={"parliament_period": 111, "range_end": 300},
+            params={"parliament_period": 111},
         )
 
     @patch("httpx.get")

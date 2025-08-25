@@ -3,7 +3,7 @@ import tarfile
 import urllib.request as request
 from pathlib import Path
 
-import bundestag.data.utils as data_utils
+from bundestag.data.utils import ensure_path_exists
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ def run(path: Path, dry: bool = False, assume_yes: bool = False):
 
     if not dry:
         if not path.exists():
-            data_utils.ensure_path_exists(path, assume_yes=assume_yes)
+            ensure_path_exists(path, assume_yes=assume_yes)
 
         # raw data
 

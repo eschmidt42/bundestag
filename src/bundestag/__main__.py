@@ -1,28 +1,41 @@
 import logging
+from enum import StrEnum, auto
 
 import typer
 
-import bundestag.data.download.abgeordnetenwatch.download as download_aw
-import bundestag.data.download.bundestag_sheets as download_bs
-import bundestag.data.download.huggingface as download_hf
-import bundestag.data.transform.abgeordnetenwatch.transform as transform_aw
-import bundestag.data.transform.bundestag_sheets as transform_bs
-import bundestag.data.utils as data_utils
 import bundestag.paths as paths
-from bundestag.logging import setup_logging
+from bundestag.data.download.abgeordnetenwatch.download import (
+    run as download_abgeordnetenwatch,
+)
+from bundestag.data.download.bundestag_sheets import run as download_bundestag_sheets
+from bundestag.data.download.huggingface import run as download_huggingface
+from bundestag.data.transform.abgeordnetenwatch.transform import (
+    run as transform_abgeordnetenwatch,
+)
+from bundestag.data.transform.bundestag_sheets import Source as SheetsSource
+from bundestag.data.transform.bundestag_sheets import run as transform_bundestag_sheets
+from bundestag.data.utils import RE_SHEET
+from bundestag.fine_logging import setup_logging
 
 logger = logging.getLogger(__name__)
 
 app = typer.Typer()
 
-VALID_SOURCES = ["abgeordnetenwatch", "bundestag_sheet", "huggingface"]
+
+class Sources(StrEnum):
+    abgeordnetenwatch = auto()
+    bundestag_sheet = auto()
+    huggingface = auto()
+
+
+sources_values = [k.value for k in Sources]
 
 
 @app.command(help="Download data from a chosen source")
 def download(
     source: str = typer.Argument(
         ...,
-        help=f"One of {VALID_SOURCES}",
+        help=f"One of {sources_values}",
     ),
     legislature_id: int = typer.Argument(
         111,
@@ -45,85 +58,99 @@ def download(
         default=False,
         help="Assume yes to all prompts and run non-interactively.",
     ),
+    do_create_xlsx_uris_json: bool = typer.Option(
+        False,
+        help="bundestag_sheet specific parameter. If passed then a new xlsx_uris.json will be created from https://www.bundestag.de/parlament/plenum/abstimmung/liste.",
+    ),
+    max_pages: int = typer.Option(
+        20,
+        help="bundestag_sheet specific parameter. Max number of pages to flip though on https://www.bundestag.de/parlament/plenum/abstimmung/liste/ to create uris_xlsx.json",
+    ),
 ):
     logger.info(f"Downloading from {source}")
 
     _paths = paths.get_paths(data_path)
 
-    if source == VALID_SOURCES[0]:
-        logger.info(f"for legislature id {legislature_id}")
+    match source:
+        case Sources.abgeordnetenwatch:
+            download_abgeordnetenwatch(
+                legislature_id=legislature_id,
+                dry=dry,
+                raw_path=_paths.raw_abgeordnetenwatch,
+                max_mandates=max_mandates,
+                max_polls=max_polls,
+                assume_yes=y,
+            )
 
-        # run steps for abgeordetenwatch
-        download_aw.run(
-            legislature_id=legislature_id,
-            dry=dry,
-            raw_path=_paths.raw_abgeordnetenwatch,
-            max_mandates=max_mandates,
-            max_polls=max_polls,
-            assume_yes=y,
-        )
+        case Sources.bundestag_sheet:
+            download_bundestag_sheets(
+                html_dir=_paths.raw_bundestag_html,
+                sheet_dir=_paths.raw_bundestag_sheets,
+                nmax=nmax,
+                dry=dry,
+                pattern=RE_SHEET,
+                assume_yes=y,
+                do_create_xlsx_uris_json=do_create_xlsx_uris_json,
+                max_pages=max_pages,
+            )
 
-    elif source == VALID_SOURCES[1]:
-        # run steps for bundestag sheets
-        download_bs.run(
-            html_dir=_paths.raw_bundestag_html,
-            sheet_dir=_paths.raw_bundestag_sheets,
-            nmax=nmax,
-            dry=dry,
-            pattern=data_utils.RE_SHEET,
-            assume_yes=y,
-        )
-
-    elif source == VALID_SOURCES[2]:
-        # run steps for huggingface
-        download_hf.run(
-            path=_paths.root_path,
-            dry=dry,
-            assume_yes=y,
-        )
-
-    else:
-        raise ValueError(f"{source=} unexpected")
+        case Sources.huggingface:
+            download_huggingface(
+                path=_paths.root_path,
+                dry=dry,
+                assume_yes=y,
+            )
 
 
 @app.command(help="Transform data for a chosen source")
 def transform(
-    source: str = typer.Argument(VALID_SOURCES[0], help=f"One of {VALID_SOURCES}"),
+    source: str = typer.Argument(
+        Sources.abgeordnetenwatch.value, help=f"One of {sources_values}"
+    ),
     legislature_id: int = typer.Argument(
         111,
         help="Bundestag legislature id value, see https://www.abgeordnetenwatch.de/bundestag -> Button 'Open Data'",
     ),
-    dry: bool = typer.Argument(False, help="Dry or not"),
+    dry: bool = typer.Option(False, help="Dry or not"),
     data_path: str = typer.Argument("data", help="Root dir for data storage"),
+    sheet_source: SheetsSource = typer.Option(
+        SheetsSource.json_file.value,
+        help=f"bundestag_sheet specific parameter. Switch between xlsx uri sources. Options: {[k.value for k in SheetsSource]}",
+    ),
 ):
     logger.info(f"Processing {source}")
 
     _paths = paths.get_paths(data_path)
 
-    if source == VALID_SOURCES[0]:
-        logger.info(f"for legislature id {legislature_id}")
+    match source:
+        case Sources.abgeordnetenwatch:
+            logger.info(f"for legislature id {legislature_id}")
 
-        # run steps for abgeordetenwatch
-        transform_aw.run(
-            legislature_id=legislature_id,
-            raw_path=_paths.raw_abgeordnetenwatch,
-            preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
-            dry=dry,
-        )
+            transform_abgeordnetenwatch(
+                legislature_id=legislature_id,
+                raw_path=_paths.raw_abgeordnetenwatch,
+                preprocessed_path=_paths.preprocessed_abgeordnetenwatch,
+                dry=dry,
+            )
 
-    elif source == VALID_SOURCES[1]:
-        # run steps for bundestag sheets
-        transform_bs.run(
-            html_path=_paths.raw_bundestag_html,
-            sheet_path=_paths.raw_bundestag_sheets,
-            preprocessed_path=_paths.preprocessed_bundestag,
-            dry=dry,
-        )
+        case Sources.bundestag_sheet:
+            transform_bundestag_sheets(
+                html_dir=_paths.raw_bundestag_html,
+                sheet_dir=_paths.raw_bundestag_sheets,
+                preprocessed_path=_paths.preprocessed_bundestag,
+                dry=dry,
+                source=sheet_source,
+            )
 
-    else:
-        raise ValueError(f"{source=} unexpected")
+        case _:
+            raise ValueError(f"{source=} unexpected")
+
+
+@app.callback(invoke_without_command=True)
+def _setup_logging_callback():
+    # configure logging for the CLI run
+    setup_logging(logging.INFO)
 
 
 if __name__ == "__main__":
-    setup_logging(logging.INFO)
     app()

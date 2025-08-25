@@ -19,10 +19,10 @@ def store_polls_json(
     )
 
     if dry:
-        logger.debug(f"Dry mode - Writing poll info to {file}")
+        logger.info(f"Dry mode - Writing poll info to {file}")
         return
 
-    logger.debug(f"Writing poll info to {file}")
+    logger.info(f"Writing poll info to {file}")
     with open(file, "w", encoding="utf8") as f:
         json.dump(polls, f)
 
@@ -40,9 +40,9 @@ def store_mandates_json(
     )
 
     if dry:
-        logger.debug(f"Dry mode - Writing mandates info to {file}")
+        logger.info(f"Dry mode - Writing mandates info to {file}")
         return
-    logger.debug(f"Writing mandates info to {file}")
+    logger.info(f"Writing mandates info to {file}")
     with open(file, "w", encoding="utf8") as f:
         json.dump(mandates, f)
 
