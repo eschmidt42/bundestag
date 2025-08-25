@@ -49,6 +49,7 @@ make install-dev-env
     * [pt I - parlamentarian-faction and faction-faction similarities](nbs/01_similarities.ipynb)
     * [pt II - predicting votes of parlamentarians](nbs/05_predicting_votes.ipynb)
 
+
 ### The `bundestag` cli
 
 A tool to assist with the data processing.
@@ -74,3 +75,13 @@ To download prepared raw and transformed data from huggingface run
 ```shell
 uv run bundestag download huggingface
 ```
+
+### The `get_xlsx_uris` cli
+
+Pre-processing cli for `bundestag` cli.
+
+    uv run get_xlsx_uris run --help
+
+Module for collecting and storing XLSX URIs from Bundestag data sources. Also done with
+
+    uv run bundestag download bundestag_sheet --do_create_xlsx_uris_json
