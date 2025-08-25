@@ -8,8 +8,6 @@ from pathlib import Path
 import httpx
 import tqdm
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 
 from bundestag.data.utils import ensure_path_exists, get_file_paths, get_sheet_filename
 
@@ -158,6 +156,9 @@ def download_multiple_sheets(
 
 
 def create_xlsx_uris_dict(max_pages: int = 3) -> dict[str, str]:
+    from selenium import webdriver
+    from selenium.webdriver.common.by import By
+
     logger.info("Collecting entries for xlsx_uris.json")
 
     # Initialize the WebDriver (e.g., Chrome)
