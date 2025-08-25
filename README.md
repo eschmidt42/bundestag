@@ -71,6 +71,16 @@ uv run bundestag transform abgeordnetenwatch 132
 
 To find out the legislature id for the current Bundestag, visit [abgeordnetenwatch.de](https://www.abgeordnetenwatch.de/bundestag) and click on the "Open Data" button at the bottom of the page.
 
+To download data from [bundestag.de](https://www.bundestag.de/parlament/plenum/abstimmung/liste)
+```shell
+uv run bundestag download bundestag_sheets --do-create-xlsx-uris-json
+```
+
+To transform the downloaded data run
+```shell
+uv run bundestag transform bundestag_sheet --sheet-source=json_file
+```
+
 To download prepared raw and transformed data from huggingface run
 ```shell
 uv run bundestag download huggingface
@@ -84,4 +94,4 @@ Pre-processing cli for `bundestag` cli.
 
 Module for collecting and storing XLSX URIs from Bundestag data sources. Also done with
 
-    uv run bundestag download bundestag_sheet --do_create_xlsx_uris_json
+    uv run bundestag download bundestag_sheet --do-create-xlsx-uris-json
