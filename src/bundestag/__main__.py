@@ -12,6 +12,7 @@ from bundestag.data.download.huggingface import run as download_huggingface
 from bundestag.data.transform.abgeordnetenwatch.transform import (
     run as transform_abgeordnetenwatch,
 )
+from bundestag.data.transform.bundestag_sheets import Source as SheetsSource
 from bundestag.data.transform.bundestag_sheets import run as transform_bundestag_sheets
 from bundestag.data.utils import RE_SHEET
 from bundestag.fine_logging import setup_logging
@@ -110,8 +111,12 @@ def transform(
         111,
         help="Bundestag legislature id value, see https://www.abgeordnetenwatch.de/bundestag -> Button 'Open Data'",
     ),
-    dry: bool = typer.Argument(False, help="Dry or not"),
+    dry: bool = typer.Option(False, help="Dry or not"),
     data_path: str = typer.Argument("data", help="Root dir for data storage"),
+    sheet_source: SheetsSource = typer.Option(
+        SheetsSource.json_file.value,
+        help=f"bundestag_sheet specific parameter. Switch between xlsx uri sources. Options: {[k.value for k in SheetsSource]}",
+    ),
 ):
     logger.info(f"Processing {source}")
 
@@ -134,6 +139,7 @@ def transform(
                 sheet_dir=_paths.raw_bundestag_sheets,
                 preprocessed_path=_paths.preprocessed_bundestag,
                 dry=dry,
+                source=sheet_source,
             )
 
         case _:
