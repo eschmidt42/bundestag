@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Callable
 
 import matplotlib.pyplot as plt
@@ -7,9 +8,8 @@ import seaborn as sns
 from scipy import spatial
 
 import bundestag.data.transform.bundestag_sheets as transform_bs
-import bundestag.logging as logging
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def get_votes_by_party(df: pd.DataFrame) -> pd.DataFrame:

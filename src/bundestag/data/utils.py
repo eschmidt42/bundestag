@@ -1,10 +1,9 @@
 import json
+import logging
 import re
 from pathlib import Path
 
-import bundestag.logging as logging
-
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 RE_HTM = re.compile(r"(\.html?)")
 RE_FNAME = re.compile(r"(\.xlsx?)")

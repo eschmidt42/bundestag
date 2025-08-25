@@ -1,4 +1,5 @@
 import itertools
+import logging
 from typing import Any
 
 import gensim
@@ -11,9 +12,7 @@ import seaborn as sns
 import spacy
 from sklearn import decomposition
 
-import bundestag.logging as logging
-
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def remove_stopwords_and_punctuation(

@@ -5,16 +5,16 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-import bundestag.data.utils as data_utils
 import bundestag.schemas as schemas
 from bundestag.data.download.abgeordnetenwatch.store import check_stored_vote_ids
+from bundestag.data.utils import get_location, get_votes_filename
 
 logger = logging.getLogger(__name__)
 
 
 def load_vote_json(legislature_id: int, poll_id: int, path: Path) -> dict:
-    votes_fname = data_utils.get_votes_filename(legislature_id, poll_id)
-    file = data_utils.get_location(
+    votes_fname = get_votes_filename(legislature_id, poll_id)
+    file = get_location(
         votes_fname,
         path=path,
         dry=False,

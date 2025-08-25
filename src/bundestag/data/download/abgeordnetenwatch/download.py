@@ -1,3 +1,4 @@
+import logging
 import time
 from pathlib import Path
 
@@ -5,7 +6,6 @@ from scipy import stats
 from tqdm import tqdm
 
 import bundestag.data.utils as data_utils
-import bundestag.logging as logging
 from bundestag.data.download.abgeordnetenwatch.cli import get_user_download_decision
 from bundestag.data.download.abgeordnetenwatch.request import (
     request_mandates_data,
@@ -20,7 +20,7 @@ from bundestag.data.download.abgeordnetenwatch.store import (
     store_vote_json,
 )
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def identify_remaining_poll_ids(

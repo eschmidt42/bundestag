@@ -1,17 +1,15 @@
+import logging
 import tarfile
 import urllib.request as request
 from pathlib import Path
 
 import bundestag.data.utils as data_utils
-import bundestag.logging as logging
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def run(path: Path, dry: bool = False, assume_yes: bool = False):
-    logger.info(
-        f"Loading and extracting dataset from huggingface to {path.absolute()}"
-    )
+    logger.info(f"Loading and extracting dataset from huggingface to {path.absolute()}")
 
     if not dry:
         if not path.exists():
@@ -43,9 +41,7 @@ def run(path: Path, dry: bool = False, assume_yes: bool = False):
         logger.info("Done loading preprocessed data from huggingface")
 
         preprocessed_tar = path / "preprocessed.tar.gz"
-        logger.info(
-            f"Extracting preprocessed data at {preprocessed_tar.absolute()}"
-        )
+        logger.info(f"Extracting preprocessed data at {preprocessed_tar.absolute()}")
         tar = tarfile.open(path / "preprocessed.tar.gz")
         tar.extractall(path=path)
         tar.close()

@@ -1,12 +1,12 @@
+import logging
 from pathlib import Path
 
 import pandas as pd
 import tqdm
 import xlrd
 
-import bundestag.data.download.bundestag_sheets as download_sheets
-import bundestag.logging as logging
 import bundestag.schemas as schemas
+from bundestag.data.download.bundestag_sheets import collect_sheet_uris
 from bundestag.data.utils import (
     RE_FNAME,
     RE_HTM,
@@ -15,7 +15,7 @@ from bundestag.data.utils import (
     get_sheet_filename,
 )
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 VOTE_COLS = ["ja", "nein", "Enthaltung", "ungültig", "nichtabgegeben"]
 
@@ -281,7 +281,7 @@ def run(
     # collect htm files
     html_file_paths = get_file_paths(html_path, pattern=RE_HTM)
     # extract excel sheet uris from htm files
-    sheet_uris = download_sheets.collect_sheet_uris(html_file_paths)
+    sheet_uris = collect_sheet_uris(html_file_paths)
 
     # locate downloaded excel files
     sheet_files = get_file_paths(sheet_path, pattern=RE_FNAME)

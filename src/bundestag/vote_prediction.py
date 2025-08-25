@@ -1,4 +1,4 @@
-# import typing as T
+import logging
 
 import numpy as np
 import pandas as pd
@@ -8,9 +8,7 @@ import torch
 from fastai.tabular.all import TabularLearner
 from sklearn import decomposition
 
-import bundestag.logging as logging
-
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 PALETTE = {
     "CDU/CSU": "black",

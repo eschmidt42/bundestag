@@ -5,15 +5,15 @@ from pathlib import Path
 import pandas as pd
 from bs4 import BeautifulSoup
 
-import bundestag.data.utils as data_utils
 import bundestag.schemas as schemas
+from bundestag.data.utils import get_location, get_polls_filename
 
 logger = logging.getLogger(__name__)
 
 
 def load_polls_json(legislature_id: int, path: Path, dry: bool = False) -> dict:
-    polls_fname = data_utils.get_polls_filename(legislature_id)
-    file = data_utils.get_location(polls_fname, path=path, dry=dry, mkdir=False)
+    polls_fname = get_polls_filename(legislature_id)
+    file = get_location(polls_fname, path=path, dry=dry, mkdir=False)
     logger.debug(f"Reading poll info from {file}")
     with open(file, "r", encoding="utf8") as f:
         info = json.load(f)

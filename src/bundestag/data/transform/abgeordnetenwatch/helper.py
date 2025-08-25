@@ -1,10 +1,9 @@
+import logging
 import re
 
 import pandas as pd
 
-import bundestag.logging as logging
-
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 PARTY_PATTERN = re.compile(r"(.+)\sseit")
 

@@ -1,6 +1,6 @@
-import bundestag.logging as logging
+import logging
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def get_user_download_decision(n: int, max_tries: int = 3) -> bool:
