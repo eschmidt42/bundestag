@@ -1,11 +1,15 @@
+import json
 import logging
 import re
 import time
+from enum import StrEnum, auto
 from pathlib import Path
 
 import httpx
 import tqdm
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 from bundestag.data.utils import ensure_path_exists, get_file_paths, get_sheet_filename
 
@@ -149,6 +153,79 @@ def download_multiple_sheets(
     )
 
 
+def create_xlsx_uris_dict(max_pages: int = 3) -> dict[str, str]:
+    logger.info("Collecting entries for xlsx_uris.json")
+
+    # Initialize the WebDriver (e.g., Chrome)
+    logger.info("Starting webdriver")
+    driver = webdriver.Chrome()
+
+    # Open the target page
+    logger.info("Accessing page")
+    driver.get("https://www.bundestag.de/parlament/plenum/abstimmung/liste")
+
+    # List to store all xlsx URIs
+    xlsx_uris = {}
+
+    for i in range(max_pages):
+        logger.info(f"page {i} of at mot {max_pages}")
+
+        # Get the page source and parse it with BeautifulSoup
+        logger.info(f"get soup")
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+
+        # Find all <a> tags with href ending in .xlsx
+        logger.info(f"get links")
+
+        new_xlsx_uris = get_title_and_href(soup)
+
+        logger.info(f"found {len(new_xlsx_uris):_} new uris")
+        xlsx_uris.update(new_xlsx_uris)
+        logger.info(f"total uris now {len(xlsx_uris):_}")
+
+        try:
+            # Find and click the "next" button
+            logger.info(f"finding the button")
+            next_button = driver.find_element(By.CSS_SELECTOR, "button.slick-next")
+            if next_button.get_attribute("aria-disabled") == "true":
+                logger.info(f"button disabled, exiting")
+                break  # Exit the loop if the button is disabled
+
+            # Scroll to the button
+            logger.info(f"scrolling to the button")
+            driver.execute_script(
+                "arguments[0].scrollIntoView({block: 'center'});", next_button
+            )
+            time.sleep(1)  # Allow time for scrolling
+
+            logger.info(f"clicking the button")
+            next_button.click()
+            time.sleep(2)  # Wait for the next page to load
+
+        except Exception as e:
+            logger.error(f"Error: {e}")
+            break
+
+    # Close the browser
+    logger.info(f"closing browser")
+    driver.quit()
+
+    logger.info(f"Found {len(xlsx_uris)} .xlsx URIs.")
+
+    return xlsx_uris
+
+
+def store_xlsx_uris(json_path: Path, xlsx_uris: dict[str, str]):
+    logger.info(f"Writing to {json_path}")
+    with json_path.open("w") as f:
+        json.dump(xlsx_uris, f, indent=4)
+
+
+class Source(StrEnum):
+    html_file = auto()
+    json_file = auto()
+
+
 def run(
     html_dir: Path,
     sheet_dir: Path,
@@ -157,6 +234,10 @@ def run(
     dry: bool = False,
     pattern: re.Pattern = RE_HTM,
     assume_yes: bool = False,
+    source: Source = Source.html_file,
+    json_filename: str = "xlsx_uris.json",
+    do_create_xlsx_uris_json: bool = False,
+    max_pages: int = 5,
 ):
     logger.info("Start downloading bundestag sheets")
 
@@ -166,8 +247,24 @@ def run(
     if not sheet_dir.exists():
         ensure_path_exists(sheet_dir, assume_yes=assume_yes)
 
-    html_file_paths = get_file_paths(html_dir, pattern=pattern)
-    sheet_uris = collect_sheet_uris(html_file_paths)
+    match source:
+        case Source.html_file:
+            html_file_paths = get_file_paths(html_dir, pattern=pattern)
+            sheet_uris = collect_sheet_uris(html_file_paths)
+        case Source.json_file:
+            json_path = html_dir.parent / json_filename
+
+            if do_create_xlsx_uris_json:
+                xlsx_uris = create_xlsx_uris_dict(max_pages=max_pages)
+                store_xlsx_uris(json_path, xlsx_uris)
+
+            if not json_path.exists():
+                raise ValueError(
+                    f"Running this function with {source=} requires that {json_path=} exists."
+                )
+            with json_path.open("r") as f:
+                sheet_uris = json.load(f)
+
     download_multiple_sheets(
         sheet_uris, sheet_dir=sheet_dir, t_sleep=t_sleep, nmax=nmax, dry=dry
     )

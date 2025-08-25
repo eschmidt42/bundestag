@@ -14,7 +14,7 @@ from bundestag.data.transform.abgeordnetenwatch.transform import (
 )
 from bundestag.data.transform.bundestag_sheets import run as transform_bundestag_sheets
 from bundestag.data.utils import RE_SHEET
-from bundestag.logging import setup_logging
+from bundestag.fine_logging import setup_logging
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +57,14 @@ def download(
         default=False,
         help="Assume yes to all prompts and run non-interactively.",
     ),
+    do_create_xlsx_uris_json: bool = typer.Option(
+        False,
+        help="bundestag_sheet specific parameter. If passed then a new xlsx_uris.json will be created from https://www.bundestag.de/parlament/plenum/abstimmung/liste.",
+    ),
+    max_pages: int = typer.Option(
+        20,
+        help="bundestag_sheet specific parameter. Max number of pages to flip though on https://www.bundestag.de/parlament/plenum/abstimmung/liste/ to create uris_xlsx.json",
+    ),
 ):
     logger.info(f"Downloading from {source}")
 
@@ -81,6 +89,8 @@ def download(
                 dry=dry,
                 pattern=RE_SHEET,
                 assume_yes=y,
+                do_create_xlsx_uris_json=do_create_xlsx_uris_json,
+                max_pages=max_pages,
             )
 
         case Sources.huggingface:
