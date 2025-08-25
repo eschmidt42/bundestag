@@ -126,7 +126,7 @@ def run(
     pattern: re.Pattern = data_utils.RE_HTM,
     assume_yes: bool = False,
 ):
-    logger.info("Start downloading sheets")
+    logger.info("Start downloading bundestag sheets")
 
     # ensure paths exist
     if not html_dir.exists():
@@ -140,4 +140,4 @@ def run(
         sheet_uris, sheet_dir=sheet_dir, t_sleep=t_sleep, nmax=nmax, dry=dry
     )
 
-    logger.info("Done downloading sheets")
+    logger.info("Done downloading bundestag sheets")

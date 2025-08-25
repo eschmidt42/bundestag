@@ -118,7 +118,7 @@ def run(
 ):
     "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
 
-    logger.info("Start downloading abgeordnetenwatch data")
+    logger.info(f"Start downloading abgeordnetenwatch data for {legislature_id=}")
 
     if not dry and (raw_path is None):
         raise ValueError(f"When {dry=} `raw_path` cannot be None.")
