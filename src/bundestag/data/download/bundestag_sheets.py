@@ -16,6 +16,37 @@ RE_FNAME = re.compile(r"(\.xlsx?)")
 RE_SHEET = re.compile("(XLSX?)")
 
 
+def get_title_and_href(
+    soup: BeautifulSoup, pattern: re.Pattern | None = None
+) -> dict[str, str]:
+    uris = {}
+    elements = soup.find_all("td", attrs={"data-th": "Dokument"})
+    for element in elements:
+        title = element.div.p.strong.text.strip()  # type: ignore
+
+        if pattern is not None:
+            attrs = {"title": pattern}
+        else:
+            attrs = {}
+
+        hrefs = element.find_all("a", attrs=attrs, href=True)  # type: ignore
+        if hrefs is None:
+            continue
+
+        hrefs = [h for h in hrefs if h is not None]
+        xlsx_hrefs = [h for h in hrefs if h["href"].endswith(".xlsx")]  # type: ignore
+
+        href = None
+        if len(xlsx_hrefs) > 0:
+            href = xlsx_hrefs[0]
+
+        if href is None:
+            continue
+
+        uris[title] = href["href"]  # type:ignore
+    return uris
+
+
 def collect_sheet_uris(
     html_file_paths: list[Path], pattern: re.Pattern | None = None
 ) -> dict[str, str]:
@@ -30,23 +61,19 @@ def collect_sheet_uris(
     """
 
     logger.info("Extracting URIs to excel sheets from htm files")
-    uris = {}
+
     if pattern is None:
         pattern = RE_SHEET
 
+    uris = {}
     for file_path in tqdm.tqdm(
         html_file_paths, total=len(html_file_paths), desc="HTM(L)"
     ):
         with open(file_path, "r") as f:
             soup = BeautifulSoup(f, features="html.parser")
 
-        elements = soup.find_all("td", attrs={"data-th": "Dokument"})
-        for element in elements:
-            title = element.div.p.strong.text.strip()  # type: ignore
-            href = element.find("a", attrs={"title": pattern})  # type: ignore
-            if href is None:
-                continue
-            uris[title] = href["href"]  # type:ignore
+        uris.update(get_title_and_href(soup, pattern))
+
     return uris
 
 
