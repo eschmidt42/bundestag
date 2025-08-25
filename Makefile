@@ -57,7 +57,7 @@ compile-binder:
 
 .PHONY: update-dev-env
 update-dev-env:
-	uv sync --group ml --group gui --group style_and_test --group data && \
+	uv sync --group ml --group gui --group style_and_test --group database && \
 	uv run spacy download de_core_news_sm
 
 
