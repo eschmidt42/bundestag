@@ -38,7 +38,11 @@ def get_title_and_href(
             continue
 
         hrefs = [h for h in hrefs if h is not None]
-        xlsx_hrefs = [h for h in hrefs if h["href"].endswith(".xlsx")]  # type: ignore
+        xlsx_hrefs = [
+            h
+            for h in hrefs
+            if h["href"].endswith(".xlsx") or h["href"].endswith(".xls")
+        ]  # type: ignore
 
         href = None
         if len(xlsx_hrefs) > 0:

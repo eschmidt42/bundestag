@@ -130,8 +130,8 @@ def transform(
 
         case Sources.bundestag_sheet:
             transform_bundestag_sheets(
-                html_path=_paths.raw_bundestag_html,
-                sheet_path=_paths.raw_bundestag_sheets,
+                html_dir=_paths.raw_bundestag_html,
+                sheet_dir=_paths.raw_bundestag_sheets,
                 preprocessed_path=_paths.preprocessed_bundestag,
                 dry=dry,
             )
