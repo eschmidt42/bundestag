@@ -5,7 +5,6 @@ from pathlib import Path
 from scipy import stats
 from tqdm import tqdm
 
-import bundestag.data.utils as data_utils
 from bundestag.data.download.abgeordnetenwatch.cli import get_user_download_decision
 from bundestag.data.download.abgeordnetenwatch.request import (
     request_mandates_data,
@@ -19,6 +18,7 @@ from bundestag.data.download.abgeordnetenwatch.store import (
     store_polls_json,
     store_vote_json,
 )
+from bundestag.data.utils import ensure_path_exists
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +125,7 @@ def run(
 
     # ensure paths exist
     if not dry and not raw_path.exists():
-        data_utils.ensure_path_exists(raw_path, assume_yes=assume_yes)
+        ensure_path_exists(raw_path, assume_yes=assume_yes)
 
     # polls
     data = request_poll_data(legislature_id, dry=dry, num_polls=max_polls)
@@ -145,4 +145,4 @@ def run(
         ask_user=ask_user,
     )
 
-    logger.info("Done downloading abgeordnetenwatch data!")
+    logger.info(f"Done downloading abgeordnetenwatch data for {legislature_id=}!")

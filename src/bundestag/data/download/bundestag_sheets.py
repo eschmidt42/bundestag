@@ -1,14 +1,13 @@
 import logging
 import re
 import time
-import typing as T
 from pathlib import Path
 
 import httpx
 import tqdm
 from bs4 import BeautifulSoup
 
-import bundestag.data.utils as data_utils
+from bundestag.data.utils import ensure_path_exists, get_file_paths, get_sheet_filename
 
 logger = logging.getLogger(__name__)
 
@@ -18,16 +17,16 @@ RE_SHEET = re.compile("(XLSX?)")
 
 
 def collect_sheet_uris(
-    html_file_paths: T.List[Path], pattern: re.Pattern | None = None
+    html_file_paths: list[Path], pattern: re.Pattern | None = None
 ) -> dict[str, str]:
     """Extracting URIs to roll call votes stored in excel sheets
 
     Args:
-        html_file_paths (T.List[Path]): List of files to parse
+        html_file_paths (list[Path]): List of files to parse
         pattern (re.Pattern, optional): Regular expression pattern to use to identify URIs. Defaults to None.
 
     Returns:
-        T.List[str]: List of identified URIs
+        list[str]: List of identified URIs
     """
 
     logger.info("Extracting URIs to excel sheets from htm files")
@@ -52,7 +51,7 @@ def collect_sheet_uris(
 
 
 def get_sheet_path(uri: str, sheet_dir: str | Path) -> Path:
-    return Path(sheet_dir) / data_utils.get_sheet_filename(uri)
+    return Path(sheet_dir) / get_sheet_filename(uri)
 
 
 def download_sheet(uri: str, sheet_dir: Path, dry: bool = False):
@@ -60,7 +59,7 @@ def download_sheet(uri: str, sheet_dir: Path, dry: bool = False):
 
     Args:
         uri (str): URI to download
-        sheet_path (T.Union[Path, str]): Directory to write downloaded sheet to
+        sheet_path (Path | str): Directory to write downloaded sheet to
         dry (bool, optional): Switch to deactivate downloading. Defaults to False.
     """
 
@@ -89,8 +88,8 @@ def download_multiple_sheets(
     """Downloads multiple excel sheets containing roll call votes using `uris`, writing to `sheet_path`
 
     Args:
-        uris (T.Dict[str, str]): Dict of sheets to download
-        sheet_path (T.Union[Path, str]): Path to write the sheets to
+        uris (dict[str, str]): Dict of sheets to download
+        sheet_path (Path | str): Path to write the sheets to
         t_sleep (float, optional): Wait time in seconds between downloaded files. Defaults to 0.01.
         nmax (int, optional): Maximum number of sheets to download. Defaults to None.
         dry (bool, optional): Switch for dry run. Defaults to False.
@@ -100,7 +99,8 @@ def download_multiple_sheets(
     logger.info(
         f"Downloading {n} excel sheets and storing under {sheet_dir} (dry = {dry})"
     )
-    known_sheets = data_utils.get_file_paths(sheet_dir, pattern=RE_FNAME)
+    known_sheets = get_file_paths(sheet_dir, pattern=RE_FNAME)
+    t0 = time.perf_counter()
 
     for i, (_, uri) in tqdm.tqdm(enumerate(uris.items()), desc="File", total=n):
         if nmax is not None and i > nmax - 1:
@@ -116,6 +116,11 @@ def download_multiple_sheets(
 
         time.sleep(t_sleep)
 
+    t1 = time.perf_counter()
+    logger.info(
+        f"Done downloading {n} excel sheets and storing under {sheet_dir} (dry = {dry}). Took {t1 - t0}."
+    )
+
 
 def run(
     html_dir: Path,
@@ -123,18 +128,18 @@ def run(
     t_sleep: float = 0.01,
     nmax: int | None = None,
     dry: bool = False,
-    pattern: re.Pattern = data_utils.RE_HTM,
+    pattern: re.Pattern = RE_HTM,
     assume_yes: bool = False,
 ):
     logger.info("Start downloading bundestag sheets")
 
     # ensure paths exist
     if not html_dir.exists():
-        data_utils.ensure_path_exists(html_dir, assume_yes=assume_yes)
+        ensure_path_exists(html_dir, assume_yes=assume_yes)
     if not sheet_dir.exists():
-        data_utils.ensure_path_exists(sheet_dir, assume_yes=assume_yes)
+        ensure_path_exists(sheet_dir, assume_yes=assume_yes)
 
-    html_file_paths = data_utils.get_file_paths(html_dir, pattern=pattern)
+    html_file_paths = get_file_paths(html_dir, pattern=pattern)
     sheet_uris = collect_sheet_uris(html_file_paths)
     download_multiple_sheets(
         sheet_uris, sheet_dir=sheet_dir, t_sleep=t_sleep, nmax=nmax, dry=dry
