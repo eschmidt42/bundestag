@@ -42,7 +42,7 @@ def request_and_store_poll_ids(
 
     dt_rv = stats.norm(scale=dt_rv_scale)
 
-    logger.debug(
+    logger.info(
         f"Starting requests for {len(remaining_poll_ids)} remaining polls ({dry=})"
     )
 
@@ -60,7 +60,7 @@ def request_and_store_poll_ids(
         # store vote data
         store_vote_json(path, data, poll_id, dry=dry)
 
-    logger.debug("Done with requests forr remaining polls")
+    logger.info("Done with requests for remaining polls")
 
 
 def get_all_remaining_vote_data(
@@ -72,6 +72,7 @@ def get_all_remaining_vote_data(
     ask_user: bool = True,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
+    logger.info("Collecting remaining vote data")
 
     # Get known legislature_id / poll_id combinations
     known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
@@ -86,7 +87,7 @@ def get_all_remaining_vote_data(
     remaining_poll_ids = identify_remaining_poll_ids(possible_poll_ids, known_poll_ids)
 
     n = len(remaining_poll_ids)
-    logger.debug(
+    logger.info(
         f"remaining poll_ids (legislature_id = {legislature_id}) = {n}:\n{remaining_poll_ids}"
     )
     if n == 0:

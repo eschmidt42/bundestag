@@ -69,7 +69,7 @@ def run(
     df = get_polls_data(legislature_id, path=raw_path)
     if not dry:
         file = get_polls_parquet_path(legislature_id, preprocessed_path)
-        logger.debug(f"writing to {file}")
+        logger.info(f"writing to {file}")
         df.to_parquet(path=file)
 
     # mandates
@@ -78,7 +78,7 @@ def run(
 
     if not dry:
         file = get_mandates_parquet_path(legislature_id, preprocessed_path)
-        logger.debug(f"Writing to {file}")
+        logger.info(f"Writing to {file}")
         df.to_parquet(path=file)
 
     # votes
@@ -87,12 +87,12 @@ def run(
 
     if not dry:
         all_votes_path = get_votes_csv_path(legislature_id, preprocessed_path)
-        logger.debug(f"Writing to {all_votes_path}")
+        logger.info(f"Writing to {all_votes_path}")
 
         df_all_votes.to_csv(all_votes_path, index=False)
 
         file = get_votes_parquet_path(legislature_id, preprocessed_path)
-        logger.debug(f"Writing to {file}")
+        logger.info(f"Writing to {file}")
         df_all_votes.to_parquet(path=file)
 
     logger.info("Done transforming abgeordnetenwatch data")

@@ -17,12 +17,12 @@ def request_poll_data(
     }
 
     if dry:
-        logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
+        logger.info(f"Dry mode - request setup: url = {url}, params = {params}")
         return
 
     r = httpx.get(url, params=params)
 
-    logger.debug(f"Requested {r.url}")
+    logger.info(f"Requested {r.url} ({r.status_code=})")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
     return r.json()
@@ -36,14 +36,14 @@ def request_mandates_data(
     url = f"https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates"
     params = {
         "parliament_period": legislature_id,  # collecting parlamentarians' votes
-        "range_end": num_mandates,  # setting a high limit to include all mandates in one go
+        # "range_end": num_mandates,  # setting a high limit to include all mandates in one go
     }
     if dry:
-        logger.debug(f"Dry mode - request setup: url = {url}, params = {params}")
+        logger.info(f"Dry mode - request setup: url = {url}, params = {params}")
         return
 
     r = httpx.get(url, params=params)
-    logger.debug(f"Requested {r.url}")
+    logger.info(f"Requested {r.url} ({r.status_code=})")
     assert r.status_code == 200, f"Unexpected GET status: {r.status_code}"
 
     return r.json()
