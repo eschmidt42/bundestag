@@ -1,12 +1,12 @@
 import json
+import logging
 import typing as T
 from pathlib import Path
 
 import bundestag.data.utils as data_utils
-import bundestag.logging as logging
 import bundestag.schemas as schemas
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def store_polls_json(

@@ -1,3 +1,4 @@
+import logging
 import re
 import time
 import typing as T
@@ -8,9 +9,8 @@ import tqdm
 from bs4 import BeautifulSoup
 
 import bundestag.data.utils as data_utils
-import bundestag.logging as logging
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 RE_HTM = re.compile(r"(\.html?)")
 RE_FNAME = re.compile(r"(\.xlsx?)")

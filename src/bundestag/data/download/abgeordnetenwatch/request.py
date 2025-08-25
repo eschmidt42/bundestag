@@ -1,8 +1,8 @@
+import logging
+
 import httpx
 
-import bundestag.logging as logging
-
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def request_poll_data(

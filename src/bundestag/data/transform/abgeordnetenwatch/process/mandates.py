@@ -4,15 +4,15 @@ from pathlib import Path
 
 import pandas as pd
 
-import bundestag.data.utils as data_utils
 import bundestag.schemas as schemas
+from bundestag.data.utils import get_location, get_mandates_filename
 
 logger = logging.getLogger(__name__)
 
 
 def load_mandate_json(legislature_id: int, path: Path, dry: bool = False) -> dict:
-    mandates_fname = data_utils.get_mandates_filename(legislature_id)
-    file = data_utils.get_location(
+    mandates_fname = get_mandates_filename(legislature_id)
+    file = get_location(
         mandates_fname,
         path=path,
         dry=dry,

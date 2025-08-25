@@ -1,3 +1,5 @@
+import logging
+
 import typer
 
 import bundestag.data.download.abgeordnetenwatch.download as download_aw
@@ -6,10 +8,10 @@ import bundestag.data.download.huggingface as download_hf
 import bundestag.data.transform.abgeordnetenwatch.transform as transform_aw
 import bundestag.data.transform.bundestag_sheets as transform_bs
 import bundestag.data.utils as data_utils
-import bundestag.logging as logging
 import bundestag.paths as paths
+from bundestag.logging import setup_logging
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 app = typer.Typer()
 
@@ -123,4 +125,5 @@ def transform(
 
 
 if __name__ == "__main__":
+    setup_logging(logging.INFO)
     app()

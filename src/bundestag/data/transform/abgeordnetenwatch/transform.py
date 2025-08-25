@@ -1,9 +1,8 @@
+import logging
 from pathlib import Path
 
 import pandas as pd
 
-import bundestag.data.utils as data_utils
-import bundestag.logging as logging
 from bundestag.data.transform.abgeordnetenwatch.helper import (
     get_parties_from_col,
     get_politician_names,
@@ -13,8 +12,9 @@ from bundestag.data.transform.abgeordnetenwatch.process import (
     get_mandates_data,
     get_polls_data,
 )
+from bundestag.data.utils import ensure_path_exists
 
-logger = logging.logger
+logger = logging.getLogger(__name__)
 
 
 def transform_mandates_data(df: pd.DataFrame) -> pd.DataFrame:
@@ -63,7 +63,7 @@ def run(
     if not dry and not raw_path.exists():
         raise ValueError(f"{raw_path=} doesn't exist, terminating transformation.")
     if not dry and not preprocessed_path.exists():
-        data_utils.ensure_path_exists(preprocessed_path, assume_yes=assume_yes)
+        ensure_path_exists(preprocessed_path, assume_yes=assume_yes)
 
     # polls
     df = get_polls_data(legislature_id, path=raw_path)
