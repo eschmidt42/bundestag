@@ -138,8 +138,10 @@ PALETTE = {
     "FDP": "yellow",
     "BÜ90/GR": "green",
     "DIE LINKE.": "purple",
+    "Die Linke": "purple",
     "SPD": "red",
     "Fraktionslos": "grey",
+    "BSW": "magenta",
 }
 
 
