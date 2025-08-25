@@ -14,3 +14,13 @@ abgeordnetenwatch_data_test/
 
 .vscode
 nbs/models
+
+data/preprocessed.tar.gz
+data/preprocessed/abgeordnetenwatch/compiled_votes_legislature_111.csv
+data/preprocessed/abgeordnetenwatch/compiled_votes_legislature_132.csv
+data/preprocessed/bundestag/
+data/raw.tar.gz
+data/raw/
+
+.pytest_cache
+.ruff_cache
