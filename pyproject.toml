@@ -112,6 +112,7 @@ database = [
     "petl>=1.7.12",
     "pillow>=9.5.0",
     "plotly>=5.14.1",
+    "plotnine>=0.15.0",
     "pydantic>=1.10.7",
     "pydantic-settings>=2.10.1",
     "pygments>=2.15.0",
