@@ -32,6 +32,7 @@ data = [
     "pandas",
     "pandera>=0.14.5",
     "plotly>=5.14.1",
+    "polars>=1.32.3",
     "pydantic>=1.10.7",
     "rich>=12.6.0",
     "seaborn>=0.12.2",
