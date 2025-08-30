@@ -52,7 +52,7 @@ def download(
         help="Max number of polls to download (abgeordnetenwatch specific)",
     ),
     nmax: int = typer.Option(
-        999, help="Max number of sheets to download (bundestag_sheet specific)"
+        None, help="Max number of sheets to download (bundestag_sheet specific)"
     ),
     y: bool = typer.Option(
         default=False,
