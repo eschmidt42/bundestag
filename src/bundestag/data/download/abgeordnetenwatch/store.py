@@ -124,7 +124,7 @@ def check_stored_vote_ids(
 
     if leg_id_unknown:
         # if the legislature id is unknown, there are no associated files, hence return an empty dict
-        logger.error(
+        logger.warning(
             f"Given legislature_id {legislature_id} is unknown. Known ids: {sorted(list(legislature_ids.keys()))}"
         )
         if legislature_id is not None:

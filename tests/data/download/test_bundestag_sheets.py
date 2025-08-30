@@ -120,7 +120,8 @@ def test_download_multiple_sheets(nmax: int, tmp_path: Path):
 
     sheet_dir.mkdir()
     for p in known_sheets:
-        p.touch()
+        with p.open("w") as f:
+            f.write("wuppety")
 
     r = httpx.Response(200, json={"wuppety": 42})
 
@@ -154,6 +155,9 @@ def test_run(tmp_path: Path):
 
     r = httpx.Response(200, json={"wuppety": 42})
 
+    # path_xlsx_uris = sheet_dir / "xlsx_uris.json"
+    # path_xlsx_uris.touch()
+
     with (
         patch("httpx.get", MagicMock(return_value=r)) as _get,
     ):
@@ -170,5 +174,5 @@ def test_run(tmp_path: Path):
         assert sheet_dir.exists()
         n_files = len(list(sheet_dir.iterdir()))
         if nmax is None:
-            assert _get.call_count == snapshot(40)
-            assert n_files == snapshot(40)
+            assert _get.call_count == snapshot(1)
+            assert n_files == snapshot(1)

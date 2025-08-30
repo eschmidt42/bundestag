@@ -9,7 +9,12 @@ import httpx
 import tqdm
 from bs4 import BeautifulSoup
 
-from bundestag.data.utils import ensure_path_exists, get_file_paths, get_sheet_filename
+from bundestag.data.utils import (
+    ensure_path_exists,
+    file_size_is_zero,
+    get_file_paths,
+    get_sheet_filename,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +147,8 @@ def download_multiple_sheets(
         sheet_path = get_sheet_path(uri, sheet_dir)
 
         sheet_is_known = sheet_path in known_sheets
-        if sheet_is_known:
+        skip_file = sheet_is_known and not file_size_is_zero(sheet_path)
+        if skip_file:
             continue
 
         download_sheet(uri, sheet_dir=sheet_dir, dry=dry)
@@ -239,7 +245,7 @@ def run(
     dry: bool = False,
     pattern: re.Pattern = RE_HTM,
     assume_yes: bool = False,
-    source: Source = Source.html_file,
+    source: Source = Source.json_file,
     json_filename: str = "xlsx_uris.json",
     do_create_xlsx_uris_json: bool = False,
     max_pages: int = 5,
