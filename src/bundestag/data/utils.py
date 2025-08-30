@@ -115,3 +115,11 @@ def ensure_path_exists(path: Path, assume_yes: bool):
 
     if do_creation:
         path.mkdir(exist_ok=True, parents=True)
+
+
+def file_size_is_zero(file: Path) -> bool:
+    file_size = file.stat().st_size
+    if file_size == 0:
+        logger.warning(f"{file=} is of size 0, skipping ...")
+        return True
+    return False

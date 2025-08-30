@@ -12,6 +12,7 @@ from bundestag.data.utils import (
     RE_FNAME,
     RE_HTM,
     ensure_path_exists,
+    file_size_is_zero,
     get_file_paths,
     get_sheet_filename,
 )
@@ -42,14 +43,6 @@ def is_date(s: str, dayfirst: bool) -> bool:
         return True
 
 
-def file_size_is_zero(file: Path) -> bool:
-    file_size = file.stat().st_size
-    if file_size == 0:
-        logger.warning(f"{file=} is of size 0, skipping ...")
-        return True
-    return False
-
-
 class ExcelReadException(Exception): ...
 
 
@@ -64,6 +57,7 @@ def read_excel(file: Path) -> pd.DataFrame:
     except:
         try:
             df = pd.read_excel(file, engine="xlrd")
+            df["sheet_name"] = ""
         except xlrd.biffh.XLRDError:
             raise ExcelReadException(f"Failed to parse {file}.")
     return df

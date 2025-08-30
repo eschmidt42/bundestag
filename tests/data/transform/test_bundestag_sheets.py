@@ -10,7 +10,6 @@ from bundestag.data.transform.bundestag_sheets import (
     ExcelReadException,
     assign_date_and_title_columns,
     disambiguate_party,
-    file_size_is_zero,
     get_file2poll_maps,
     get_multiple_sheets_df,
     get_sheet_df,
@@ -22,6 +21,7 @@ from bundestag.data.transform.bundestag_sheets import (
     set_sheet_dtypes,
     verify_vote_columns,
 )
+from bundestag.data.utils import file_size_is_zero
 
 
 def test_get_file2poll_maps():
