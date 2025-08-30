@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/data/transform/bundestag_sheets/" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>bundestag_sheets - bundestag</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "bundestag_sheets";
+        var mkdocs_page_input_path = "bundestag/data/transform/bundestag_sheets.md";
+        var mkdocs_page_url = "/bundestag/bundestag/data/transform/bundestag_sheets/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../analysis-highlights/">Analysis highlights</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../metabase/">Analysis with metabase</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >data</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../download/abgeordnetenwatch/">abgeordnetenwatch</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >transform</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../abgeordnetenwatch/">abgeordnetenwatch</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">bundestag_sheets</a>
+    <ul class="current">
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../../../logging.md">logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../poll_clustering/">poll_clustering</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../similarity/">similarity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../vote_prediction/">vote_prediction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+          <li class="breadcrumb-item">data</li>
+          <li class="breadcrumb-item">transform</li>
+      <li class="breadcrumb-item active">bundestag_sheets</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/data/transform/bundestag_sheets.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.data.transform.bundestag_sheets"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.bundestag_sheets.get_file2poll_maps" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_file2poll_maps</span><span class="p">(</span><span class="n">uris</span><span class="p">,</span> <span class="n">sheet_dir</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates a file name (so file needs to exist) to poll title map</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/bundestag_sheets.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_file2poll_maps</span><span class="p">(</span><span class="n">uris</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">sheet_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="s2">&quot;Creates a file name (so file needs to exist) to poll title map&quot;</span>
+    <span class="n">known_sheets</span> <span class="o">=</span> <span class="n">get_file_paths</span><span class="p">(</span><span class="n">sheet_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">RE_FNAME</span><span class="p">)</span>
+    <span class="n">file2poll</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">poll_title</span><span class="p">,</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">uris</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">get_sheet_filename</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">sheet_path</span> <span class="o">=</span> <span class="n">sheet_dir</span> <span class="o">/</span> <span class="n">fname</span>
+        <span class="k">if</span> <span class="n">sheet_path</span> <span class="ow">in</span> <span class="n">known_sheets</span><span class="p">:</span>
+            <span class="n">file2poll</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span> <span class="o">=</span> <span class="n">poll_title</span>
+    <span class="k">return</span> <span class="n">file2poll</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.bundestag_sheets.get_multiple_sheets_df" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_multiple_sheets_df</span><span class="p">(</span><span class="n">sheet_files</span><span class="p">,</span> <span class="n">file_title_maps</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Loads, processes and concatenates multiple vote sheets</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/bundestag_sheets.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_multiple_sheets_df</span><span class="p">(</span>
+    <span class="n">sheet_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span>
+    <span class="n">file_title_maps</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="s2">&quot;Loads, processes and concatenates multiple vote sheets&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading processing and concatenating multiple vote sheets&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_empty</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n_errors</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">sheet_file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">sheet_files</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sheet_files</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Sheets&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">file_size_is_zero</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">):</span>
+            <span class="n">n_empty</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">sheet_file</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file_title_maps</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sheet_df</span> <span class="o">=</span> <span class="n">get_sheet_df</span><span class="p">(</span>
+                <span class="n">sheet_file</span><span class="p">,</span> <span class="n">file_title_maps</span><span class="o">=</span><span class="n">file_title_maps</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">ExcelReadException</span><span class="p">:</span>
+            <span class="n">n_errors</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sheet_df</span> <span class="o">=</span> <span class="n">get_squished_dataframe</span><span class="p">(</span><span class="n">sheet_df</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parsing failed for </span><span class="si">{</span><span class="n">sheet_file</span><span class="si">}</span><span class="s2"> with ValueError: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sheet_df</span> <span class="o">=</span> <span class="n">set_sheet_dtypes</span><span class="p">(</span><span class="n">sheet_df</span><span class="p">)</span>
+
+        <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sheet_df</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sheet_files</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_empty</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_empty</span><span class="si">:</span><span class="s2">_</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">_</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">n_empty</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2"> % files were empty.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_errors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_errors</span><span class="si">:</span><span class="s2">_</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">_</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">n_errors</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2"> % files skipped due to some excel parsing error, likely xls files.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.bundestag_sheets.get_sheet_df" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_sheet_df</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">,</span> <span class="n">file_title_maps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Parsing xlsx and xls files into dataframes</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/bundestag_sheets.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_sheet_df</span><span class="p">(</span>
+    <span class="n">sheet_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">file_title_maps</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="s2">&quot;Parsing xlsx and xls files into dataframes&quot;</span>
+
+    <span class="n">sheet_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">)</span>
+
+    <span class="n">verify_vote_columns</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">assign_date_and_title_columns</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">file_title_maps</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">disambiguate_party</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+        <span class="n">schemas</span><span class="o">.</span><span class="n">SHEET</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.bundestag_sheets.get_squished_dataframe" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_squished_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">id_col</span><span class="o">=</span><span class="s1">&#39;Bezeichnung&#39;</span><span class="p">,</span> <span class="n">feature_cols</span><span class="o">=</span><span class="n">VOTE_COLS</span><span class="p">,</span> <span class="n">other_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Reformats <code>df</code> by squishing the vote columns (ja, nein, Enthaltung, ...) into one column</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/bundestag_sheets.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_squished_dataframe</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Bezeichnung&quot;</span><span class="p">,</span>
+    <span class="n">feature_cols</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">VOTE_COLS</span><span class="p">,</span>
+    <span class="n">other_cols</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="s2">&quot;Reformats `df` by squishing the vote columns (ja, nein, Enthaltung, ...) into one column&quot;</span>
+
+    <span class="n">other_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">other_cols</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other_cols</span>
+    <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="n">id_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">feature_cols</span> <span class="o">+</span> <span class="n">other_cols</span><span class="p">]</span>
+
+    <span class="c1"># add issue column</span>
+    <span class="n">mask_date_title_missing</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span> <span class="o">|</span> <span class="n">df_sub</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+
+    <span class="n">n_missing</span> <span class="o">=</span> <span class="n">mask_date_title_missing</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">n_missing</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># TODO: that this can happen is weird - error in processing?</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Missing date and or title information for </span><span class="si">{</span><span class="n">n_missing</span><span class="si">:</span><span class="s2">_</span><span class="si">}</span><span class="s2"> rows (</span><span class="si">{</span><span class="n">n_missing</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">df_sub</span><span class="p">)</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">), did you provide file_title_maps upstream?&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">df_sub</span><span class="p">[</span><span class="s2">&quot;issue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span>
+
+    <span class="n">df_sub</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">id_col</span><span class="p">,</span> <span class="s2">&quot;issue&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">other_cols</span><span class="p">)</span>
+    <span class="n">df_sub</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df_sub</span><span class="p">[</span><span class="n">df_sub</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;level_</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">other_cols</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;vote&quot;</span><span class="p">})</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">df_sub</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;Bezeichnung&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">]),</span>
+        <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Bezeichnung&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">],</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">VOTE_COLS</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+        <span class="n">schemas</span><span class="o">.</span><span class="n">SHEET_FINAL</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.bundestag_sheets.handle_title_and_date" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">handle_title_and_date</span><span class="p">(</span><span class="n">full_title</span><span class="p">,</span> <span class="n">sheet_file</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extracting the title of the roll call vote and the date</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/bundestag_sheets.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_title_and_date</span><span class="p">(</span>
+    <span class="n">full_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sheet_file</span><span class="p">:</span> <span class="n">Path</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="s2">&quot;Extracting the title of the roll call vote and the date&quot;</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">full_title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="n">date</span> <span class="o">=</span> <span class="n">title</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">is_date</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">dayfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">title</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">elif</span> <span class="n">is_date</span><span class="p">(</span><span class="n">sheet_file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sheet_file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">full_title</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">full_title</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">title</span><span class="p">,</span> <span class="n">date</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.bundestag_sheets.verify_vote_columns" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">verify_vote_columns</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>verifying that all vote columns (ja, nein, Enthaltung, ungültig, nichtabgegeben) are plausible</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/bundestag_sheets.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">verify_vote_columns</span><span class="p">(</span><span class="n">sheet_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="s2">&quot;verifying that all vote columns (ja, nein, Enthaltung, ungültig, nichtabgegeben) are plausible&quot;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">VOTE_COLS</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sheet_file</span><span class="si">=}</span><span class="s2"> has rows with more than one vote:</span><span class="se">\n</span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span><span class="w"> </span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../abgeordnetenwatch/" class="btn btn-neutral float-left" title="abgeordnetenwatch"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../utils/" class="btn btn-neutral float-right" title="utils">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../abgeordnetenwatch/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../utils/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
