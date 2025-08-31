@@ -1,10 +1,9 @@
 import sys
 import time
 
-import pandas as pd
+import polars as pl
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from sqlalchemy import create_engine
 
 
 class Settings(BaseSettings):
@@ -37,20 +36,25 @@ def main():
     print(f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}")
     sys.stdout.flush()
 
-    engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}")
-    # pandas.io.parquet.get_engine("auto")
+    uri = f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
 
     print("Reading data...")
     sys.stdout.flush()
-    df_all_votes = pd.read_parquet("./data/abgeordnetenwatch/votes_111.parquet")
-    df_mandates = pd.read_parquet("./data/abgeordnetenwatch/mandates_111.parquet")
-    df_polls = pd.read_parquet("./data/abgeordnetenwatch/polls_111.parquet")
+    df_all_votes = pl.read_parquet("./data/abgeordnetenwatch/votes_111.parquet")
+    df_mandates = pl.read_parquet("./data/abgeordnetenwatch/mandates_111.parquet")
+    df_polls = pl.read_parquet("./data/abgeordnetenwatch/polls_111.parquet")
 
     print("Inserting data...")
     sys.stdout.flush()
-    df_all_votes.to_sql(name=table_name_votes, con=engine, if_exists="append")
-    df_mandates.to_sql(name=table_name_mandates, con=engine, if_exists="append")
-    df_polls.to_sql(name=table_name_polls, con=engine, if_exists="append")
+    df_all_votes.write_database(
+        table_name=table_name_votes, connection=uri, if_table_exists="append"
+    )
+    df_mandates.write_database(
+        table_name=table_name_mandates, connection=uri, if_table_exists="append"
+    )
+    df_polls.write_database(
+        table_name=table_name_polls, connection=uri, if_table_exists="append"
+    )
 
     print("Done!")
 
