@@ -73,7 +73,7 @@ def run(
     if not dry:
         file = get_polls_parquet_path(legislature_id, preprocessed_path)
         logger.info(f"writing to {file}")
-        df.to_parquet(path=file)
+        df.write_parquet(file)
 
     # mandates
     df = get_mandates_data(legislature_id, path=raw_path)

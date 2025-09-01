@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-import pandas as pd
 import polars as pl
 import pytest
 
@@ -52,28 +51,28 @@ def sample_votes_response(sample_vote_json_path: Path) -> schemas.VoteResponse:
 
 
 @pytest.fixture()
-def POLLS_DF() -> pd.DataFrame:
-    return pd.DataFrame(
+def POLLS_DF() -> pl.DataFrame:
+    return pl.DataFrame(
         {
-            "poll_id": {0: 4293, 1: 4284},
-            "poll_title": {
-                0: "Änderung des Infektionsschutzgesetzes und Grundrechtseinschränkungen",
-                1: "Fortbestand der epidemischen Lage von nationaler Tragweite",
-            },
-            "poll_first_committee": {
-                0: "Haushaltsausschuss",
-                1: "Ausschuss für Gesundheit",
-            },
-            "poll_description": {
-                0: "Ein von den Fraktionen der CDU/CSU und SPD eingebrachter Gesetzentwurf zur Hilfe für Flutopfer in Deutschland sieht auch Änderungen des Infektionsschutzgesetzes vor. Diese sollen unter anderem in bestimmten Einrichtungen eine Auskunftspflicht von Mitarbeiter:innen zu ihrem Impf- oder Genesenenstatus ermöglichen.\nIm Vorfeld hatte die Opposition für das Gesetzespaket eine namentliche Abstimmung nur über die Punkte verlangt, die auch das Infektionsschutzgesetz betreffen.\nDie Neuregelungen wurden mit 344 Ja-Stimmen der Unions- und SPD-Fraktion gegen 280 Nein-Stimmen der Oppositionsfraktionen sowie einzelner Abgeordneter der Union und SPD angenommen. Lediglich eine Abgeordnete hatte sich bei der Abstimmung enthalten.",
-                1: "Der von den Fraktionen der CDU/CSU und SPD eingebrachte Antrag sieht vor, dass der Bundestag feststellt, dass die seit dem 25. März 2020 geltende epidemische Lage von nationaler Tragweite weiter fortbesteht. Das wird damit begründet, dass angesichts des erneuten Anstiegs der COVID-19-Fallzahlen in Deutschland weiterhin eine erhebliche Gesundheitsgefährdung der Bevölkerung gegeben sei.\nDer Antrag wurde mit 325 Ja-Stimmen der CDU- und SPD-Fraktion gegen 252 Nein-Stimmen der Oppositionsfraktionen angenommen. Fünf Abgeordnete haben sich enthalten.",
-            },
-            "legislature_id": {0: 111, 1: 111},
-            "legislature_period": {
-                0: "Bundestag 2017 - 2021",
-                1: "Bundestag 2017 - 2021",
-            },
-            "poll_date": {0: "2021-09-07", 1: "2021-08-25"},
+            "poll_id": [4293, 4284],
+            "poll_title": [
+                "Änderung des Infektionsschutzgesetzes und Grundrechtseinschränkungen",
+                "Fortbestand der epidemischen Lage von nationaler Tragweite",
+            ],
+            "poll_first_committee": [
+                "Haushaltsausschuss",
+                "Ausschuss für Gesundheit",
+            ],
+            "poll_description": [
+                "Ein von den Fraktionen der CDU/CSU und SPD eingebrachter Gesetzentwurf zur Hilfe für Flutopfer in Deutschland sieht auch Änderungen des Infektionsschutzgesetzes vor. Diese sollen unter anderem in bestimmten Einrichtungen eine Auskunftspflicht von Mitarbeiter:innen zu ihrem Impf- oder Genesenenstatus ermöglichen.\nIm Vorfeld hatte die Opposition für das Gesetzespaket eine namentliche Abstimmung nur über die Punkte verlangt, die auch das Infektionsschutzgesetz betreffen.\nDie Neuregelungen wurden mit 344 Ja-Stimmen der Unions- und SPD-Fraktion gegen 280 Nein-Stimmen der Oppositionsfraktionen sowie einzelner Abgeordneter der Union und SPD angenommen. Lediglich eine Abgeordnete hatte sich bei der Abstimmung enthalten.",
+                "Der von den Fraktionen der CDU/CSU und SPD eingebrachte Antrag sieht vor, dass der Bundestag feststellt, dass die seit dem 25. März 2020 geltende epidemische Lage von nationaler Tragweite weiter fortbesteht. Das wird damit begründet, dass angesichts des erneuten Anstiegs der COVID-19-Fallzahlen in Deutschland weiterhin eine erhebliche Gesundheitsgefährdung der Bevölkerung gegeben sei.\nDer Antrag wurde mit 325 Ja-Stimmen der CDU- und SPD-Fraktion gegen 252 Nein-Stimmen der Oppositionsfraktionen angenommen. Fünf Abgeordnete haben sich enthalten.",
+            ],
+            "legislature_id": [111, 111],
+            "legislature_period": [
+                "Bundestag 2017 - 2021",
+                "Bundestag 2017 - 2021",
+            ],
+            "poll_date": ["2021-09-07", "2021-08-25"],
         }
     )
 

@@ -2,7 +2,7 @@ import json
 import logging
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 from bs4 import BeautifulSoup
 
 import bundestag.schemas as schemas
@@ -40,8 +40,9 @@ def parse_poll_data(poll: schemas.Poll) -> dict:
     return d
 
 
-def get_polls_data(legislature_id: int, path: Path) -> pd.DataFrame:
+def get_polls_data(legislature_id: int, path: Path) -> pl.DataFrame:
     "Parses info from poll json files for `legislature_id`"
     info = load_polls_json(legislature_id, path=path)
     polls = schemas.PollResponse(**info)
-    return pd.DataFrame([parse_poll_data(v) for v in polls.data])
+    df = pl.DataFrame([parse_poll_data(v) for v in polls.data])
+    return df
