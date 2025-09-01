@@ -1,11 +1,11 @@
 import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Callable
 
 import pandas as pd
+import polars as pl
 import pytest
 
-import bundestag.schemas as schemas
 from bundestag.data.transform.bundestag_sheets import (
     PARTY_MAP,
     ExcelReadException,
@@ -20,7 +20,6 @@ from bundestag.data.transform.bundestag_sheets import (
     parse_date,
     read_excel,
     run,
-    set_sheet_dtypes,
     verify_vote_columns,
 )
 from bundestag.data.utils import file_size_is_zero
@@ -124,49 +123,6 @@ def test_read_excel_xlsx():
     assert "sheet_name" in res.columns
 
 
-# @pytest.mark.parametrize(
-#         "case,side_effect", [(0,None),(1,ValueError),(2,xlrd.biffh.XLRDError)]
-# )
-# def test_read_excel(case: int, side_effect):
-#     path = Path("dummy/path")
-#     df = pd.DataFrame({"a": [1]})
-#     match case:
-#         case 0:
-#             se = ({"b": df.copy(deep=True)},)
-#         case 1:
-#             se = (side_effect, df.copy(deep=True))
-#         case 2:
-#             se = (side_effect,)
-#         case _:
-#             raise ValueError
-
-#     with patch("pandas.read_excel", MagicMock(side_effect=se)) as _read_excel:
-#         # line to test
-#         res = read_excel(path)
-
-#         match case:
-#             case 0:
-#                 assert res is not None
-#                 assert "sheet_name" in res.columns
-#                 res = res.drop(columns=["sheet_name"])
-#                 assert res.equals(df)
-#                 _read_excel.assert_has_calls(
-#                     [
-#                         call(path, sheet_name=None, engine="openpyxl"),
-#                     ]
-#                 )
-#             case 1:
-#                 assert res is not None
-#                 assert "sheet_name" not in res.columns
-#                 assert res.equals(df)
-#                 _read_excel.assert_has_calls([
-#                     call(path, sheet_name=None, engine="openpyxl"),
-#                     call(path, engine="xlrd")
-#                 ])
-#             case 2:
-#                 assert res is None
-#                 _read_excel.assert_called_once_with(path, engine="xlrd")
-
 # ========================= verify_vote_columns =========================
 
 
@@ -179,7 +135,7 @@ def test_verify_vote_columns_valid():
         "ungültig": [0, 0, 0],
         "nichtabgegeben": [0, 0, 0],
     }
-    df = pd.DataFrame(data)
+    df = pl.from_dict(data)
     sheet_file = Path("dummy_sheet.xlsx")
 
     try:
@@ -197,7 +153,7 @@ def test_verify_vote_columns_invalid_sum_greater_than_1():
         "ungültig": [0, 0, 0],
         "nichtabgegeben": [0, 0, 0],
     }
-    df = pd.DataFrame(data)
+    df = pl.from_dict(data)
     sheet_file = Path("dummy_sheet.xlsx")
 
     with pytest.raises(ValueError):
@@ -213,7 +169,7 @@ def test_verify_vote_columns_invalid_sum_is_zero():
         "ungültig": [0, 0, 0],
         "nichtabgegeben": [0, 0, 0],  # second row is invalid
     }
-    df = pd.DataFrame(data)
+    df = pl.from_dict(data)
     sheet_file = Path("dummy_sheet.xlsx")
 
     with pytest.raises(ValueError):
@@ -221,50 +177,50 @@ def test_verify_vote_columns_invalid_sum_is_zero():
 
 
 @pytest.fixture
-def sample_df():
-    return pd.DataFrame({"col1": [1, 2, 3]})
+def sample_df() -> pl.DataFrame:
+    return pl.DataFrame({"col1": [1, 2, 3]})
 
 
 # ========================= assign_date_and_title_columns =========================
 
 
-def test_assign_date_and_title_columns_with_file_title_maps(sample_df):
+def test_assign_date_and_title_columns_with_file_title_maps(sample_df: pl.DataFrame):
     sheet_file = Path("20230101_some_vote.xlsx")
     file_title_maps = {sheet_file.name: "01.01.2023: Some Vote Title"}
-    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), file_title_maps)
+    df = assign_date_and_title_columns(sheet_file, sample_df, file_title_maps)
     assert "date" in df.columns
     assert "title" in df.columns
-    assert pd.to_datetime(df["date"].iloc[0]) == pd.Timestamp("2023-01-01")
-    assert df["title"].iloc[0] == "Some Vote Title"
+    assert df["date"].first() == datetime.datetime(2023, 1, 1)
+    assert df["title"].first() == "Some Vote Title"
 
 
-def test_assign_date_and_title_columns_with_date_in_filename(sample_df):
+def test_assign_date_and_title_columns_with_date_in_filename(sample_df: pl.DataFrame):
     sheet_file = Path("20230101_some_vote.xlsx")
     file_title_maps = {sheet_file.name: "Some Vote Title Without Date"}
-    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), file_title_maps)
+    df = assign_date_and_title_columns(sheet_file, sample_df, file_title_maps)
     assert "date" in df.columns
     assert "title" in df.columns
-    assert pd.to_datetime(df["date"].iloc[0]) == pd.Timestamp("2023-01-01")
-    assert df["title"].iloc[0] == "Some Vote Title Without Date"
+    assert df["date"].first() == datetime.datetime(2023, 1, 1)
+    assert df["title"].first() == "Some Vote Title Without Date"
 
 
-def test_assign_date_and_title_columns_no_date(sample_df):
+def test_assign_date_and_title_columns_no_date(sample_df: pl.DataFrame):
     sheet_file = Path("some_vote.xlsx")
     file_title_maps = {sheet_file.name: "Some Vote Title Without Date"}
-    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), file_title_maps)
+    df = assign_date_and_title_columns(sheet_file, sample_df, file_title_maps)
     assert "date" in df.columns
     assert "title" in df.columns
-    assert df["date"].iloc[0] is None
-    assert df["title"].iloc[0] == "Some Vote Title Without Date"
+    assert df["date"].first() is None
+    assert df["title"].first() == "Some Vote Title Without Date"
 
 
-def test_assign_date_and_title_columns_no_file_title_maps(sample_df):
+def test_assign_date_and_title_columns_no_file_title_maps(sample_df: pl.DataFrame):
     sheet_file = Path("20230101_some_vote.xlsx")
-    df = assign_date_and_title_columns(sheet_file, sample_df.copy(), None)
+    df = assign_date_and_title_columns(sheet_file, sample_df, None)
     assert "date" in df.columns
     assert "title" in df.columns
-    assert df["date"].iloc[0] is None
-    assert df["title"].iloc[0] is None
+    assert df["date"].first() is None
+    assert df["title"].first() is None
 
 
 # ========================= handle_title_and_date =========================
@@ -343,13 +299,13 @@ def test_disambiguate_party():
     col = "Fraktion/Gruppe"
     known = list(PARTY_MAP.keys())
     unknown = ["wuppety"]
-    df = pd.DataFrame({col: known + unknown})
+    df = pl.DataFrame({col: known + unknown})
 
     # line to test
-    df2 = disambiguate_party(df.copy(), col=col, party_map=PARTY_MAP)
+    df2 = disambiguate_party(df, col=col, party_map=PARTY_MAP)
 
-    assert df2[col].iloc[-1] == df[col].iloc[-1]
-    assert not df2[col].iloc[:-1].equals(df[col].iloc[:-1])
+    assert df2[col].last() == df[col].last()
+    assert not df2[col].equals(df[col])
 
 
 # ========================= get_sheet_df =========================
@@ -372,8 +328,8 @@ def create_dummy_excel(tmp_path: Path):
         if file_size_zero:
             path.touch()
             return path
-        df = pd.DataFrame(data)
-        df.to_excel(path, index=False, engine="openpyxl")
+        df = pl.DataFrame(data)
+        df.write_excel(path)
         return path
 
     return wrapped
@@ -381,31 +337,59 @@ def create_dummy_excel(tmp_path: Path):
 
 def test_get_sheet_df_valid_file(create_dummy_excel: Callable):
     data = {
+        "Wahlperiode": [1, 1, 1],
+        "Sitzungnr": [1, 1, 1],
+        "Abstimmnr": [1, 2, 3],
         "Fraktion/Gruppe": ["CDU/CSU", "SPD", "BÜNDNIS`90/DIE GRÜNEN"],
+        "Name": ["a", "b", "c"],
+        "Vorname": ["d", "e", "f"],
+        "Titel": ["von", "", None],
         "ja": [1, 0, 0],
         "nein": [0, 1, 0],
         "Enthaltung": [0, 0, 1],
         "ungültig": [0, 0, 0],
         "nichtabgegeben": [0, 0, 0],
         "Bezeichnung": ["a", "b", "c"],
+        "Bemerkung": ["a", "aa", "aaa"],
     }
     sheet_file = create_dummy_excel("test.xlsx", data)
 
     df = get_sheet_df(sheet_file)
     assert df is not None
     assert len(df) == 3
-    assert "BÜ90/GR" in df["Fraktion/Gruppe"].values
+    assert "BÜ90/GR" in df["Fraktion/Gruppe"].to_list()
 
 
 def test_get_sheet_df_invalid_vote_columns(create_dummy_excel: Callable):
     data = {
+        "Wahlperiode": [
+            1,
+        ],
+        "Sitzungnr": [
+            1,
+        ],
+        "Abstimmnr": [
+            1,
+        ],
         "Fraktion/Gruppe": ["CDU/CSU"],
+        "Name": [
+            "a",
+        ],
+        "Vorname": [
+            "d",
+        ],
+        "Titel": [
+            "von",
+        ],
         "ja": [1],
         "nein": [1],
         "Enthaltung": [0],
         "ungültig": [0],
         "nichtabgegeben": [0],
         "Bezeichnung": ["a"],
+        "Bemerkung": [
+            "a",
+        ],
     }
     sheet_file = create_dummy_excel("empty.xlsx", data)
 
@@ -415,13 +399,34 @@ def test_get_sheet_df_invalid_vote_columns(create_dummy_excel: Callable):
 
 def test_get_sheet_df_with_file_title_maps(create_dummy_excel: Callable):
     data = {
+        "Wahlperiode": [
+            1,
+        ],
+        "Sitzungnr": [
+            1,
+        ],
+        "Abstimmnr": [
+            1,
+        ],
         "Fraktion/Gruppe": ["CDU/CSU"],
+        "Name": [
+            "a",
+        ],
+        "Vorname": [
+            "d",
+        ],
+        "Titel": [
+            "von",
+        ],
         "ja": [1],
         "nein": [0],
         "Enthaltung": [0],
         "ungültig": [0],
         "nichtabgegeben": [0],
         "Bezeichnung": ["a"],
+        "Bemerkung": [
+            "a",
+        ],
     }
 
     sheet_file = create_dummy_excel("20230101_1_test.xlsx", data)
@@ -432,25 +437,32 @@ def test_get_sheet_df_with_file_title_maps(create_dummy_excel: Callable):
     assert df is not None
     assert "title" in df.columns
     assert "date" in df.columns
-    assert df["title"].iloc[0] == "Test Title"
-    assert df["date"].iloc[0] == pd.Timestamp("2023-01-01")
+    assert df["title"].first() == "Test Title"
+    assert df["date"].first() == datetime.datetime(2023, 1, 1)
 
 
 def test_get_sheet_df_disambiguate_party(create_dummy_excel: Callable):
     data = {
+        "Wahlperiode": [1, 1, 1],
+        "Sitzungnr": [1, 1, 1],
+        "Abstimmnr": [1, 2, 3],
         "Fraktion/Gruppe": ["BÜNDNIS`90/DIE GRÜNEN", "DIE LINKE", "fraktionslos"],
+        "Name": ["a", "b", "c"],
+        "Vorname": ["d", "e", "f"],
+        "Titel": ["von", "", None],
         "ja": [1, 0, 0],
         "nein": [0, 1, 0],
         "Enthaltung": [0, 0, 1],
         "ungültig": [0, 0, 0],
         "nichtabgegeben": [0, 0, 0],
         "Bezeichnung": ["a", "b", "c"],
+        "Bemerkung": ["a", "aa", "aaa"],
     }
     sheet_file = create_dummy_excel("party_test.xlsx", data)
 
     df = get_sheet_df(sheet_file)
     assert df is not None
-    parties = df["Fraktion/Gruppe"].tolist()
+    parties = df["Fraktion/Gruppe"].to_list()
     assert "BÜ90/GR" in parties
     assert "DIE LINKE." in parties
     assert "Fraktionslos" in parties
@@ -467,11 +479,10 @@ def test_get_sheet_df_with_actual_data():
     }
 
     # line to test
-    df = get_sheet_df(path, file_title_maps=file_title_maps, validate=True)
+    _ = get_sheet_df(path, file_title_maps=file_title_maps)
 
 
-@pytest.mark.parametrize("validate", [True, False])
-def test_get_squished_dataframe(validate: bool):
+def test_get_squished_dataframe():
     path = Path("tests/data_for_testing/20201126_3_xls-data.xlsx")
     file_title_maps = {
         "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
@@ -481,54 +492,106 @@ def test_get_squished_dataframe(validate: bool):
         "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
     }
 
-    df = get_sheet_df(path, file_title_maps=file_title_maps, validate=validate)
+    df = get_sheet_df(path, file_title_maps=file_title_maps)
 
     if df is None:
         raise ValueError(f"df cannot be None here.")
 
-    df = get_squished_dataframe(df, validate=validate)
-
-
-@pytest.mark.parametrize(
-    "dtypes",
-    [
-        {"a": "int64", "b": "int64", "c": "object"},
-        {"a": int, "b": int, "c": object},
-        {"a": int, "b": int, "c": str},
-    ],
-    ids=["object", "object2", "str"],
-)
-def test_set_sheet_dtypes(dtypes: dict[str, Any]):
-    df = pd.DataFrame({"a": [1, 2, 3], "b": [1.0, 2.0, 3.0], "c": ["a", "b", "c"]})
-    df_target = pd.DataFrame({"a": [1, 2, 3], "b": [1, 2, 3], "c": ["a", "b", "c"]})
-
-    # line to test
-    df2 = set_sheet_dtypes(df.copy(), dtypes)
-    assert df2.dtypes.equals(df_target.dtypes)
-
-
-def test_bits_of_get_multiple_sheets_df():
-    path = Path("tests/data_for_testing/20201126_3_xls-data.xlsx")
-    file_title_maps = {
-        "20201126_3_xls-data.xlsx": "26.11.2020: Übereinkommen über ein Einheitliches Patentgericht",
-        "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",
-        "20201118_4_xls-data.xlsx": "18.11.2020: Corona-Maßnahmen (epidemische Lage), Antrag CDU/CSU, SPD",
-        "20201118_1_xls-data.xlsx": "18.11.2020: Corona-Maßnahmen (epidemische Lage), Änderungsantrag FDP",
-        "20200916_1_xls-data.xlsx": "16.09.2020: Mobilität der Zukunft (Beschlussempfehlung)",
-    }
-
-    df = get_sheet_df(path, file_title_maps=file_title_maps, validate=False)
-
-    if df is None:
-        raise ValueError(f"df cannot be None here.")
-
-    # lines to test
     df = get_squished_dataframe(df)
-    df = set_sheet_dtypes(df)
-    schemas.SHEET_FINAL.validate(df)
+    records_expected = [
+        {
+            "Wahlperiode": 19,
+            "Sitzungnr": 195,
+            "Abstimmnr": 3,
+            "Fraktion/Gruppe": "CDU/CSU",
+            "Name": "Abercron",
+            "Vorname": "Michael",
+            "Titel": "von",
+            "Bezeichnung": "Dr. Michael von Abercron",
+            "Bemerkung": None,
+            "sheet_name": "",
+            "date": "2020-11-26T00:00:00.000",
+            "title": "\u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "issue": "2020-11-26 \u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "vote": "ja",
+        },
+        {
+            "Wahlperiode": 19,
+            "Sitzungnr": 195,
+            "Abstimmnr": 3,
+            "Fraktion/Gruppe": "CDU/CSU",
+            "Name": "Albani",
+            "Vorname": "Stephan",
+            "Titel": None,
+            "Bezeichnung": "Stephan Albani",
+            "Bemerkung": None,
+            "sheet_name": "",
+            "date": "2020-11-26T00:00:00.000",
+            "title": "\u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "issue": "2020-11-26 \u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "vote": "ja",
+        },
+        {
+            "Wahlperiode": 19,
+            "Sitzungnr": 195,
+            "Abstimmnr": 3,
+            "Fraktion/Gruppe": "CDU/CSU",
+            "Name": "Altenkamp",
+            "Vorname": "Norbert Maria",
+            "Titel": None,
+            "Bezeichnung": "Norbert Maria Altenkamp",
+            "Bemerkung": None,
+            "sheet_name": "",
+            "date": "2020-11-26T00:00:00.000",
+            "title": "\u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "issue": "2020-11-26 \u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "vote": "ja",
+        },
+        {
+            "Wahlperiode": 19,
+            "Sitzungnr": 195,
+            "Abstimmnr": 3,
+            "Fraktion/Gruppe": "CDU/CSU",
+            "Name": "Altmaier",
+            "Vorname": "Peter",
+            "Titel": None,
+            "Bezeichnung": "Peter Altmaier",
+            "Bemerkung": None,
+            "sheet_name": "",
+            "date": "2020-11-26T00:00:00.000",
+            "title": "\u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "issue": "2020-11-26 \u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "vote": "nichtabgegeben",
+        },
+        {
+            "Wahlperiode": 19,
+            "Sitzungnr": 195,
+            "Abstimmnr": 3,
+            "Fraktion/Gruppe": "CDU/CSU",
+            "Name": "Amthor",
+            "Vorname": "Philipp",
+            "Titel": None,
+            "Bezeichnung": "Philipp Amthor",
+            "Bemerkung": None,
+            "sheet_name": "",
+            "date": "2020-11-26T00:00:00.000",
+            "title": "\u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "issue": "2020-11-26 \u00dcbereinkommen \u00fcber ein Einheitliches Patentgericht",
+            "vote": "ja",
+        },
+    ]
 
+    df_expected = pl.from_dicts(records_expected)
+    df_expected = df_expected.with_columns(
+        **{"date": pl.col("date").str.to_datetime().dt.date()}
+    )
 
-# TODO - CONTINUE HERE: test failing
+    df_head = df.head()
+
+    for c in df_expected.columns:
+        s_expected = df_expected[c]
+        s = df_head[c]
+        assert s_expected.equals(s)
 
 
 @pytest.mark.parametrize("one_fails", [True, False])
@@ -542,7 +605,7 @@ def test_get_multiple_sheets(one_fails: bool):
         "20201126_2_xls-data.xlsx": "26.11.2020: Europäische Bank für nachhaltige Entwicklung (Beschlussempfehlung)",
     }
 
-    df = get_multiple_sheets_df(
+    _ = get_multiple_sheets_df(
         sheet_files, file_title_maps=file_title_maps, validate=True
     )
 
