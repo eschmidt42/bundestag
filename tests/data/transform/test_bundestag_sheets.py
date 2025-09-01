@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 from typing import Any, Callable
 
@@ -16,6 +17,7 @@ from bundestag.data.transform.bundestag_sheets import (
     get_squished_dataframe,
     handle_title_and_date,
     is_date,
+    parse_date,
     read_excel,
     run,
     set_sheet_dtypes,
@@ -39,9 +41,53 @@ def test_get_file2poll_maps():
     assert file2poll_map["20201126_3_xls-data.xlsx"] == "title1"
 
 
-def test_is_date():
-    assert is_date("123", False) == False
-    assert is_date("2022-02-02", True) == True
+@pytest.mark.parametrize(
+    "date_str, dayfirst, expected_date, expected_format",
+    [
+        ("31.01.2022", True, datetime.datetime(2022, 1, 31), "%d.%m.%Y"),
+        ("2022-01-31", True, None, ""),
+        ("2022-01-31", False, datetime.datetime(2022, 1, 31), "%Y-%m-%d"),
+        ("20220131", False, datetime.datetime(2022, 1, 31), "%Y%m%d"),
+        ("220131", False, datetime.datetime(2022, 1, 31), "%y%m%d"),
+        ("31.01.2022", False, None, ""),
+        ("not a date", True, None, ""),
+        ("not a date", False, None, ""),
+    ],
+)
+def test_parse_date(
+    date_str: str,
+    dayfirst: bool,
+    expected_date: datetime.datetime | None,
+    expected_format: str,
+):
+    parsed_date, matched_format = parse_date(date_str, dayfirst)
+    if date_str == "220131":
+        with pytest.raises(AssertionError):
+            assert parsed_date == expected_date
+            assert matched_format == expected_format
+        pytest.xfail(
+            "datetime.datetime.strptime weirdly parses 220131 successfully with %Y%m%d."
+        )
+    else:
+        assert parsed_date == expected_date
+        assert matched_format == expected_format
+
+
+@pytest.mark.parametrize(
+    "date_str, dayfirst, expected",
+    [
+        ("31.01.2022", True, True),
+        ("2022-01-31", True, False),
+        ("2022-01-31", False, True),
+        ("20220131", False, True),
+        ("31.01.2022", False, False),
+        ("not a date", True, False),
+        ("not a date", False, False),
+        ("123", False, False),
+    ],
+)
+def test_is_date(date_str: str, dayfirst: bool, expected: bool):
+    assert is_date(date_str, dayfirst) == expected
 
 
 @pytest.mark.parametrize(

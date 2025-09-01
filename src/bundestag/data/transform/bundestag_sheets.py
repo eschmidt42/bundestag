@@ -1,8 +1,11 @@
+import datetime
 import json
 import logging
 from pathlib import Path
 
 import pandas as pd
+
+# import polars as pl
 import tqdm
 import xlrd
 
@@ -34,13 +37,30 @@ def get_file2poll_maps(uris: dict[str, str], sheet_dir: Path) -> dict[str, str]:
     return file2poll
 
 
-def is_date(s: str, dayfirst: bool) -> bool:
-    try:
-        _ = pd.to_datetime(s, dayfirst=dayfirst)
-    except:
-        return False
+def parse_date(date: str, dayfirst: bool) -> tuple[datetime.date | None, str]:
+    if dayfirst:
+        formats = ["%d.%m.%Y", "%d%m%y"]
     else:
+        formats = ["%Y-%m-%d", "%Y%m%d"]
+
+    parsed_date = None
+    matched_format = ""
+    for f in formats:
+        try:
+            parsed_date = datetime.datetime.strptime(date, f)
+            matched_format = f
+            break
+        except:
+            pass
+
+    return parsed_date, matched_format
+
+
+def is_date(s: str, dayfirst: bool) -> bool:
+    parsed_date, _ = parse_date(s, dayfirst=dayfirst)
+    if parsed_date is not None:
         return True
+    return False
 
 
 class ExcelReadException(Exception): ...
@@ -75,23 +95,39 @@ def verify_vote_columns(sheet_file: Path, df: pd.DataFrame):
 def handle_title_and_date(
     full_title: str, sheet_file: Path
 ) -> tuple[str, pd.Timestamp | None]:
-    "Extracting the title of the roll call vote and the date"
+    "Extracting the title of the roll call vote and the date from full_title, if possible, otherwise fall back to sheet_file."
 
-    title = full_title.split(":")
+    # get date from full_title
+    title_clean = full_title.strip()
+    title = title_clean.split(":")
+    date_in_title = title[0]
+    title_has_date = is_date(date_in_title, dayfirst=True)
 
-    date = title[0]
+    # get date from file name
+    date_in_fname = sheet_file.name.split("_")[0]
+    fname_has_date = is_date(date_in_fname, dayfirst=False)
 
-    if is_date(date, True):
-        date = pd.to_datetime(date, dayfirst=True)
-        title = ":".join(title[1:])
-    elif is_date(sheet_file.name.split("_")[0], False):
-        date = pd.to_datetime(sheet_file.name.split("_")[0])
-        title = full_title
+    if title_has_date:
+        date = pd.to_datetime(date_in_title, dayfirst=True)
+        title = ":".join(title[1:]).strip()
+        return title, date
+    elif fname_has_date:
+        date = pd.to_datetime(date_in_fname, dayfirst=False)
+        return title_clean, date
     else:
-        date = None
-        title = full_title
+        return title_clean, None
 
-    title = title.strip()
+    # if is_date(date_in_title, True):
+    #     date_in_title = pd.to_datetime(date_in_title, dayfirst=True)
+    #     title = ":".join(title[1:])
+    # elif is_date(date_in_fname, False):
+    #     date = pd.to_datetime(sheet_file.name.split("_")[0])
+    #     title = title_clean
+    # else:
+    #     date = None
+    #     title = title_clean
+
+    # title = title.strip()
     return title, date
 
 
