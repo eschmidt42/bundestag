@@ -23,6 +23,7 @@ build-backend = "hatchling.build"
 data = [
     "beautifulsoup4>=4.12.2",
     "fastcore>=1.5.29",
+    "fastexcel>=0.14.0",
     "fastparquet>=2023.2.0",
     "frictionless>=5.11.1",
     "ipywidgets",
