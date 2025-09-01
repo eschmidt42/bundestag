@@ -1,11 +1,10 @@
 import logging
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 
 from bundestag.data.transform.abgeordnetenwatch.helper import (
     get_parties_from_col,
-    get_politician_names,
 )
 from bundestag.data.transform.abgeordnetenwatch.process import (
     compile_votes_data,
@@ -17,14 +16,18 @@ from bundestag.data.utils import ensure_path_exists
 logger = logging.getLogger(__name__)
 
 
-def transform_mandates_data(df: pd.DataFrame) -> pd.DataFrame:
-    df["all_parties"] = df.apply(get_parties_from_col, axis=1)
-    df["party"] = df["all_parties"].apply(lambda x: x[-1])
+def transform_mandates_data(df: pl.DataFrame) -> pl.DataFrame:
+    df = df.with_columns(
+        **{"all_parties": pl.col("fraction_names").map_elements(get_parties_from_col)}
+    ).with_columns(**{"party": pl.col("all_parties").list.last()})
+
     return df
 
 
-def transform_votes_data(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.assign(**{"politician name": get_politician_names})
+def transform_votes_data(df: pl.DataFrame) -> pl.DataFrame:
+    df = df.with_columns(
+        **{"politician name": pl.col("mandate").str.extract(r"^(.*?) \s*\(", 1)}
+    )
     return df
 
 
@@ -79,7 +82,7 @@ def run(
     if not dry:
         file = get_mandates_parquet_path(legislature_id, preprocessed_path)
         logger.info(f"Writing to {file}")
-        df.to_parquet(path=file)
+        df.write_parquet(file)
 
     # votes
     df_all_votes = compile_votes_data(legislature_id, raw_path, validate=validate)
@@ -89,10 +92,10 @@ def run(
         all_votes_path = get_votes_csv_path(legislature_id, preprocessed_path)
         logger.info(f"Writing to {all_votes_path}")
 
-        df_all_votes.to_csv(all_votes_path, index=False)
+        df_all_votes.write_csv(all_votes_path)
 
         file = get_votes_parquet_path(legislature_id, preprocessed_path)
         logger.info(f"Writing to {file}")
-        df_all_votes.to_parquet(path=file)
+        df_all_votes.write_parquet(file)
 
     logger.info("Done transforming abgeordnetenwatch data")

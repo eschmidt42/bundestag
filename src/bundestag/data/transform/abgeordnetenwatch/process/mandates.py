@@ -2,7 +2,7 @@ import json
 import logging
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 
 import bundestag.schemas as schemas
 from bundestag.data.utils import get_location, get_mandates_filename
@@ -65,9 +65,9 @@ def parse_mandate_data(mandate: schemas.Mandate, missing: str = "unknown") -> di
     return d
 
 
-def get_mandates_data(legislature_id: int, path: Path) -> pd.DataFrame:
+def get_mandates_data(legislature_id: int, path: Path) -> pl.DataFrame:
     "Parses info from mandate json file(s) for `legislature_id`"
     info = load_mandate_json(legislature_id, path=path)
     mandates = schemas.MandatesResponse(**info)
-    df = pd.DataFrame([parse_mandate_data(m) for m in mandates.data])
+    df = pl.DataFrame([parse_mandate_data(m) for m in mandates.data])
     return df

@@ -1,7 +1,8 @@
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 import pytest
+from inline_snapshot import snapshot
 
 from bundestag.data.transform.abgeordnetenwatch.transform import (
     get_mandates_parquet_path,
@@ -20,72 +21,79 @@ def raw_path() -> Path:
 
 
 @pytest.fixture
-def MANDATES_DF() -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            "legislature_id": {0: 111, 1: 111},
-            "legislature_period": {
-                0: "Bundestag 2017 - 2021",
-                1: "Bundestag 2017 - 2021",
+def MANDATES_DF() -> pl.DataFrame:
+    return pl.from_dicts(
+        [
+            {
+                "legislature_id": 111,
+                "legislature_period": "Bundestag 2017 - 2021",
+                "mandate_id": 52657,
+                "mandate": "Zeki Gökhan (Bundestag 2017 - 2021)",
+                "politician_id": 122163,
+                "politician": "Zeki Gökhan",
+                "politician_url": "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
+                "start_date": "2021-08-19",
+                "end_date": "",
+                "constituency_id": 4215,
+                "constituency_name": "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
+                "fraction_names": ["DIE LINKE seit 19.08.2021"],
+                "fraction_ids": [9233],
+                "fraction_starts": ["2021-08-19"],
+                "fraction_ends": [""],
             },
-            "mandate_id": {0: 52657, 1: 52107},
-            "mandate": {
-                0: "Zeki Gökhan (Bundestag 2017 - 2021)",
-                1: "Florian Jäger (Bundestag 2017 - 2021)",
+            {
+                "legislature_id": 111,
+                "legislature_period": "Bundestag 2017 - 2021",
+                "mandate_id": 52107,
+                "mandate": "Florian Jäger (Bundestag 2017 - 2021)",
+                "politician_id": 121214,
+                "politician": "Florian Jäger",
+                "politician_url": "https://www.abgeordnetenwatch.de/profile/florian-jaeger",
+                "start_date": "2021-07-20",
+                "end_date": "",
+                "constituency_id": 4339,
+                "constituency_name": "215 - Fürstenfeldbruck (Bundestag 2017 - 2021)",
+                "fraction_names": ["AfD seit 20.07.2021"],
+                "fraction_ids": [9228],
+                "fraction_starts": ["2021-07-20"],
+                "fraction_ends": [""],
             },
-            "politician_id": {0: 122163, 1: 121214},
-            "politician": {0: "Zeki Gökhan", 1: "Florian Jäger"},
-            "politician_url": {
-                0: "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
-                1: "https://www.abgeordnetenwatch.de/profile/florian-jaeger",
-            },
-            "start_date": {0: "2021-08-19", 1: "2021-07-20"},
-            "end_date": {0: "", 1: ""},
-            "constituency_id": {0: 4215, 1: 4339},
-            "constituency_name": {
-                0: "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
-                1: "215 - Fürstenfeldbruck (Bundestag 2017 - 2021)",
-            },
-            "fraction_names": {
-                0: ["DIE LINKE seit 19.08.2021"],
-                1: ["AfD seit 20.07.2021"],
-            },
-            "fraction_ids": {0: [9233], 1: [9228]},
-            "fraction_starts": {0: ["2021-08-19"], 1: ["2021-07-20"]},
-            "fraction_ends": {0: [""], 1: [""]},
-        }
+        ]
     )
 
 
 @pytest.fixture
-def VOTES_DF() -> pd.DataFrame:
-    return pd.DataFrame(
+def VOTES_DF() -> pl.DataFrame:
+    return pl.from_dict(
         {
-            "mandate_id": {0: 45467, 1: 44472},
-            "mandate": {
-                0: "Michael von Abercron (Bundestag 2017 - 2021)",
-                1: "Stephan Albani (Bundestag 2017 - 2021)",
-            },
-            "poll_id": {0: 4217, 1: 4217},
-            "vote": {0: "yes", 1: "yes"},
-            "reason_no_show": {0: None, 1: None},
-            "reason_no_show_other": {0: None, 1: None},
+            "mandate_id": [45467, 44472],
+            "mandate": [
+                "Michael von Abercron (Bundestag 2017 - 2021)",
+                "Stephan Albani (Bundestag 2017 - 2021)",
+            ],
+            "poll_id": [4217, 4217],
+            "vote": ["yes", "yes"],
+            "reason_no_show": [None, None],
+            "reason_no_show_other": [None, None],
         }
     )
 
 
-def test_transform_mandates_data(MANDATES_DF: pd.DataFrame):
-    # line to test
+def test_transform_mandates_data(MANDATES_DF: pl.DataFrame):
     res = transform_mandates_data(MANDATES_DF)
     assert "all_parties" in res.columns
+    assert res["all_parties"].to_list() == snapshot([["DIE LINKE"], ["AfD"]])
     assert "party" in res.columns
+    assert res["party"].to_list() == snapshot(["DIE LINKE", "AfD"])
 
 
-def test_transform_votes_data(VOTES_DF: pd.DataFrame):
-    # line to test
+def test_transform_votes_data(VOTES_DF: pl.DataFrame):
     res = transform_votes_data(VOTES_DF)
     assert "politician name" in res.columns
-    assert res.drop(columns=["politician name"]).equals(VOTES_DF)
+    assert res.drop(["politician name"]).equals(VOTES_DF)
+    assert res["politician name"].to_list() == snapshot(
+        ["Michael von Abercron", "Stephan Albani"]
+    )
 
 
 @pytest.mark.parametrize(

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 import pytest
 from inline_snapshot import snapshot
 
@@ -13,7 +13,7 @@ from bundestag.data.transform.abgeordnetenwatch.process.votes import (
 )
 
 
-def test_get_votes_data(sample_vote_json_path: Path, VOTES_DF: pd.DataFrame):
+def test_get_votes_data(sample_vote_json_path: Path, VOTES_DF: pl.DataFrame):
     legislature_id = 111
     poll_id = 4217
     res = get_votes_data(legislature_id, poll_id, sample_vote_json_path.parent.parent)
@@ -177,7 +177,7 @@ def test_load_vote_json(sample_vote_json_path: Path):
 
 @pytest.mark.parametrize("validate", [True, False])
 def test_compile_votes_data(
-    sample_vote_json_path: Path, VOTES_DF: pd.DataFrame, validate: bool
+    sample_vote_json_path: Path, VOTES_DF: pl.DataFrame, validate: bool
 ):
     legislature_id = 111
 

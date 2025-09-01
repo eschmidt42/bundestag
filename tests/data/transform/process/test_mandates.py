@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 import pytest
 from inline_snapshot import snapshot
 
@@ -12,7 +12,7 @@ from bundestag.data.transform.abgeordnetenwatch.process.mandates import (
 )
 
 
-def test_get_mandates_data(sample_mandates_json_path: Path, MANDATES_DF: pd.DataFrame):
+def test_get_mandates_data(sample_mandates_json_path: Path, MANDATES_DF: pl.DataFrame):
     legislature_id = 111
     res = get_mandates_data(legislature_id, sample_mandates_json_path.parent)
     assert res.equals(MANDATES_DF)

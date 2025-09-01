@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+import polars as pl
 import pytest
 
 import bundestag.schemas as schemas
@@ -78,56 +79,56 @@ def POLLS_DF() -> pd.DataFrame:
 
 
 @pytest.fixture()
-def MANDATES_DF() -> pd.DataFrame:
-    return pd.DataFrame(
+def MANDATES_DF() -> pl.DataFrame:
+    return pl.DataFrame(
         {
-            "legislature_id": {0: 111, 1: 111},
-            "legislature_period": {
-                0: "Bundestag 2017 - 2021",
-                1: "Bundestag 2017 - 2021",
-            },
-            "mandate_id": {0: 52657, 1: 52107},
-            "mandate": {
-                0: "Zeki Gökhan (Bundestag 2017 - 2021)",
-                1: "Florian Jäger (Bundestag 2017 - 2021)",
-            },
-            "politician_id": {0: 122163, 1: 121214},
-            "politician": {0: "Zeki Gökhan", 1: "Florian Jäger"},
-            "politician_url": {
-                0: "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
-                1: "https://www.abgeordnetenwatch.de/profile/florian-jaeger",
-            },
-            "start_date": {0: "2021-08-19", 1: "2021-07-20"},
-            "end_date": {0: "", 1: ""},
-            "constituency_id": {0: 4215, 1: 4339},
-            "constituency_name": {
-                0: "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
-                1: "215 - Fürstenfeldbruck (Bundestag 2017 - 2021)",
-            },
-            "fraction_names": {
-                0: ["DIE LINKE seit 19.08.2021"],
-                1: ["AfD seit 20.07.2021"],
-            },
-            "fraction_ids": {0: [9233], 1: [9228]},
-            "fraction_starts": {0: ["2021-08-19"], 1: ["2021-07-20"]},
-            "fraction_ends": {0: [""], 1: [""]},
+            "legislature_id": [111, 111],
+            "legislature_period": [
+                "Bundestag 2017 - 2021",
+                "Bundestag 2017 - 2021",
+            ],
+            "mandate_id": [52657, 52107],
+            "mandate": [
+                "Zeki Gökhan (Bundestag 2017 - 2021)",
+                "Florian Jäger (Bundestag 2017 - 2021)",
+            ],
+            "politician_id": [122163, 121214],
+            "politician": ["Zeki Gökhan", "Florian Jäger"],
+            "politician_url": [
+                "https://www.abgeordnetenwatch.de/profile/zeki-goekhan",
+                "https://www.abgeordnetenwatch.de/profile/florian-jaeger",
+            ],
+            "start_date": ["2021-08-19", "2021-07-20"],
+            "end_date": ["", ""],
+            "constituency_id": [4215, 4339],
+            "constituency_name": [
+                "91 - Rhein-Erft-Kreis I (Bundestag 2017 - 2021)",
+                "215 - Fürstenfeldbruck (Bundestag 2017 - 2021)",
+            ],
+            "fraction_names": [
+                ["DIE LINKE seit 19.08.2021"],
+                ["AfD seit 20.07.2021"],
+            ],
+            "fraction_ids": [[9233], [9228]],
+            "fraction_starts": [["2021-08-19"], ["2021-07-20"]],
+            "fraction_ends": [[""], [""]],
         }
     )
 
 
 @pytest.fixture()
-def VOTES_DF() -> pd.DataFrame:
-    return pd.DataFrame(
+def VOTES_DF() -> pl.DataFrame:
+    return pl.DataFrame(
         {
-            "mandate_id": {0: 45467, 1: 44472},
-            "mandate": {
-                0: "Michael von Abercron (Bundestag 2017 - 2021)",
-                1: "Stephan Albani (Bundestag 2017 - 2021)",
-            },
-            "poll_id": {0: 4217, 1: 4217},
-            "vote": {0: "yes", 1: "yes"},
-            "reason_no_show": {0: None, 1: None},
-            "reason_no_show_other": {0: None, 1: None},
+            "mandate_id": [45467, 44472],
+            "mandate": [
+                "Michael von Abercron (Bundestag 2017 - 2021)",
+                "Stephan Albani (Bundestag 2017 - 2021)",
+            ],
+            "poll_id": [4217, 4217],
+            "vote": ["yes", "yes"],
+            "reason_no_show": [None, None],
+            "reason_no_show_other": [None, None],
         }
     )
 
