@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.graph_objects as go
+import polars as pl
 import pytest
 from fastai.tabular.all import (
     TabularLearner,
@@ -19,7 +20,7 @@ from bundestag.vote_prediction import (
 @pytest.mark.parametrize("seed,shuffle", [(None, True), (42, False)])
 def test_poll_splitter(seed: int, shuffle: bool):
     c = "poll"
-    df = pd.DataFrame(
+    df = pl.DataFrame(
         {
             c: list(range(10)),
         }
@@ -62,13 +63,12 @@ def test_get_embeddings(transform: str | None, learn: TabularLearner):
     assert all([k in emb for k in learn.dls.classes])
 
 
-def test_get_poll_proponents(df_all_votes: pd.DataFrame, df_mandates: pd.DataFrame):
+def test_get_poll_proponents(df_all_votes: pl.DataFrame, df_mandates: pl.DataFrame):
     proponents = get_poll_proponents(df_all_votes, df_mandates)
 
-    assert proponents.index.nunique() == len(proponents)
-    exp_cols = ["strongest proponent", "yesses", "total", "yes %"]
+    exp_cols = ["strongest proponent", "yesses", "total", "yes %", "poll_id"]
     assert all([c in proponents.columns for c in exp_cols])
-    assert proponents.index.name == "poll_id"
+    assert proponents["poll_id"].n_unique() == len(proponents)
     assert proponents["yes %"].max() <= 100
     assert proponents["yes %"].min() >= 0
     assert proponents["total"].min() >= 0
@@ -79,9 +79,9 @@ def test_get_poll_proponents(df_all_votes: pd.DataFrame, df_mandates: pd.DataFra
 @pytest.mark.skip("skipping plot")
 def test_plot_predictions(
     learn: TabularLearner,
-    df_all_votes: pd.DataFrame,
-    df_mandates: pd.DataFrame,
-    df_polls: pd.DataFrame,
+    df_all_votes: pl.DataFrame,
+    df_mandates: pl.DataFrame,
+    df_polls: pl.DataFrame,
     y_col: str,
     splits: tuple[list[int], list[int]],
 ):
@@ -91,9 +91,9 @@ def test_plot_predictions(
 @pytest.mark.skip("skipping plot")
 @pytest.mark.slow
 def test_plot_poll_embeddings(
-    df_all_votes: pd.DataFrame,
-    df_mandates: pd.DataFrame,
-    df_polls: pd.DataFrame,
+    df_all_votes: pl.DataFrame,
+    df_mandates: pl.DataFrame,
+    df_polls: pl.DataFrame,
     embeddings: dict,
 ):
     fig = plot_poll_embeddings(df_all_votes, df_polls, embeddings, df_mandates)
@@ -104,8 +104,8 @@ def test_plot_poll_embeddings(
 @pytest.mark.skip("skipping plot")
 @pytest.mark.slow
 def test_plot_politician_embeddings(
-    df_all_votes: pd.DataFrame,
-    df_mandates: pd.DataFrame,
+    df_all_votes: pl.DataFrame,
+    df_mandates: pl.DataFrame,
     embeddings: dict,
 ):
     fig = plot_politician_embeddings(

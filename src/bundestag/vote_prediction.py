@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import polars as pl
 import torch
 from fastai.tabular.all import TabularLearner
 from sklearn import decomposition
@@ -21,7 +22,7 @@ PALETTE = {
 
 
 def poll_splitter(
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     poll_col: str = "poll_id",
     valid_pct: float = 0.2,
     shuffle: bool = True,
@@ -43,22 +44,25 @@ def poll_splitter(
         f"Splitting votes by polls (num train = {n - len(polls1)}, num valid = {len(polls1)})"
     )
 
-    mask1 = df[poll_col].isin(polls1)
-    ix0 = df.loc[~mask1].index.values
-    ix1 = df.loc[mask1].index.values
+    df = df.with_columns(
+        **{"is validation set": pl.col(poll_col).is_in(pl.lit(polls1))}
+    ).with_row_index(name="index")
+
+    ix0 = df.filter(pl.col("is validation set").not_())["index"].to_list()
+    ix1 = df.filter(pl.col("is validation set"))["index"].to_list()
 
     if shuffle:
         rng.shuffle(ix0)
         rng.shuffle(ix1)
 
-    return (ix0.tolist(), ix1.tolist())
+    return (ix0, ix1)
 
 
 def plot_predictions(
     learn: TabularLearner,
-    df_all_votes: pd.DataFrame,
-    df_mandates: pd.DataFrame,
-    df_polls: pd.DataFrame,
+    df_all_votes: pl.DataFrame,
+    df_mandates: pl.DataFrame,
+    df_polls: pl.DataFrame,
     splits: tuple[list[int], list[int]],
     y_col: str = "vote",
     n_worst_politicians: int = 20,
@@ -75,48 +79,55 @@ def plot_predictions(
     make_pred_readable = lambda x: [learn.dls.vocab[i] for i in x.argmax(axis=1)]
 
     pred_col = f"{y_col}_pred"
-    df_valid = df_all_votes.iloc[splits[1], :].assign(
-        **{pred_col: make_pred_readable(y_pred)}
-    )
+    df_all_votes = df_all_votes.with_row_index(name="index")
+    y_pred_reabale = make_pred_readable(y_pred)
 
-    M = df_valid[[y_col, pred_col]].pivot_table(
-        index=y_col, columns=pred_col, aggfunc=len, fill_value=0
-    )
+    df_valid = df_all_votes.filter(pl.col("index").is_in(pl.lit(list(splits[1]))))
 
-    display(
-        M.style.background_gradient(axis=1),
-        M.assign(total=M.sum(axis=1))
-        .pipe(lambda x: (x.T / x["total"]).T)
-        .drop(columns=["total"])
-        .style.background_gradient(axis=1),
+    df_valid = df_valid.with_columns(**{pred_col: pl.Series(y_pred_reabale)})
+
+    M = df_valid.select([y_col, pred_col]).pivot(
+        index=y_col,
+        on=pred_col,
+        aggregate_function="len",
     )
-    df_valid["prediction_correct"] = df_valid["vote"] == df_valid["vote_pred"]
+    M = M.fill_null(0.0)
+
+    # display(
+
+    #     M.with_columns(total=M.sum_horizontal())
+    #     .pipe(lambda x: (x.T / x["total"]).T)
+    #     .drop(columns=["total"])
+    #     .style.background_gradient(axis=1),
+    # )
+    df_valid = df_valid.with_columns(
+        **{"prediction_correct": pl.col("vote") == pl.col("vote_pred")}
+    )
 
     acc = df_valid["prediction_correct"].sum() / len(df_valid)
     logger.info(f"Overall accuracy = {acc * 100:.2f} %")
 
     df_valid = df_valid.join(
-        df_mandates[["politician", "party"]].set_index("politician"),
-        on="politician name",
-    ).join(df_polls[["poll_id", "poll_title"]].set_index("poll_id"), on="poll_id")
+        df_mandates.select(["politician", "party"]),
+        left_on="politician name",
+        right_on="politician",
+    ).join(df_polls.select(["poll_id", "poll_title"]), on="poll_id")
 
     print(f"\n{n_worst_politicians} most inaccurately predicted politicians:")
     tmp = (
-        df_valid.groupby(["politician name", "party"])["prediction_correct"]
-        .mean()
-        .sort_values(ascending=True)
+        df_valid.group_by(["politician name", "party"])
+        .agg(**{"prediction_correct": pl.col("prediction_correct").mean()})
+        .sort("prediction_correct", descending=False)
         .head(n_worst_politicians)
-        .reset_index()
     )
     display(tmp)
 
     print(f"\n{n_worst_polls} most inaccurately predicted polls:")
     tmp = (
-        df_valid.groupby(["poll_id", "poll_title"])["prediction_correct"]
-        .mean()
-        .sort_values(ascending=True)
+        df_valid.group_by(["poll_id", "poll_title"])
+        .agg(**{"prediction_correct": pl.col("prediction_correct").mean()})
+        .sort("prediction_correct", descending=False)
         .head(n_worst_polls)
-        .reset_index()
     )
     display(tmp)
 
@@ -148,55 +159,55 @@ def get_embeddings(
 
 
 def get_poll_proponents(
-    df_all_votes: pd.DataFrame, df_mandates: pd.DataFrame
-) -> pd.DataFrame:
+    df_all_votes: pl.DataFrame, df_mandates: pl.DataFrame
+) -> pl.DataFrame:
     "Computes which party most strongly endorsed (% yes votes of party) a poll"
 
-    votes_slim = df_all_votes[["poll_id", "vote", "politician name"]]
+    votes_slim = df_all_votes.select(["poll_id", "vote", "politician name"])
     politician_votes = votes_slim.join(
-        df_mandates[["politician", "party"]].set_index("politician"),
-        on="politician name",
+        df_mandates.select(["politician", "party"]),
+        left_on="politician name",
+        right_on="politician",
     )
 
     poll_agreement = (
-        politician_votes.groupby(["poll_id", "party"])
+        politician_votes.group_by(["poll_id", "party"])
         .agg(
-            yesses=pd.NamedAgg("vote", lambda x: (x == "yes").sum()),
-            total=pd.NamedAgg("vote", "count"),
+            yesses=pl.col("vote").eq(pl.lit("yes")).sum(),
+            total=pl.col("vote").count(),
         )
-        .assign(**{"yes %": lambda x: x["yesses"] / x["total"] * 100})
+        .with_columns(**{"yes %": pl.col("yesses") / pl.col("total") * 100.0})
     )
 
     proponents = (
-        poll_agreement.reset_index()
-        .sort_values("yes %")
-        .groupby(["poll_id"])
+        poll_agreement.sort("yes %", descending=False)
+        .group_by(["poll_id"], maintain_order=True)
         .last()
-        .rename(columns={"party": "strongest proponent"})
+        .rename({"party": "strongest proponent"})
     )
 
     return proponents
 
 
 def plot_poll_embeddings(
-    df_all_votes: pd.DataFrame,
-    df_polls: pd.DataFrame,
-    embeddings: dict,
-    df_mandates: pd.DataFrame,
+    df_all_votes: pl.DataFrame,
+    df_polls: pl.DataFrame,
+    embeddings: dict[str, pl.DataFrame],
+    df_mandates: pl.DataFrame,
     col: str = "poll_id",
     palette: dict[str, str] | None = None,
 ) -> go.Figure:
     tmp = (
-        df_all_votes.drop_duplicates(subset=col)
+        df_all_votes.unique(subset=col)
         .join(
-            df_polls[[col, "poll_title"]].set_index(col),
+            df_polls.select([col, "poll_title"]),
             on=col,
         )
-        .join(embeddings[col].set_index(col), on=col)
+        .join(embeddings[col], on=col)
     )
 
     proponents = get_poll_proponents(df_all_votes, df_mandates)
-    tmp = tmp.join(proponents[["strongest proponent"]], on=col)
+    tmp = tmp.join(proponents.select([col, "strongest proponent"]), on=col)
 
     palette = PALETTE if palette is None else palette
 
@@ -212,19 +223,19 @@ def plot_poll_embeddings(
 
 
 def plot_politician_embeddings(
-    df_all_votes: pd.DataFrame,
-    df_mandates: pd.DataFrame,
-    embeddings: dict[str, pd.DataFrame],
+    df_all_votes: pl.DataFrame,
+    df_mandates: pl.DataFrame,
+    embeddings: dict[str, pl.DataFrame],
     col: str = "politician name",
     palette: dict[str, str] | None = None,
 ) -> go.Figure:
     tmp = (
-        df_all_votes.drop_duplicates(subset="mandate_id")
+        df_all_votes.unique(subset="mandate_id")
         .join(
-            df_mandates[["mandate_id", "party"]].set_index("mandate_id"),
+            df_mandates.select(["mandate_id", "party"]),
             on="mandate_id",
         )
-        .join(embeddings[col].set_index(col), on=col)
+        .join(embeddings[col], on=col)
     )
 
     palette = PALETTE if palette is None else palette
