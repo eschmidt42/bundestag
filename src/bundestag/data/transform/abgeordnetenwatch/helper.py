@@ -1,7 +1,7 @@
 import logging
 import re
 
-import pandas as pd
+import polars as pl
 
 logger = logging.getLogger(__name__)
 
@@ -20,17 +20,8 @@ def extract_party_from_string(s: str) -> str:
         return s
 
 
-def get_parties_from_col(
-    row: pd.Series, col="fraction_names", missing: str = "unknown"
-):
-    strings = row[col]
-    if strings is None or not isinstance(strings, list):
-        return [missing]
+def get_parties_from_col(elements: pl.Series, missing: str = "unknown") -> pl.Series:
+    if len(elements) > 0:
+        return elements.map_elements(extract_party_from_string)
     else:
-        return [extract_party_from_string(s) for s in strings]
-
-
-def get_politician_names(df: pd.DataFrame, col: str = "mandate"):
-    names = df[col].str.split(" ").str[:-4].str.join(" ")
-    logger.debug(f"Parsing `{col}` to names. Found {names.nunique()} names")
-    return names
+        return pl.Series([missing])

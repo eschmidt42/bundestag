@@ -2,7 +2,7 @@ import json
 import logging
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 from tqdm import tqdm
 
 import bundestag.schemas as schemas
@@ -45,7 +45,7 @@ def get_votes_data(
     poll_id: int,
     path: Path,
     validate: bool = False,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     "Parses info from vote json files for `legislature_id` and `poll_id`"
     data = load_vote_json(legislature_id, poll_id, path=path)
     votes = schemas.VoteResponse(**data)
@@ -60,15 +60,14 @@ def get_votes_data(
 
     if n_none > 0:
         logger.warning(f"Removed {n_none} votes because of their id being None")
-    df = pd.DataFrame(df)  # [parse_vote_data(v) for v in votes.data.related_data.votes]
-
-    if validate:
-        schemas.VOTES.validate(df)
+    df = pl.DataFrame(df)
 
     return df
 
 
-def compile_votes_data(legislature_id: int, path: Path, validate: bool = False):
+def compile_votes_data(
+    legislature_id: int, path: Path, validate: bool = False
+) -> pl.DataFrame:
     "Compiles the individual politicians' votes for a specific legislature period"
 
     known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
@@ -83,17 +82,19 @@ def compile_votes_data(legislature_id: int, path: Path, validate: bool = False):
     ):
         df = get_votes_data(legislature_id, poll_id, path=path, validate=False)
 
-        ids = df.loc[df.duplicated(subset=["mandate_id"]), "mandate_id"].unique()
-        if len(ids) > 0:
+        id_duplicates = df.filter(pl.col("mandate_id").is_duplicated())[
+            "mandate_id"
+        ].unique()
+        # id_duplicates = df.loc[df.duplicated(subset=["mandate_id"]), "mandate_id"].unique()
+        if len(id_duplicates) > 0:
             logger.warning(
-                f"Dropping duplicates for mandate_ids ({ids}):\n{df.loc[df['mandate_id'].isin(ids)]}"
+                f"Dropping duplicates for mandate_ids ({len(id_duplicates):_}):\n{df.filter(pl.col('mandate_id').is_in(pl.lit(id_duplicates)))}"
             )
-            df = df.drop_duplicates(subset=["mandate_id"])
+            df = df.unique("mandate_id", keep="first", maintain_order=True)
+            # df = df.drop_duplicates(subset=["mandate_id"])
 
         df_all_votes.append(df)
 
-    df_all_votes = pd.concat(df_all_votes, ignore_index=True)
+    df_all_votes = pl.concat(df_all_votes)
 
-    if validate:
-        schemas.VOTES.validate(df_all_votes)
     return df_all_votes

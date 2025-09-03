@@ -1,6 +1,8 @@
+import datetime
+
 import ipywidgets as widgets
 import matplotlib.pyplot as plt
-import pandas as pd
+import polars as pl
 
 from bundestag import similarity as sim
 
@@ -12,8 +14,12 @@ class GUI:
     submit_widget: widgets.Button
     selection_widget: widgets.Label
     display_widget: widgets.Output
+    df: pl.DataFrame
+    mdbs: pl.Series
+    parties: pl.Series
+    party_votes: pl.DataFrame
 
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pl.DataFrame):
         self.df = df
         self.mdbs = df["Bezeichnung"].unique()
         self.parties = df["Fraktion/Gruppe"].unique()
@@ -37,16 +43,21 @@ class GUI:
             ]
         )
 
-    def filter_dfs(self, start_date, end_date):
+    def filter_dfs(
+        self, start_date: datetime.date | None, end_date: datetime.date | None
+    ) -> tuple[pl.DataFrame, pl.DataFrame]:
         if start_date is None or end_date is None:
             return self.df, self.party_votes
 
-        mask = (self.df["date"] >= str(start_date)) & (self.df["date"] <= str(end_date))
-        df = self.df.loc[mask]
-
-        date_range = pd.date_range(start_date, end_date)
-        mask = self.party_votes["date"].isin(date_range)
-        party_votes = self.party_votes.loc[mask]
+        df = self.df.filter(pl.col("date").is_between(start_date, end_date))
+        # mask = (self.df["date"] >= str(start_date)) & (self.df["date"] <= str(end_date))
+        # df = self.df.loc[mask]
+        party_votes = self.party_votes.filter(
+            pl.col("date").is_between(start_date, end_date)
+        )
+        # date_range = pl.date_range(start_date, end_date)
+        # mask = self.party_votes["date"].isin(date_range)
+        # party_votes = self.party_votes.loc[mask]
         return df, party_votes
 
 
@@ -89,9 +100,8 @@ class MdBGUI(GUI):
 
         mdb_votes = sim.prepare_votes_of_mdb(df, mdb)
 
-        mdb_vs_parties = sim.align_mdb_with_parties(
-            mdb_votes, party_votes_pivoted
-        ).pipe(sim.compute_similarity, lsuffix="mdb", rsuffix="party")
+        mdb_vs_parties = sim.align_mdb_with_parties(mdb_votes, party_votes_pivoted)
+        mdb_vs_parties = sim.compute_similarity(mdb_vs_parties, suffix="_party")
 
         self.display_widget.clear_output()
         with self.display_widget:
@@ -99,7 +109,7 @@ class MdBGUI(GUI):
                 mdb_vs_parties,
                 title_overall=f"Overall similarity of {mdb} with all parties",
                 title_over_time=f"{mdb} vs time",
-                party_col="Fraktion/Gruppe",
+                party_col="Fraktion/Gruppe_party",
             )
             plt.tight_layout()
             plt.show()
@@ -144,7 +154,7 @@ class PartyGUI(GUI):
 
         partyA_vs_rest = sim.align_party_with_all_parties(
             party_votes_pivoted, party
-        ).pipe(sim.compute_similarity, lsuffix="a", rsuffix="b")
+        ).pipe(sim.compute_similarity, suffix="_b")
 
         self.display_widget.clear_output()
         with self.display_widget:

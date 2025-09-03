@@ -1,6 +1,9 @@
+from functools import partial
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import polars as pl
 import pytest
 import spacy
 
@@ -74,26 +77,21 @@ def test_make_topic_scores_dense():
 
 
 def test_clean_text(nlp: spacy.language.Language):
-    df = pd.DataFrame(
-        {
-            "text": [
-                "Das ist ein Test\nmit Zeilenumbrüchen.",
-                "Und hier ist noch einer mit Zahlen 123 und Satzzeichen!",
-                "Ein Text\xa0mit geschütztem Leerzeichen.",
-            ]
-        }
-    )
+    texts = [
+        "Das ist ein Test\nmit Zeilenumbrüchen.",
+        "Und hier ist noch einer mit Zahlen 123 und Satzzeichen!",
+        "Ein Text\xa0mit geschütztem Leerzeichen.",
+    ]
 
-    expected_result = [
+    expected_results = [
         ["Test", "Zeilenumbrüchen"],
         ["Zahlen", "Satzzeichen"],
         ["Text", "geschütztem", "Leerzeichen"],
     ]
 
-    # line to test
-    result = clean_text(df, nlp, col="text")
-
-    assert result == expected_result
+    for t, e in zip(texts, expected_results, strict=True):
+        r = clean_text(t, nlp)
+        assert r == e
 
 
 @pytest.fixture()
@@ -102,10 +100,10 @@ def spacy_transformer() -> SpacyTransformer:
 
 
 @pytest.fixture()
-def df_polls(spacy_transformer: SpacyTransformer) -> pd.DataFrame:
+def df_polls(spacy_transformer: SpacyTransformer) -> pl.DataFrame:
     col = "poll_title"
     nlp_col = f"{col}_nlp_processed"
-    df_polls = pd.DataFrame(
+    df_polls = pl.DataFrame(
         {
             col: [
                 "Änderung des Infektionsschutzgesetzes und Grundrechtseinschränkungen",
@@ -128,8 +126,13 @@ def df_polls(spacy_transformer: SpacyTransformer) -> pd.DataFrame:
             ]
         }
     )
-    df_polls[nlp_col] = df_polls.pipe(clean_text, col=col, nlp=spacy_transformer.nlp)
-
+    df_polls = df_polls.with_columns(
+        **{
+            nlp_col: pl.col(col).map_elements(
+                partial(clean_text, nlp=spacy_transformer.nlp)
+            )
+        }
+    )
     return df_polls
 
 
@@ -137,21 +140,23 @@ class TestSpacyTransformer:
     col = "poll_title"
     nlp_col = f"{col}_nlp_processed"
     num_topics = 7
-    expected_nlp_cols = [f"nlp_dim{i}" for i in range(num_topics - 1)]
+    expected_nlp_cols = [f"nlp_dim{i}" for i in range(num_topics)]
 
     def test_cleaned_text(
-        self, df_polls: pd.DataFrame, spacy_transformer: SpacyTransformer
+        self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer
     ):
         "Basic sanity check on `col` which is expected to contain lists of strings"
 
-        res = df_polls.pipe(clean_text, col=self.col, nlp=spacy_transformer.nlp)
+        res = df_polls[self.col].map_elements(
+            partial(clean_text, nlp=spacy_transformer.nlp)
+        )
 
         mask = [len(v) == 0 for v in res]
         assert not any(mask)
 
-    def test_fit(self, df_polls: pd.DataFrame, spacy_transformer: SpacyTransformer):
+    def test_fit(self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer):
         spacy_transformer.fit_lda(
-            df_polls[self.nlp_col].values.tolist(),
+            df_polls[self.nlp_col].to_list(),
             num_topics=self.num_topics,
         )
 
@@ -161,27 +166,27 @@ class TestSpacyTransformer:
         assert spacy_transformer.corpus is not None
 
     def test_transform_documents(
-        self, df_polls: pd.DataFrame, spacy_transformer: SpacyTransformer
+        self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer
     ):
         spacy_transformer.fit_lda(
-            df_polls[self.nlp_col].values.tolist(),
+            df_polls[self.nlp_col].to_list(),
             num_topics=self.num_topics,
         )
 
-        df_lda = spacy_transformer.transform_documents(df_polls[self.nlp_col])
+        df_lda = spacy_transformer.transform_documents(df_polls, self.nlp_col)
 
-        assert df_lda.shape == (df_polls.shape[0], self.num_topics)
+        assert df_lda.shape == (df_polls.shape[0], self.num_topics + 1)
         assert all([c in df_lda.columns for c in self.expected_nlp_cols])
 
     @pytest.mark.parametrize("return_new_cols", [True, False])
     def test_transform(
         self,
         return_new_cols: bool,
-        df_polls: pd.DataFrame,
+        df_polls: pl.DataFrame,
         spacy_transformer: SpacyTransformer,
     ):
         spacy_transformer.fit_lda(
-            df_polls[self.nlp_col].values.tolist(),
+            df_polls[self.nlp_col].to_list(),
             num_topics=self.num_topics,
         )
 
@@ -200,10 +205,10 @@ class TestSpacyTransformer:
             )
             new_cols = None
 
-        assert isinstance(df_lda, pd.DataFrame)
+        assert isinstance(df_lda, pl.DataFrame)
         assert df_lda.shape == (
             df_polls.shape[0],
-            self.num_topics + df_polls.shape[1],
+            self.num_topics + 1 + df_polls.shape[1],
         )
         assert all([c in df_lda.columns for c in self.expected_nlp_cols])
 
@@ -215,16 +220,16 @@ class TestSpacyTransformer:
         "Works but something to be run elsewhere, not as a unit test that opens a window."
     )
     def test_pca_plot_lda_topics(
-        self, df_polls: pd.DataFrame, spacy_transformer: SpacyTransformer
+        self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer
     ):
         spacy_transformer.fit_lda(
-            df_polls[self.nlp_col].values.tolist(),
+            df_polls[self.nlp_col].to_list(),
             num_topics=self.num_topics,
         )
         df_lda, nlp_feature_cols = spacy_transformer.transform(
             df_polls, col=self.nlp_col, return_new_cols=True
         )
-        assert isinstance(df_lda, pd.DataFrame)
+        assert isinstance(df_lda, pl.DataFrame)
         assert isinstance(nlp_feature_cols, list)
 
         # line to test

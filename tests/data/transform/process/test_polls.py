@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 import pytest
 from inline_snapshot import snapshot
 
@@ -14,13 +14,13 @@ from bundestag.data.transform.abgeordnetenwatch.process.polls import (
 # =================== get_polls_data ===================
 
 
-def test_get_polls_data(sample_poll_json_path: Path, POLLS_DF: pd.DataFrame):
+def test_get_polls_data(sample_poll_json_path: Path, POLLS_DF: pl.DataFrame):
     """Tests getting polls data and parsing it into a DataFrame."""
     legislature_id = 111
 
     df = get_polls_data(legislature_id, sample_poll_json_path.parent)
 
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert df.equals(POLLS_DF)
 
 
@@ -50,7 +50,7 @@ def test_get_polls_data_empty(tmp_path: Path):
 
     # Create a dummy file
     file_path = tmp_path / f"polls_legislature_{legislature_id}.json"
-    with open(file_path, "w") as f:
+    with file_path.open("w") as f:
         try:
             # pydantic v2
             f.write(poll_response_data.model_dump_json())
@@ -61,7 +61,7 @@ def test_get_polls_data_empty(tmp_path: Path):
     # Test getting the data
     df = get_polls_data(legislature_id, path=tmp_path)
 
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) == 0
 
 

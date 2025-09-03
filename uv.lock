@@ -267,6 +267,7 @@ binder = [
     { name = "beautifulsoup4" },
     { name = "fastai" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "frictionless" },
     { name = "gensim" },
@@ -286,10 +287,12 @@ binder = [
     { name = "spacy" },
     { name = "typer" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
 ]
 data = [
     { name = "beautifulsoup4" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "frictionless" },
     { name = "ipywidgets" },
@@ -306,6 +309,7 @@ data = [
     { name = "seaborn" },
     { name = "typer" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
 ]
 database = [
     { name = "attrs" },
@@ -324,6 +328,7 @@ database = [
     { name = "decorator" },
     { name = "et-xmlfile" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "fonttools" },
     { name = "frictionless" },
@@ -385,12 +390,14 @@ database = [
     { name = "validators" },
     { name = "wrapt" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
     { name = "zipp" },
 ]
 docs = [
     { name = "beautifulsoup4" },
     { name = "fastai" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "frictionless" },
     { name = "gensim" },
@@ -413,10 +420,12 @@ docs = [
     { name = "spacy" },
     { name = "typer" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
 ]
 gui = [
     { name = "beautifulsoup4" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "frictionless" },
     { name = "ipywidgets" },
@@ -433,11 +442,13 @@ gui = [
     { name = "seaborn" },
     { name = "typer" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
 ]
 ml = [
     { name = "beautifulsoup4" },
     { name = "fastai" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "frictionless" },
     { name = "gensim" },
@@ -457,6 +468,7 @@ ml = [
     { name = "spacy" },
     { name = "typer" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
 ]
 style-and-test = [
     { name = "beautifulsoup4" },
@@ -464,6 +476,7 @@ style-and-test = [
     { name = "dirty-equals" },
     { name = "fastai" },
     { name = "fastcore" },
+    { name = "fastexcel" },
     { name = "fastparquet" },
     { name = "frictionless" },
     { name = "gensim" },
@@ -487,6 +500,7 @@ style-and-test = [
     { name = "spacy" },
     { name = "typer" },
     { name = "xlrd" },
+    { name = "xlsxwriter" },
 ]
 
 [package.metadata]
@@ -496,6 +510,7 @@ binder = [
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
     { name = "fastai", specifier = ">=2.7.12" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "frictionless", specifier = ">=5.11.1" },
     { name = "gensim", specifier = ">=4.3.1" },
@@ -517,10 +532,12 @@ binder = [
     { name = "spacy", specifier = ">=3.5.2" },
     { name = "typer", extras = ["all"], specifier = ">=0.7.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
 ]
 data = [
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "frictionless", specifier = ">=5.11.1" },
     { name = "ipywidgets" },
@@ -537,6 +554,7 @@ data = [
     { name = "seaborn", specifier = ">=0.12.2" },
     { name = "typer", extras = ["all"], specifier = ">=0.7.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
 ]
 database = [
     { name = "attrs", specifier = ">=23.1.0" },
@@ -554,6 +572,7 @@ database = [
     { name = "decorator", specifier = ">=5.1.1" },
     { name = "et-xmlfile", specifier = ">=1.1.0" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "fonttools", specifier = ">=4.39.3" },
     { name = "frictionless", specifier = ">=5.11.1" },
@@ -616,12 +635,14 @@ database = [
     { name = "validators", specifier = ">=0.20.0" },
     { name = "wrapt", specifier = ">=1.15.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
     { name = "zipp", specifier = ">=3.15.0" },
 ]
 docs = [
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
     { name = "fastai", specifier = ">=2.7.12" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "frictionless", specifier = ">=5.11.1" },
     { name = "gensim", specifier = ">=4.3.1" },
@@ -646,10 +667,12 @@ docs = [
     { name = "spacy", specifier = ">=3.5.2" },
     { name = "typer", extras = ["all"], specifier = ">=0.7.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
 ]
 gui = [
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "frictionless", specifier = ">=5.11.1" },
     { name = "ipywidgets" },
@@ -668,11 +691,13 @@ gui = [
     { name = "seaborn", specifier = ">=0.12.2" },
     { name = "typer", extras = ["all"], specifier = ">=0.7.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
 ]
 ml = [
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
     { name = "fastai", specifier = ">=2.7.12" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "frictionless", specifier = ">=5.11.1" },
     { name = "gensim", specifier = ">=4.3.1" },
@@ -692,6 +717,7 @@ ml = [
     { name = "spacy", specifier = ">=3.5.2" },
     { name = "typer", extras = ["all"], specifier = ">=0.7.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
 ]
 style-and-test = [
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
@@ -699,6 +725,7 @@ style-and-test = [
     { name = "dirty-equals", specifier = ">=0.9.0" },
     { name = "fastai", specifier = ">=2.7.12" },
     { name = "fastcore", specifier = ">=1.5.29" },
+    { name = "fastexcel", specifier = ">=0.14.0" },
     { name = "fastparquet", specifier = ">=2023.2.0" },
     { name = "frictionless", specifier = ">=5.11.1" },
     { name = "gensim", specifier = ">=4.3.1" },
@@ -724,6 +751,7 @@ style-and-test = [
     { name = "spacy", specifier = ">=3.5.2" },
     { name = "typer", extras = ["all"], specifier = ">=0.7.0" },
     { name = "xlrd", specifier = ">=2.0.1" },
+    { name = "xlsxwriter", specifier = ">=3.2.5" },
 ]
 
 [[package]]
@@ -1589,6 +1617,22 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/08/be/d2c2e8dc81aa88316ed27f1bd707440a83a7420c35e67c0b143fe81aeca9/fastdownload-0.0.7.tar.gz", hash = "sha256:20507edb8e89406a1fbd7775e6e2a3d81a4dd633dd506b0e9cf0e1613e831d6a", size = 16096, upload-time = "2022-07-07T18:35:53.336Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/47/60/ed35253a05a70b63e4f52df1daa39a6a464a3e22b0bd060b77f63e2e2b6a/fastdownload-0.0.7-py3-none-any.whl", hash = "sha256:b791fa3406a2da003ba64615f03c60e2ea041c3c555796450b9a9a601bc0bbac", size = 12803, upload-time = "2022-07-07T18:35:50.912Z" },
+]
+
+[[package]]
+name = "fastexcel"
+version = "0.14.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyarrow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b7/55/376bc213921232d18dc9287c7e4eddd892d29e6a988c3ab022ee96f3a7ae/fastexcel-0.14.0.tar.gz", hash = "sha256:c73460c2ce2a07cf1a21a27aae67af3bc6a855fb4aa191c20c6ddae3f0573215", size = 40892, upload-time = "2025-04-30T08:57:05.996Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b8/5a/e5612bb03f113e283cdd4e137a24e60d312230e55870a2879cc62ee256cd/fastexcel-0.14.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:8cf9fdff9df918cc2dfad66932cd238b6e1e5e1b7b0a079df713a35d2af1586e", size = 1281472, upload-time = "2025-04-30T08:57:00.658Z" },
+    { url = "https://files.pythonhosted.org/packages/12/97/204b0da0b1d94af752e5a7a515d4b68e8d957bc48a04d27a3087ea80e0c2/fastexcel-0.14.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:0764cb1232e5feb4a7953ee53e60a46f330fa32ef012d813fa491173c7578d3b", size = 1235392, upload-time = "2025-04-30T08:57:02.227Z" },
+    { url = "https://files.pythonhosted.org/packages/38/41/7a0b8c0421cbda0f6185bfeaf55d06cd12073f68abb31cc70f385350f1bc/fastexcel-0.14.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fecc5927ef18eba36f360aec0994e2cef106f8d83f197734d460ae198e5c0b87", size = 1359282, upload-time = "2025-04-30T08:56:57.271Z" },
+    { url = "https://files.pythonhosted.org/packages/8d/86/f00dae040b315505008c4e94ae59c5de0b5fdaefdb27c046bb11917628da/fastexcel-0.14.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c70f463b88d72205eb5069754b07edb9a877bab9991ca71f8db1cc4e1bb8d8a4", size = 1383225, upload-time = "2025-04-30T08:56:59.068Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/5f/fdb54eab1fae9057fbcaca3b4b283cde717686c9e67e3cff2796a308b1e2/fastexcel-0.14.0-cp39-abi3-win_amd64.whl", hash = "sha256:856d061b254268302ee968d10fd446b83f4a1a932588149539be4fb9d34224d4", size = 1094572, upload-time = "2025-04-30T08:57:03.58Z" },
 ]
 
 [[package]]
@@ -5723,6 +5767,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/07/5a/377161c2d3538d1990d7af382c79f3b2372e880b65de21b01b1a2b78691e/xlrd-2.0.2.tar.gz", hash = "sha256:08b5e25de58f21ce71dc7db3b3b8106c1fa776f3024c54e45b45b374e89234c9", size = 100167, upload-time = "2025-06-14T08:46:39.039Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1a/62/c8d562e7766786ba6587d09c5a8ba9f718ed3fa8af7f4553e8f91c36f302/xlrd-2.0.2-py2.py3-none-any.whl", hash = "sha256:ea762c3d29f4cca48d82df517b6d89fbce4db3107f9d78713e48cd321d5c9aa9", size = 96555, upload-time = "2025-06-14T08:46:37.766Z" },
+]
+
+[[package]]
+name = "xlsxwriter"
+version = "3.2.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a7/47/7704bac42ac6fe1710ae099b70e6a1e68ed173ef14792b647808c357da43/xlsxwriter-3.2.5.tar.gz", hash = "sha256:7e88469d607cdc920151c0ab3ce9cf1a83992d4b7bc730c5ffdd1a12115a7dbe", size = 213306, upload-time = "2025-06-17T08:59:14.619Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fa/34/a22e6664211f0c8879521328000bdcae9bf6dbafa94a923e531f6d5b3f73/xlsxwriter-3.2.5-py3-none-any.whl", hash = "sha256:4f4824234e1eaf9d95df9a8fe974585ff91d0f5e3d3f12ace5b71e443c1c6abd", size = 172347, upload-time = "2025-06-17T08:59:13.453Z" },
 ]
 
 [[package]]

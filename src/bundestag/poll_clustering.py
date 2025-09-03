@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import polars as pl
 import seaborn as sns
 import spacy
 from sklearn import decomposition
@@ -50,16 +51,23 @@ def make_topic_scores_dense(scores: list[list[tuple[int, Any]]]) -> np.ndarray:
     return dense
 
 
-def clean_text(df: pd.DataFrame, nlp: spacy.language.Language, col: str = "poll_title"):
+def clean_text(
+    s: str, nlp: spacy.language.Language
+) -> list[str]:  # , col: str = "poll_title"
     logger.debug("Cleaning texts")
-    return list(
-        df[col]
-        .str.split("\n")
-        .str.join(" ")
-        .str.replace("\xa0", " ")
-        .apply(remove_stopwords_and_punctuation, nlp=nlp)
-        .apply(remove_numeric_and_empty)
-    )
+    _s = " ".join(s.split("\n")).replace("\xa0", " ")
+    _texts = remove_stopwords_and_punctuation(_s, nlp)
+    _texts = remove_numeric_and_empty(_texts)
+    return _texts
+
+    # return list(
+    #     df[col]
+    #     .str.split("\n")
+    #     .str.join(" ")
+    #     .str.replace("\xa0", " ")
+    #     .map_elements(remove_stopwords_and_punctuation, nlp=nlp, return_dtype=pl.List)
+    #     .map_elements(remove_numeric_and_empty)
+    # )
 
 
 class SpacyTransformer:
@@ -87,30 +95,32 @@ class SpacyTransformer:
             for (i, descr) in self.lda_model.print_topics(num_topics=num_topics)
         }
 
-    def transform_documents(self, documents: pd.Series, label: str = "nlp"):
+    def transform_documents(
+        self, documents: pl.DataFrame, col: str, label: str = "nlp"
+    ) -> pl.DataFrame:
         "Transforming `documents` to an ndoc-by-ndim matrix"
         logger.debug("Transforming `documents` to a dense real matrix")
-        corpus = [self.dictionary.doc2bow(doc) for doc in documents]
+        corpus = [self.dictionary.doc2bow(doc) for doc in documents[col]]
         scores = list(self.lda_model[corpus])
         dense = make_topic_scores_dense(scores)  # type: ignore
-        return pd.DataFrame(
-            dense,
-            columns=[f"{label}_dim{i}" for i in range(dense.shape[1])],
-            index=documents.index,
-        )
+        return documents.with_columns(
+            **{f"{label}_dim{i}": pl.Series(dense[:, i]) for i in range(dense.shape[1])}
+        ).drop(col)
 
     def transform(
         self,
-        df: pd.DataFrame,
+        df: pl.DataFrame,
         col: str = "poll_title_nlp_processed",
         label: str = "nlp",
         return_new_cols: bool = False,
     ):
-        df_lda = self.transform_documents(df[col], label=label)
-        tmp = df.copy()
-        new_cols = df_lda.columns.values.tolist()
+        df = df.with_row_index(name="index")
+        df_lda = self.transform_documents(df.select(["index", col]), col, label=label)
+        tmp = df.join(df_lda, on="index")
+
+        new_cols = [c for c in df_lda.columns if c.startswith(label)]
         logger.debug(f"Adding nlp features: {new_cols}")
-        tmp = tmp.join(df_lda)
+
         if return_new_cols:
             return tmp, new_cols
         return tmp
@@ -174,35 +184,36 @@ def compare_word_frequencies(
 
 
 def pca_plot_lda_topics(
-    df_polls: pd.DataFrame,
+    df_polls: pl.DataFrame,
     st: SpacyTransformer,
     original_text_col: str,
     nlp_feature_cols: list,
 ):
     "Visualises `nlp_feature_cols` columns in `df_polls` by performing a PCA and reducing to 2 dimensions."
 
-    dense = df_polls[nlp_feature_cols].values
+    dense = df_polls[nlp_feature_cols].to_numpy()
     pca_model = decomposition.PCA(n_components=2).fit(dense)
     X = pca_model.transform(dense)
 
     most_relevant_topic = dense.argmax(axis=1)
     most_relevant_topic_p = dense[range(len(dense)), most_relevant_topic]
 
-    df_polls = df_polls.drop(
-        columns=["lda_pca_component_0", "lda_pca_component_1"], errors="ignore"
-    )
-    tmp = pd.DataFrame(
-        X, columns=["lda_pca_component_0", "lda_pca_component_1"]
-    ).assign(
-        **{
-            "most_relevant_topic_p": most_relevant_topic_p,
-            "most_relevant_topic_ix": most_relevant_topic,
-            "most_relevant_topic_full": [
-                st.lda_topics[ix] for ix in most_relevant_topic
-            ],
+    # df_polls = df_polls.drop(
+    #     ["lda_pca_component_0", "lda_pca_component_1"]
+    # )
+
+    tmp = pl.DataFrame(
+        {
+            "lda_pca_component_0": pl.Series(X[:, 0]),
+            "lda_pca_component_1": pl.Series(X[:, 1]),
+            "most_relevant_topic_p": pl.Series(most_relevant_topic_p),
+            "most_relevant_topic_ix": pl.Series(most_relevant_topic),
+            "most_relevant_topic_full": pl.Series(
+                [st.lda_topics[ix] for ix in most_relevant_topic]
+            ),
         }
     )
-    df_polls = df_polls.join(tmp)
+    df_polls = pl.concat((df_polls, tmp), how="horizontal")
 
     fig = px.scatter(
         data_frame=df_polls,

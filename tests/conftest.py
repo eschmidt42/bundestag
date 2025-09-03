@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import polars as pl
 import pytest
 from fastai.tabular.all import (
     Categorify,
@@ -21,28 +22,32 @@ def base_path() -> Path:
 
 
 @pytest.fixture()
-def df_all_votes(base_path: Path) -> pd.DataFrame:
+def df_all_votes(base_path: Path) -> pl.DataFrame:
     file = base_path / "votes_111.parquet"
-    return pd.read_parquet(file)
+    return pl.read_parquet(file)
 
 
 @pytest.fixture()
-def df_mandates(base_path: Path) -> pd.DataFrame:
+def df_mandates(base_path: Path) -> pl.DataFrame:
     file = base_path / "mandates_111.parquet"
-    df_mandates = pd.read_parquet(file)
-    df_mandates["party_original"] = df_mandates["party"].copy()
-    df_mandates["party"] = df_mandates["party"].apply(lambda x: x[-1])
+    df_mandates = pl.read_parquet(file)
+    df_mandates = df_mandates.with_columns(
+        **{
+            "party_original": pl.col("party"),
+        }
+    )
+
     return df_mandates
 
 
 @pytest.fixture()
-def df_polls(base_path: Path) -> pd.DataFrame:
+def df_polls(base_path: Path) -> pl.DataFrame:
     file = base_path / "polls_111.parquet"
-    return pd.read_parquet(file)
+    return pl.read_parquet(file)
 
 
 @pytest.fixture()
-def splits(df_all_votes: pd.DataFrame) -> tuple[list[int], list[int]]:
+def splits(df_all_votes: pl.DataFrame) -> tuple[list[int], list[int]]:
     return poll_splitter(df_all_votes, valid_pct=0.2)
 
 
@@ -53,12 +58,12 @@ def y_col() -> str:
 
 @pytest.fixture()
 def tabular_object(
-    df_all_votes: pd.DataFrame,
+    df_all_votes: pl.DataFrame,
     splits: tuple[list[int], list[int]],
     y_col: str,
 ) -> TabularPandas:
     return TabularPandas(
-        df_all_votes,
+        df_all_votes.to_pandas(),
         cat_names=["politician name", "poll_id"],
         y_names=[y_col],
         procs=[Categorify],

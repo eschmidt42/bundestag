@@ -155,9 +155,6 @@ def test_run(tmp_path: Path):
 
     r = httpx.Response(200, json={"wuppety": 42})
 
-    # path_xlsx_uris = sheet_dir / "xlsx_uris.json"
-    # path_xlsx_uris.touch()
-
     with (
         patch("httpx.get", MagicMock(return_value=r)) as _get,
     ):

@@ -1,8 +1,10 @@
+import datetime
 import json
 import logging
 from pathlib import Path
 
 import pandas as pd
+import polars as pl
 import tqdm
 import xlrd
 
@@ -34,70 +36,102 @@ def get_file2poll_maps(uris: dict[str, str], sheet_dir: Path) -> dict[str, str]:
     return file2poll
 
 
-def is_date(s: str, dayfirst: bool) -> bool:
-    try:
-        _ = pd.to_datetime(s, dayfirst=dayfirst)
-    except:
-        return False
+def parse_date(date: str, dayfirst: bool) -> tuple[datetime.date | None, str]:
+    if dayfirst:
+        formats = ["%d.%m.%Y", "%d%m%y"]
     else:
+        formats = ["%Y-%m-%d", "%Y%m%d"]
+
+    parsed_date = None
+    matched_format = ""
+    for f in formats:
+        try:
+            parsed_date = datetime.datetime.strptime(date, f)
+            matched_format = f
+            break
+        except:
+            pass
+
+    return parsed_date, matched_format
+
+
+def is_date(s: str, dayfirst: bool) -> bool:
+    parsed_date, _ = parse_date(s, dayfirst=dayfirst)
+    if parsed_date is not None:
         return True
+    return False
 
 
 class ExcelReadException(Exception): ...
 
 
-def read_excel(file: Path) -> pd.DataFrame:
+def read_excel(file: Path) -> pl.DataFrame:
     try:
-        dfs = pd.read_excel(file, sheet_name=None, engine="openpyxl")
+        dfs = pl.read_excel(file, sheet_name=None, engine="openpyxl")
         # sanity check that there is only one sheet
-        if len(dfs) > 1:
-            raise ValueError(f"{file=} has more than one page, that's unexpected.")
-        sheet_name, df = next(iter(dfs.items()))
-        df["sheet_name"] = sheet_name
+        if isinstance(dfs, dict):
+            if len(dfs) > 1:
+                raise ValueError(f"{file=} has more than one page, that's unexpected.")
+
+            sheet_name, df = next(iter(dfs.items()))
+            df = df.with_columns(**{"sheet_name": pl.lit(sheet_name)})
+
+        else:
+            df = dfs.with_columns(**{"sheet_name": pl.lit("")})
+
     except:
         try:
             df = pd.read_excel(file, engine="xlrd")
-            df["sheet_name"] = ""
+
         except xlrd.biffh.XLRDError:
             raise ExcelReadException(f"Failed to parse {file}.")
+
+        df = pl.from_pandas(df)
+        df = df.with_columns(**{"sheet_name": pl.lit("")})
     return df
 
 
-def verify_vote_columns(sheet_file: Path, df: pd.DataFrame):
+def verify_vote_columns(sheet_file: Path, df: pl.DataFrame):
     "verifying that all vote columns (ja, nein, Enthaltung, ungültig, nichtabgegeben) are plausible"
-    mask = df.loc[:, VOTE_COLS].sum(axis=1) != 1
-    if mask.any():
-        msg = f"{sheet_file=} has rows with more than one vote:\n{df.loc[mask, :]}"
+    tmp = df.with_columns(
+        **{"hits": df.select(VOTE_COLS).sum_horizontal()}
+    ).with_columns(**{"implausible": pl.col("hits").ne(pl.lit(1))})
+
+    if tmp["implausible"].any():
+        msg = f"{sheet_file=} has rows with more than one vote:\n{tmp.filter(pl.col('implausible'))}"
         logger.error(msg)
         raise ValueError(msg)
 
 
 def handle_title_and_date(
     full_title: str, sheet_file: Path
-) -> tuple[str, pd.Timestamp | None]:
-    "Extracting the title of the roll call vote and the date"
+) -> tuple[str, datetime.date | None]:
+    "Extracting the title of the roll call vote and the date from full_title, if possible, otherwise fall back to sheet_file."
 
-    title = full_title.split(":")
+    # get date from full_title
+    title_clean = full_title.strip()
+    title = title_clean.split(":")
+    date_in_title = title[0]
+    title_has_date = is_date(date_in_title, dayfirst=True)
 
-    date = title[0]
+    # get date from file name
+    date_in_fname = sheet_file.name.split("_")[0]
+    fname_has_date = is_date(date_in_fname, dayfirst=False)
 
-    if is_date(date, True):
-        date = pd.to_datetime(date, dayfirst=True)
-        title = ":".join(title[1:])
-    elif is_date(sheet_file.name.split("_")[0], False):
-        date = pd.to_datetime(sheet_file.name.split("_")[0])
-        title = full_title
+    if title_has_date:
+        date, _ = parse_date(date_in_title, dayfirst=True)
+        title = ":".join(title[1:]).strip()
+        return title, date
+    elif fname_has_date:
+        date, _ = parse_date(date_in_fname, dayfirst=False)
+        return title_clean, date
     else:
-        date = None
-        title = full_title
-
-    title = title.strip()
-    return title, date
+        return title_clean, None
 
 
 def assign_date_and_title_columns(
-    sheet_file: Path, df: pd.DataFrame, file_title_maps: dict[str, str] | None = None
-) -> pd.DataFrame:
+    sheet_file: Path, df: pl.DataFrame, file_title_maps: dict[str, str] | None = None
+) -> pl.DataFrame:
     if file_title_maps is not None and sheet_file.name in file_title_maps:
         title, date = handle_title_and_date(
             file_title_maps[sheet_file.name], sheet_file
@@ -105,8 +139,13 @@ def assign_date_and_title_columns(
     else:
         title, date = None, None
 
-    df["date"] = date
-    df["title"] = title
+    df = df.with_columns(
+        **{
+            "date": pl.lit(date),
+            "title": pl.lit(title),
+        }
+    )
+
     return df
 
 
@@ -119,19 +158,25 @@ PARTY_MAP = {
 
 
 def disambiguate_party(
-    df: pd.DataFrame, col: str = "Fraktion/Gruppe", party_map: dict | None = None
-) -> pd.DataFrame:
+    df: pl.DataFrame, col: str = "Fraktion/Gruppe", party_map: dict | None = None
+) -> pl.DataFrame:
     if party_map is None:
         party_map = PARTY_MAP
-    df[col] = df[col].apply(lambda x: x if x not in party_map else party_map[x])
+    df = df.with_columns(
+        **{
+            col: pl.col(col).map_elements(
+                lambda x: x if x not in party_map else party_map[x]
+            )
+        }
+    )
+    # df[col] = df[col].apply(lambda x: x if x not in party_map else party_map[x])
     return df
 
 
 def get_sheet_df(
     sheet_file: str | Path,
     file_title_maps: dict[str, str] | None = None,
-    validate: bool = False,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     "Parsing xlsx and xls files into dataframes"
 
     sheet_file = Path(sheet_file)
@@ -142,78 +187,77 @@ def get_sheet_df(
 
     df = assign_date_and_title_columns(sheet_file, df, file_title_maps)
 
-    df = df.pipe(disambiguate_party)
+    df = disambiguate_party(df)
 
-    if validate:
-        schemas.SHEET.validate(df)
+    df = pl.DataFrame(df, schema=schemas.SHEET_PL)
 
     return df
 
 
 def get_squished_dataframe(
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     id_col: str = "Bezeichnung",
     feature_cols: list[str] = VOTE_COLS,
     other_cols: list | None = None,
     validate: bool = False,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     "Reformats `df` by squishing the vote columns (ja, nein, Enthaltung, ...) into one column"
 
     other_cols = ["date", "title"] if other_cols is None else other_cols
-    df_sub = df.loc[:, [id_col] + feature_cols + other_cols]
+    df_sub = df.select([id_col] + feature_cols + other_cols)
 
     # add issue column
-    mask_date_title_missing = df_sub["date"].isnull() | df_sub["title"].isnull()
+    df_sub = df_sub.with_columns(
+        **{
+            "date or title missing": pl.col("date").is_null()
+            | pl.col("title").is_null()
+        }
+    )
 
-    n_missing = mask_date_title_missing.sum()
+    n_missing = df_sub["date or title missing"].sum()
+
     if n_missing > 0:  # TODO: that this can happen is weird - error in processing?
         raise ValueError(
             f"Missing date and or title information for {n_missing:_} rows ({n_missing / len(df_sub):.2%}), did you provide file_title_maps upstream?"
         )
 
-    df_sub["issue"] = df_sub["date"].dt.date.apply(str) + " " + df["title"]
+    df_sub = df_sub.drop("date or title missing")
 
-    df_sub = df_sub.set_index([id_col, "issue"] + other_cols)
-    df_sub = (
-        df_sub[df_sub == 1]
-        .stack()
-        .reset_index()
-        .drop(labels=0, axis=1)
-        .rename(columns={f"level_{2 + len(other_cols)}": "vote"})
+    df_sub = df_sub.with_columns(
+        **{"issue": pl.col("date").dt.date().cast(pl.String) + " " + pl.col("title")}
     )
-    df = df.join(
-        df_sub.set_index(["Bezeichnung", "date", "title"]),
-        on=["Bezeichnung", "date", "title"],
-    ).drop(columns=VOTE_COLS)
 
-    if validate:
-        schemas.SHEET_FINAL(df)
+    df_sub = df_sub.with_columns(
+        **{
+            "vote": (
+                pl.when(pl.col("ja") == pl.lit(1))
+                .then(pl.lit("ja"))
+                .otherwise(
+                    pl.when(pl.col("nein") == pl.lit(1))
+                    .then(pl.lit("nein"))
+                    .otherwise(
+                        pl.when(pl.col("Enthaltung") == pl.lit(1))
+                        .then(pl.lit("Enthaltung"))
+                        .otherwise(
+                            pl.when(pl.col("ungültig") == pl.lit(1))
+                            .then(pl.lit("ungültig"))
+                            .otherwise(
+                                pl.when(pl.col("nichtabgegeben") == pl.lit(1))
+                                .then(pl.lit("nichtabgegeben"))
+                                .otherwise(pl.lit("error"))
+                            )
+                        )
+                    )
+                )
+            )
+        }
+    )
 
-    return df
+    df = df.drop(VOTE_COLS).join(
+        df_sub.drop(VOTE_COLS), on=["Bezeichnung", "date", "title"]
+    )
+    df = pl.DataFrame(df, schema=schemas.SHEET_FINAL_PL)
 
-
-DTYPES = {
-    "Wahlperiode": int,
-    "Sitzungnr": int,
-    "Abstimmnr": int,
-    "Fraktion/Gruppe": str,
-    "Name": str,
-    "Vorname": str,
-    "Titel": str,
-    "vote": str,
-    "issue": str,
-    #           'ja': bool, 'nein': bool, 'Enthaltung': bool, 'ungültig': bool, 'nichtabgegeben': bool, 'Bemerkung': str,
-    "Bezeichnung": str,
-    "sheet_name": str,
-    "date": "datetime64[ns]",
-    "title": str,
-}
-
-
-def set_sheet_dtypes(df: pd.DataFrame, dtypes: dict[str, str | object] | None = None):
-    dtypes = DTYPES if dtypes is None else dtypes
-    for col, dtype in dtypes.items():
-        df[col] = df[col].astype(dtype)  # type: ignore
     return df
 
 
@@ -221,7 +265,7 @@ def get_multiple_sheets_df(
     sheet_files: list[Path],
     file_title_maps: dict[str, str],
     validate: bool = False,
-):
+) -> pl.DataFrame:
     "Loads, processes and concatenates multiple vote sheets"
     logger.info("Loading processing and concatenating multiple vote sheets")
     df = []
@@ -234,9 +278,7 @@ def get_multiple_sheets_df(
         if sheet_file.name not in file_title_maps:
             continue
         try:
-            sheet_df = get_sheet_df(
-                sheet_file, file_title_maps=file_title_maps, validate=validate
-            )
+            sheet_df = get_sheet_df(sheet_file, file_title_maps=file_title_maps)
         except ExcelReadException:
             n_errors += 1
             continue
@@ -245,7 +287,6 @@ def get_multiple_sheets_df(
             sheet_df = get_squished_dataframe(sheet_df, validate=validate)
         except ValueError as ex:
             raise ValueError(f"Parsing failed for {sheet_file} with ValueError: {ex}")
-        sheet_df = set_sheet_dtypes(sheet_df)
 
         df.append(sheet_df)
 
@@ -256,7 +297,7 @@ def get_multiple_sheets_df(
         logger.warning(
             f"{n_errors:_} / {n:_} = {n_errors / n:.2%} % files skipped due to some excel parsing error, likely xls files."
         )
-    return pd.concat(df, ignore_index=True)
+    return pl.concat(df)
 
 
 def get_sheet_uris_from_json(source: Source, json_path: Path) -> dict[str, str]:
@@ -314,6 +355,6 @@ def run(
     if not dry:
         path = preprocessed_path / "bundestag.de_votes.parquet"
         logger.info(f"Writing to {path}")
-        df.to_parquet(path)
+        df.write_parquet(path)
 
     logger.info("Done parsing sheets")

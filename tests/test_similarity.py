@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
+import polars as pl
 import pytest
 
 import bundestag.data.transform.bundestag_sheets as transform_bs
@@ -23,7 +24,7 @@ from bundestag.similarity import (
 
 @pytest.fixture(scope="module")
 def df():
-    return pd.DataFrame(
+    return pl.DataFrame(
         {
             "Fraktion/Gruppe": ["A", "A", "A", "B", "B", "B"],
             "vote": ["ja", "nein", "Enthaltung", "ja", "nein", "Enthaltung"],
@@ -34,7 +35,7 @@ def df():
     )
 
 
-def test_votes_by_party(df: pd.DataFrame):
+def test_votes_by_party(df: pl.DataFrame):
     # line to test
     votes = get_votes_by_party(df)
 
@@ -47,10 +48,10 @@ def test_votes_by_party(df: pd.DataFrame):
         "# votes",
     ]
     assert all([v in votes.columns for v in expected_columns])
-    assert votes["# votes"].isna().sum() == 0
+    assert votes["# votes"].is_null().sum() == 0
 
 
-def test_pivot_party_votes_df(df: pd.DataFrame):
+def test_pivot_party_votes_df(df: pl.DataFrame):
     votes = get_votes_by_party(df)
 
     # line to test
@@ -59,11 +60,12 @@ def test_pivot_party_votes_df(df: pd.DataFrame):
     vote_columns = ["ja", "nein", "Enthaltung"]
     other_columns = ["Fraktion/Gruppe"]
     assert all([v in pivoted.columns for v in vote_columns + other_columns])
-    assert pivoted[vote_columns].isna().sum().sum() == 0
+    for c in vote_columns:
+        assert pivoted[c].is_null().sum() == 0
 
 
 @pytest.mark.parametrize("mdb", ["A", "wup"])
-def test_prepare_votes_of_mdb(mdb: str, df: pd.DataFrame):
+def test_prepare_votes_of_mdb(mdb: str, df: pl.DataFrame):
     try:
         # line to test
         mdb_votes = prepare_votes_of_mdb(df, mdb)
@@ -75,10 +77,11 @@ def test_prepare_votes_of_mdb(mdb: str, df: pd.DataFrame):
 
     expected_columns = ["date", "title"] + transform_bs.VOTE_COLS
     assert all([v in mdb_votes.columns for v in expected_columns])
-    assert mdb_votes[transform_bs.VOTE_COLS].isna().sum().sum() == 0
+    for c in transform_bs.VOTE_COLS:
+        assert mdb_votes[c].is_null().sum() == 0
 
 
-def test_align_mdb_with_parties(df: pd.DataFrame):
+def test_align_mdb_with_parties(df: pl.DataFrame):
     votes = get_votes_by_party(df)
     pivoted = pivot_party_votes_df(votes)
     mdb_votes = prepare_votes_of_mdb(df, "A")
@@ -88,11 +91,12 @@ def test_align_mdb_with_parties(df: pd.DataFrame):
 
     expected_columns = (
         ["date", "title"]
-        + [f"{v}_mdb" for v in transform_bs.VOTE_COLS]
+        + [v for v in transform_bs.VOTE_COLS]
         + [f"{v}_party" for v in transform_bs.VOTE_COLS]
         + ["Fraktion/Gruppe"]
     )
-    assert all([v in mdb_vs_parties.columns for v in expected_columns])
+    for v in expected_columns:
+        assert v in mdb_vs_parties.columns
 
 
 @pytest.mark.parametrize(
@@ -110,21 +114,21 @@ def test_cosine_similarity(a, b, expected):
     assert np.isclose(res, expected)
 
 
-def test_compute_similarity(df: pd.DataFrame):
+def test_compute_similarity(df: pl.DataFrame):
     votes = get_votes_by_party(df)
     pivoted = pivot_party_votes_df(votes)
     mdb_votes = prepare_votes_of_mdb(df, "A")
     mdb_vs_parties = align_mdb_with_parties(mdb_votes, pivoted)
 
     # line to test
-    res = compute_similarity(mdb_vs_parties, lsuffix="mdb", rsuffix="party")
+    res = compute_similarity(mdb_vs_parties, suffix="_party")
 
     assert all([v in res.columns for v in mdb_vs_parties.columns])
     assert "similarity" in res.columns
-    assert res["similarity"].between(0, 1).all()
+    assert res["similarity"].is_between(0, 1).all()
 
 
-def test_align_party_with_party(df: pd.DataFrame):
+def test_align_party_with_party(df: pl.DataFrame):
     votes = get_votes_by_party(df)
     pivoted = pivot_party_votes_df(votes)
 
@@ -133,14 +137,14 @@ def test_align_party_with_party(df: pd.DataFrame):
 
     expected_columns = (
         ["date", "title"]
-        + [f"{v}_a" for v in transform_bs.VOTE_COLS]
+        + [v for v in transform_bs.VOTE_COLS]
         + [f"{v}_b" for v in transform_bs.VOTE_COLS]
-        + ["Fraktion/Gruppe_a", "Fraktion/Gruppe_b"]
+        + ["Fraktion/Gruppe", "Fraktion/Gruppe_b"]
     )
     assert all([v in res.columns for v in expected_columns])
 
 
-def test_align_party_with_all_parties(df: pd.DataFrame):
+def test_align_party_with_all_parties(df: pl.DataFrame):
     votes = get_votes_by_party(df)
     pivoted = pivot_party_votes_df(votes)
 
@@ -149,9 +153,9 @@ def test_align_party_with_all_parties(df: pd.DataFrame):
 
     expected_columns = (
         ["date", "title"]
-        + [f"{v}_a" for v in transform_bs.VOTE_COLS]
+        + [v for v in transform_bs.VOTE_COLS]
         + [f"{v}_b" for v in transform_bs.VOTE_COLS]
-        + ["Fraktion/Gruppe_a", "Fraktion/Gruppe_b"]
+        + ["Fraktion/Gruppe", "Fraktion/Gruppe_b"]
     )
     assert all([v in res.columns for v in expected_columns])
 
@@ -179,13 +183,12 @@ def test_get_party_party_simlarity():
 @pytest.mark.skip(
     "Works but something to be run elsewhere, not as a unit test that opens a window."
 )
-def test_plot_overall_similarity(df: pd.DataFrame):
+def test_plot_overall_similarity(df: pl.DataFrame):
     votes = get_votes_by_party(df)
     pivoted = pivot_party_votes_df(votes)
     mdb_votes = prepare_votes_of_mdb(df, "A")
-    mdb_vs_parties = align_mdb_with_parties(mdb_votes, pivoted).pipe(
-        compute_similarity, lsuffix="mdb", rsuffix="party"
-    )
+    mdb_vs_parties = align_mdb_with_parties(mdb_votes, pivoted)
+    mdb_vs_parties = compute_similarity(mdb_vs_parties, suffix="_party")
 
     # line to test
     ax = plot_overall_similarity(
@@ -199,14 +202,13 @@ def test_plot_overall_similarity(df: pd.DataFrame):
 @pytest.mark.skip(
     "Works but something to be run elsewhere, not as a unit test that opens a window."
 )
-def test_plot_similarity_over_time(df: pd.DataFrame):
+def test_plot_similarity_over_time(df: pl.DataFrame):
     votes = get_votes_by_party(df)
     pivoted = pivot_party_votes_df(votes)
     mdb_votes = prepare_votes_of_mdb(df, "A")
-    mdb_vs_parties = align_mdb_with_parties(mdb_votes, pivoted).pipe(
-        compute_similarity, lsuffix="mdb", rsuffix="party"
-    )
-    mdb_vs_parties["date"] = pd.to_datetime(mdb_vs_parties["date"])
+    mdb_vs_parties = align_mdb_with_parties(mdb_votes, pivoted)
+    mdb_vs_parties = compute_similarity(mdb_vs_parties, suffix="_party")
+
     # line to test
     ax = plot_similarity_over_time(
         mdb_vs_parties,
@@ -220,7 +222,7 @@ def test_plot_similarity_over_time(df: pd.DataFrame):
     "Works but something to be run elsewhere, not as a unit test that opens a window."
 )
 def test_plot():
-    df = pd.DataFrame({"a": [1]})
+    df = pl.DataFrame({"a": [1]})
 
     with (
         patch(
