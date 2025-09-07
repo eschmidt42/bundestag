@@ -73,12 +73,12 @@ To find out the legislature id for the current Bundestag, visit [abgeordnetenwat
 
 To download data from [bundestag.de](https://www.bundestag.de/parlament/plenum/abstimmung/liste)
 ```shell
-uv run bundestag download bundestag_sheets --do-create-xlsx-uris-json
+uv run bundestag download bundestag-sheets --do-create-xlsx-uris-json
 ```
 
 To transform the downloaded data run
 ```shell
-uv run bundestag transform bundestag_sheet --sheet-source=json_file
+uv run bundestag transform bundestag-sheet --sheet-source=json_file
 ```
 
 To download prepared raw and transformed data from huggingface run
