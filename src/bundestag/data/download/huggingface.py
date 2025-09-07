@@ -2,6 +2,7 @@ import logging
 import tarfile
 import urllib.request as request
 from pathlib import Path
+from time import perf_counter
 
 from bundestag.data.utils import ensure_path_exists
 
@@ -9,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def run(path: Path, dry: bool = False, assume_yes: bool = False):
+    start_time = perf_counter()
     logger.info(f"Loading and extracting dataset from huggingface to {path.absolute()}")
 
     if not dry:
@@ -47,6 +49,7 @@ def run(path: Path, dry: bool = False, assume_yes: bool = False):
         tar.close()
         logger.info("Done extracting preprocessed data")
 
+    dt = str(perf_counter() - start_time)
     logger.info(
-        f"Done loading and extracting dataset from huggingface to {path.absolute()}"
+        f"Done loading and extracting dataset from huggingface to {path.absolute()} after {dt}"
     )

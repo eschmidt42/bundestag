@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from time import perf_counter
 
 import polars as pl
 
@@ -55,7 +56,8 @@ def run(
     validate: bool = False,
     assume_yes: bool = False,
 ):
-    logger.info("Start transforming abgeordnetenwatch data")
+    logger.info(f"Start transforming abgeordnetenwatch data for {legislature_id=}")
+    start_time = perf_counter()
 
     if not dry and (raw_path is None or preprocessed_path is None):
         raise ValueError(
@@ -98,4 +100,7 @@ def run(
         logger.info(f"Writing to {file}")
         df_all_votes.write_parquet(file)
 
-    logger.info("Done transforming abgeordnetenwatch data")
+    dt = perf_counter() - start_time
+    logger.info(
+        f"Done transforming abgeordnetenwatch data for {legislature_id=} after {dt}"
+    )

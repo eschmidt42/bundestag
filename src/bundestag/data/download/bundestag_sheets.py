@@ -4,6 +4,7 @@ import re
 import time
 from enum import StrEnum, auto
 from pathlib import Path
+from time import perf_counter
 
 import httpx
 import tqdm
@@ -250,6 +251,7 @@ def run(
     do_create_xlsx_uris_json: bool = False,
     max_pages: int = 5,
 ):
+    start_time = perf_counter()
     logger.info("Start downloading bundestag sheets")
 
     # ensure paths exist
@@ -279,5 +281,5 @@ def run(
     download_multiple_sheets(
         sheet_uris, sheet_dir=sheet_dir, t_sleep=t_sleep, nmax=nmax, dry=dry
     )
-
-    logger.info("Done downloading bundestag sheets")
+    dt = str(perf_counter() - start_time)
+    logger.info(f"Done downloading bundestag sheets after {dt}.")
