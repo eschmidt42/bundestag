@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 from pathlib import Path
+from time import perf_counter
 
 import pandas as pd
 import polars as pl
@@ -70,6 +71,7 @@ SHEET_SCHEMA_READ_EXCEL = pl.Schema(
         "Sitzungnr": pl.Int64(),
         "Abstimmnr": pl.Int64(),
         "Fraktion/Gruppe": pl.String(),
+        "AbgNr": pl.Int64(),
         "Name": pl.String(),
         "Vorname": pl.String(),
         "Titel": pl.String(),
@@ -109,7 +111,11 @@ def read_excel(file: Path) -> pl.DataFrame:
         df = pl.from_pandas(df)
         df = df.with_columns(**{"sheet_name": pl.lit("")})
 
-    df = pl.DataFrame(df, schema=SHEET_SCHEMA_READ_EXCEL)
+    for c in ["AbgNr", "Bemerkung"]:
+        if c not in df.columns:
+            df = df.with_columns(**{c: None})
+
+    df = pl.from_dict(df.to_dict(), schema=SHEET_SCHEMA_READ_EXCEL)
     return df
 
 
@@ -187,7 +193,8 @@ def disambiguate_party(
     df = df.with_columns(
         **{
             col: pl.col(col).map_elements(
-                lambda x: x if x not in party_map else party_map[x]
+                lambda x: x if x not in party_map else party_map[x],
+                return_dtype=pl.String,
             )
         }
     )
@@ -201,6 +208,7 @@ SHEET_SCHEMA_GET_SHEET_DF = pl.Schema(
         "Sitzungnr": pl.Int64(),
         "Abstimmnr": pl.Int64(),
         "Fraktion/Gruppe": pl.String(),
+        "AbgNr": pl.Int64(),
         "Name": pl.String(),
         "Vorname": pl.String(),
         "Titel": pl.String(),
@@ -234,7 +242,7 @@ def get_sheet_df(
 
     df = disambiguate_party(df)
 
-    df = pl.DataFrame(df, schema=SHEET_SCHEMA_GET_SHEET_DF)
+    df = pl.from_dict(df.to_dict(), schema=SHEET_SCHEMA_GET_SHEET_DF)
 
     return df
 
@@ -277,6 +285,7 @@ SHEET_SCHEMA_GET_SQUISHED_DATAFRAME = pl.Schema(
         "Sitzungnr": pl.Int64(),
         "Abstimmnr": pl.Int64(),
         "Fraktion/Gruppe": pl.String(),
+        "AbgNr": pl.Int64(),
         "Name": pl.String(),
         "Vorname": pl.String(),
         "Titel": pl.String(),
@@ -329,7 +338,7 @@ def get_squished_dataframe(
     df = df.drop(VOTE_COLS).join(
         df_sub.drop(VOTE_COLS), on=["Bezeichnung", "date", "title"]
     )
-    df = pl.DataFrame(df, schema=SHEET_SCHEMA_GET_SQUISHED_DATAFRAME)
+    df = pl.from_dict(df.to_dict(), schema=SHEET_SCHEMA_GET_SQUISHED_DATAFRAME)
 
     return df
 
@@ -394,7 +403,7 @@ def run(
     json_filename: str = "xlsx_uris.json",
 ):
     logger.info("Start parsing sheets")
-
+    start_time = perf_counter()
     # ensuring path exists
     if not dry and not html_dir.exists():
         raise ValueError(f"{html_dir=} doesn't exist, terminating transformation.")
@@ -430,4 +439,5 @@ def run(
         logger.info(f"Writing to {path}")
         df.write_parquet(path)
 
-    logger.info("Done parsing sheets")
+    dt = str(perf_counter() - start_time)
+    logger.info(f"Done parsing sheets after {dt}")

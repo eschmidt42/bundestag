@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-bundestag = "bundestag.__main__:app"
+bundestag = "bundestag.cli.__main__:app"
 get_xlsx_uris = "bundestag.get_xlsx_uris:app"
 
 [build-system]

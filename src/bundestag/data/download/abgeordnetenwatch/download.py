@@ -1,6 +1,7 @@
 import logging
 import time
 from pathlib import Path
+from time import perf_counter
 
 from scipy import stats
 from tqdm import tqdm
@@ -118,7 +119,7 @@ def run(
     assume_yes: bool = False,
 ):
     "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
-
+    start_time = perf_counter()
     logger.info(f"Start downloading abgeordnetenwatch data for {legislature_id=}")
 
     if not dry and (raw_path is None):
@@ -145,5 +146,7 @@ def run(
         dt_rv_scale=dt_rv_scale,
         ask_user=ask_user,
     )
-
-    logger.info(f"Done downloading abgeordnetenwatch data for {legislature_id=}!")
+    dt = str(perf_counter() - start_time)
+    logger.info(
+        f"Done downloading abgeordnetenwatch data for {legislature_id=} after {dt}."
+    )
