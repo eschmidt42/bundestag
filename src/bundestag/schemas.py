@@ -1,6 +1,5 @@
 import pandas as pd
 import pandera.pandas as pa
-import polars as pl
 from pandera.pandas import Check, Column, DataFrameSchema, Index
 from pydantic import BaseModel
 
@@ -711,44 +710,4 @@ SHEET_FINAL = DataFrameSchema(
     unique_column_names=False,
     title=None,
     description=None,
-)
-SHEET_PL = pl.Schema(
-    {
-        "Wahlperiode": pl.Int64(),
-        "Sitzungnr": pl.Int64(),
-        "Abstimmnr": pl.Int64(),
-        "Fraktion/Gruppe": pl.String(),
-        "Name": pl.String(),
-        "Vorname": pl.String(),
-        "Titel": pl.String(),
-        "ja": pl.Int64(),
-        "nein": pl.Int64(),
-        "Enthaltung": pl.Int64(),
-        "ungültig": pl.Int64(),
-        "nichtabgegeben": pl.Int64(),
-        "Bezeichnung": pl.String(),
-        "Bemerkung": pl.String(),
-        "sheet_name": pl.String(),
-        "date": pl.Datetime(time_unit="ns"),
-        "title": pl.String(),
-    }
-)
-
-SHEET_FINAL_PL = pl.Schema(
-    {
-        "Wahlperiode": pl.Int64(),
-        "Sitzungnr": pl.Int64(),
-        "Abstimmnr": pl.Int64(),
-        "Fraktion/Gruppe": pl.String(),
-        "Name": pl.String(),
-        "Vorname": pl.String(),
-        "Titel": pl.String(),
-        "Bezeichnung": pl.String(),
-        "Bemerkung": pl.String(),
-        "sheet_name": pl.String(),
-        "date": pl.Datetime(time_unit="ns"),
-        "title": pl.String(),
-        "issue": pl.String(),
-        "vote": pl.String(),
-    }
 )

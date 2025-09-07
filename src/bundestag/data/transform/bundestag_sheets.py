@@ -8,7 +8,6 @@ import polars as pl
 import tqdm
 import xlrd
 
-import bundestag.schemas as schemas
 from bundestag.data.download.bundestag_sheets import Source, collect_sheet_uris
 from bundestag.data.utils import (
     RE_FNAME,
@@ -65,6 +64,27 @@ def is_date(s: str, dayfirst: bool) -> bool:
 class ExcelReadException(Exception): ...
 
 
+SHEET_SCHEMA_READ_EXCEL = pl.Schema(
+    {
+        "Wahlperiode": pl.Int64(),
+        "Sitzungnr": pl.Int64(),
+        "Abstimmnr": pl.Int64(),
+        "Fraktion/Gruppe": pl.String(),
+        "Name": pl.String(),
+        "Vorname": pl.String(),
+        "Titel": pl.String(),
+        "ja": pl.Int64(),
+        "nein": pl.Int64(),
+        "Enthaltung": pl.Int64(),
+        "ungültig": pl.Int64(),
+        "nichtabgegeben": pl.Int64(),
+        "Bezeichnung": pl.String(),
+        "Bemerkung": pl.String(),
+        "sheet_name": pl.String(),
+    }
+)
+
+
 def read_excel(file: Path) -> pl.DataFrame:
     try:
         dfs = pl.read_excel(file, sheet_name=None, engine="openpyxl")
@@ -88,6 +108,8 @@ def read_excel(file: Path) -> pl.DataFrame:
 
         df = pl.from_pandas(df)
         df = df.with_columns(**{"sheet_name": pl.lit("")})
+
+    df = pl.DataFrame(df, schema=SHEET_SCHEMA_READ_EXCEL)
     return df
 
 
@@ -169,8 +191,31 @@ def disambiguate_party(
             )
         }
     )
-    # df[col] = df[col].apply(lambda x: x if x not in party_map else party_map[x])
+
     return df
+
+
+SHEET_SCHEMA_GET_SHEET_DF = pl.Schema(
+    {
+        "Wahlperiode": pl.Int64(),
+        "Sitzungnr": pl.Int64(),
+        "Abstimmnr": pl.Int64(),
+        "Fraktion/Gruppe": pl.String(),
+        "Name": pl.String(),
+        "Vorname": pl.String(),
+        "Titel": pl.String(),
+        "ja": pl.Int64(),
+        "nein": pl.Int64(),
+        "Enthaltung": pl.Int64(),
+        "ungültig": pl.Int64(),
+        "nichtabgegeben": pl.Int64(),
+        "Bezeichnung": pl.String(),
+        "Bemerkung": pl.String(),
+        "sheet_name": pl.String(),
+        "date": pl.Datetime(time_unit="ns"),
+        "title": pl.String(),
+    }
+)
 
 
 def get_sheet_df(
@@ -189,9 +234,59 @@ def get_sheet_df(
 
     df = disambiguate_party(df)
 
-    df = pl.DataFrame(df, schema=schemas.SHEET_PL)
+    df = pl.DataFrame(df, schema=SHEET_SCHEMA_GET_SHEET_DF)
 
     return df
+
+
+def create_vote_column(df: pl.DataFrame) -> pl.DataFrame:
+    df = df.with_columns(
+        **{
+            "vote": (
+                pl.when(pl.col("ja") == pl.lit(1))
+                .then(pl.lit("ja"))
+                .otherwise(
+                    pl.when(pl.col("nein") == pl.lit(1))
+                    .then(pl.lit("nein"))
+                    .otherwise(
+                        pl.when(pl.col("Enthaltung") == pl.lit(1))
+                        .then(pl.lit("Enthaltung"))
+                        .otherwise(
+                            pl.when(pl.col("ungültig") == pl.lit(1))
+                            .then(pl.lit("ungültig"))
+                            .otherwise(
+                                pl.when(pl.col("nichtabgegeben") == pl.lit(1))
+                                .then(pl.lit("nichtabgegeben"))
+                                .otherwise(pl.lit("error"))
+                            )
+                        )
+                    )
+                )
+            )
+        }
+    )
+
+    return df
+
+
+SHEET_SCHEMA_GET_SQUISHED_DATAFRAME = pl.Schema(
+    {
+        "Wahlperiode": pl.Int64(),
+        "Sitzungnr": pl.Int64(),
+        "Abstimmnr": pl.Int64(),
+        "Fraktion/Gruppe": pl.String(),
+        "Name": pl.String(),
+        "Vorname": pl.String(),
+        "Titel": pl.String(),
+        "Bezeichnung": pl.String(),
+        "Bemerkung": pl.String(),
+        "sheet_name": pl.String(),
+        "date": pl.Datetime(time_unit="ns"),
+        "title": pl.String(),
+        "issue": pl.String(),
+        "vote": pl.String(),
+    }
+)
 
 
 def get_squished_dataframe(
@@ -227,36 +322,12 @@ def get_squished_dataframe(
         **{"issue": pl.col("date").dt.date().cast(pl.String) + " " + pl.col("title")}
     )
 
-    df_sub = df_sub.with_columns(
-        **{
-            "vote": (
-                pl.when(pl.col("ja") == pl.lit(1))
-                .then(pl.lit("ja"))
-                .otherwise(
-                    pl.when(pl.col("nein") == pl.lit(1))
-                    .then(pl.lit("nein"))
-                    .otherwise(
-                        pl.when(pl.col("Enthaltung") == pl.lit(1))
-                        .then(pl.lit("Enthaltung"))
-                        .otherwise(
-                            pl.when(pl.col("ungültig") == pl.lit(1))
-                            .then(pl.lit("ungültig"))
-                            .otherwise(
-                                pl.when(pl.col("nichtabgegeben") == pl.lit(1))
-                                .then(pl.lit("nichtabgegeben"))
-                                .otherwise(pl.lit("error"))
-                            )
-                        )
-                    )
-                )
-            )
-        }
-    )
+    df_sub = create_vote_column(df_sub)
 
     df = df.drop(VOTE_COLS).join(
         df_sub.drop(VOTE_COLS), on=["Bezeichnung", "date", "title"]
     )
-    df = pl.DataFrame(df, schema=schemas.SHEET_FINAL_PL)
+    df = pl.DataFrame(df, schema=SHEET_SCHEMA_GET_SQUISHED_DATAFRAME)
 
     return df
 

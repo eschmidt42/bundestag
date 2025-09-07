@@ -10,6 +10,7 @@ from bundestag.data.transform.bundestag_sheets import (
     PARTY_MAP,
     ExcelReadException,
     assign_date_and_title_columns,
+    create_vote_column,
     disambiguate_party,
     get_file2poll_maps,
     get_multiple_sheets_df,
@@ -121,6 +122,31 @@ def test_read_excel_xlsx():
     res = read_excel(file_path)
     assert res is not None
     assert "sheet_name" in res.columns
+
+
+def test_read_excel_schema_mismatch(create_dummy_excel: Callable):
+    """Tests that read_excel raises a SchemaError if the data does not match the expected schema."""
+    # Create data with a type mismatch: 'Wahlperiode' should be integer, but we provide a string.
+    invalid_data = {
+        "Wahlperiode": ["nineteen"],  # This should be an integer
+        "Sitzungnr": [195],
+        "Abstimmnr": [3],
+        "Fraktion/Gruppe": ["CDU/CSU"],
+        "Name": ["Abercron"],
+        "Vorname": ["Michael"],
+        "Titel": ["von"],
+        "ja": [1],
+        "nein": [0],
+        "Enthaltung": [0],
+        "ungültig": [0],
+        "nichtabgegeben": [0],
+        "Bezeichnung": ["Dr. Michael von Abercron"],
+        "Bemerkung": [None],
+    }
+    file_path = create_dummy_excel("invalid_schema.xlsx", invalid_data)
+
+    with pytest.raises(pl.exceptions.InvalidOperationError):
+        read_excel(file_path)
 
 
 # ========================= verify_vote_columns =========================
@@ -309,12 +335,6 @@ def test_disambiguate_party():
 
 
 # ========================= get_sheet_df =========================
-
-# @pytest.fixture
-# def data_dir(tmp_path: Path) -> Path:
-#     data_dir = tmp_path / "data"
-#     data_dir.mkdir()
-#     return data_dir
 
 
 @pytest.fixture
@@ -646,3 +666,42 @@ def test_run(
         assert preprocessed_path.exists()
         output_file = preprocessed_path / "bundestag.de_votes.parquet"
         assert output_file.exists()
+
+
+# ========================= create_vote_column =========================
+
+
+def test_create_vote_column():
+    """Tests that the vote column is created correctly based on the individual vote columns."""
+    data = {
+        "ja": [1, 0, 0, 0, 0, 0],
+        "nein": [0, 1, 0, 0, 0, 0],
+        "Enthaltung": [0, 0, 1, 0, 0, 0],
+        "ungültig": [0, 0, 0, 1, 0, 0],
+        "nichtabgegeben": [0, 0, 0, 0, 1, 0],
+    }
+    df = pl.DataFrame(data)
+
+    # line to test
+    df_with_vote = create_vote_column(df)
+
+    expected_votes = ["ja", "nein", "Enthaltung", "ungültig", "nichtabgegeben", "error"]
+
+    assert "vote" in df_with_vote.columns
+    assert df_with_vote["vote"].to_list() == expected_votes
+
+
+def test_create_vote_column_all_zero():
+    """Tests the case where all vote columns are zero, expecting 'error'."""
+    data = {
+        "ja": [0],
+        "nein": [0],
+        "Enthaltung": [0],
+        "ungültig": [0],
+        "nichtabgegeben": [0],
+    }
+    df = pl.DataFrame(data)
+
+    df_with_vote = create_vote_column(df)
+
+    assert df_with_vote["vote"].to_list() == ["error"]
