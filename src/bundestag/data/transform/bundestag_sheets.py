@@ -240,33 +240,35 @@ def get_sheet_df(
 
 
 def create_vote_column(df: pl.DataFrame) -> pl.DataFrame:
-    df = df.with_columns(
-        **{
-            "vote": (
-                pl.when(pl.col("ja") == pl.lit(1))
-                .then(pl.lit("ja"))
-                .otherwise(
-                    pl.when(pl.col("nein") == pl.lit(1))
-                    .then(pl.lit("nein"))
-                    .otherwise(
-                        pl.when(pl.col("Enthaltung") == pl.lit(1))
-                        .then(pl.lit("Enthaltung"))
-                        .otherwise(
-                            pl.when(pl.col("ungültig") == pl.lit(1))
-                            .then(pl.lit("ungültig"))
-                            .otherwise(
-                                pl.when(pl.col("nichtabgegeben") == pl.lit(1))
-                                .then(pl.lit("nichtabgegeben"))
-                                .otherwise(pl.lit("error"))
-                            )
-                        )
-                    )
-                )
-            )
-        }
+    """
+    Transforms the vote columns (ja, nein, etc.) into a single 'vote' column
+    by unpivoting the dataframe. It handles cases where a vote is cast (one of
+    the columns is 1) and where no vote is cast (all columns are 0), labeling
+    the latter as 'error'.
+    """
+    # Keep original columns to join back later
+    original_cols = df.columns
+
+    # Add a unique row identifier to pivot and join correctly
+    df = df.with_row_index("__row_nr__")
+
+    # Unpivot the DataFrame to long format
+    unpivoted = df.unpivot(
+        index=["__row_nr__"], on=VOTE_COLS, variable_name="vote", value_name="value"
     )
 
-    return df
+    # Filter for the cast votes (where value is 1)
+    votes = unpivoted.filter(pl.col("value") == 1).select(["__row_nr__", "vote"])
+
+    # Join the vote information back to the original DataFrame
+    df = df.join(votes, on="__row_nr__", how="left")
+
+    # For rows where no vote was cast, the 'vote' column will be null.
+    # We fill these with 'error'.
+    df = df.with_columns(vote=pl.col("vote").fill_null("error"))
+
+    # Return the DataFrame with the original columns plus the new 'vote' column
+    return df.select(original_cols + ["vote"])
 
 
 SHEET_SCHEMA_GET_SQUISHED_DATAFRAME = pl.Schema(
