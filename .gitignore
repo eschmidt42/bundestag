@@ -19,6 +19,7 @@ data/preprocessed.tar.gz
 data/preprocessed/abgeordnetenwatch/compiled_votes_legislature_111.csv
 data/preprocessed/abgeordnetenwatch/compiled_votes_legislature_132.csv
 data/preprocessed/bundestag/
+data/preprocessed/abgeordnetenwatch/
 data/raw.tar.gz
 data/raw/
 
