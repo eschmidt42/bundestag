@@ -1,3 +1,9 @@
+"""
+# Download CLI
+
+This module provides CLI commands to download data from various sources.
+"""
+
 import logging
 
 import typer

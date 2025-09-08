@@ -5,9 +5,15 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - How to use: how-to-use.md
-  - Analysis highlights: analysis-highlights.md
-  - Analysis with metabase: metabase.md
+  - Analysis:
+    - Embeddings: analysis-highlights.md
+    - Fraktionszwang: fraktionszwang.md
   - Documentation:
+    - cli:
+      - __main__: bundestag/cli/__main__.md
+      - download: bundestag/cli/download.md
+      - transform: bundestag/cli/transform.md
+      - utils: bundestag/cli/utils.md
     - data:
       - __init__: bundestag/data.md
       - download:
@@ -19,7 +25,7 @@ nav:
         - bundestag_sheets: bundestag/data/transform/bundestag_sheets.md
       - utils: bundestag/data/utils.md
     - gui: bundestag/gui.md
-    - logging: bundestag/logging.md
+    - fine_logging: bundestag/fine_logging.md
     - paths: bundestag/paths.md
     - poll_clustering: bundestag/poll_clustering.md
     - schemas: bundestag/schemas.md
