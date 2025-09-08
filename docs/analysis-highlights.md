@@ -31,23 +31,27 @@ from fastai.tabular.all import (
 from functools import partial
 from rich import print as pprint
 
-# import bundestag.data.download.huggingface as download_hf
 from bundestag.fine_logging import setup_logging
 from bundestag.paths import get_paths
-from bundestag.similarity import get_votes_by_party, pivot_party_votes_df, prepare_votes_of_mdb, align_mdb_with_parties,compute_similarity, plot, align_party_with_all_parties
+from bundestag.similarity import (
+    get_votes_by_party,
+    pivot_party_votes_df,
+    prepare_votes_of_mdb,
+    align_mdb_with_parties,
+    compute_similarity,
+    plot,
+    align_party_with_all_parties,
+)
 from bundestag.poll_clustering import SpacyTransformer, clean_text
-from bundestag.vote_prediction import plot_predictions, get_embeddings, plot_politician_embeddings, plot_poll_embeddings
+from bundestag.vote_prediction import (
+    plot_predictions,
+    get_embeddings,
+    plot_politician_embeddings,
+    plot_poll_embeddings,
+)
 from bundestag.gui import MdBGUI, PartyGUI
 import logging
 from plotnine import (
-    ggplot,
-    aes,
-    geom_point,
-    labs,
-    scale_y_continuous,
-    facet_wrap,
-    theme,
-    geom_line,
     scale_color_manual,
 )
 ```
@@ -69,6 +73,7 @@ Comment-in the below cell to download prepared data
 
 
 ```python
+# import bundestag.data.download.huggingface as download_hf
 # download_hf.run(Path("../data"))
 ```
 
@@ -470,7 +475,7 @@ The politician embeddings are color coded using the politician's party membershi
 
 
 ```python
-fig = plot_politician_embeddings(df_all_votes, df_mandates, embeddings_pl,party_colors)
+fig = plot_politician_embeddings(df_all_votes, df_mandates, embeddings_pl, party_colors)
 fig.show()
 if makedocs:
     fig.save(_fig_path / "mandate_embeddings.png")

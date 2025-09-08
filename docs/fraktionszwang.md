@@ -28,7 +28,8 @@ from plotnine import (
     geom_line,
     scale_color_manual,
 )
-
+import os
+from pathlib import Path
 from bundestag.fine_logging import setup_logging
 import logging
 from bundestag.paths import get_paths
@@ -184,15 +185,27 @@ def plot_rolling_entropy_over_time(
             labels=lambda v: [f"{x * 100:.0f}%" for x in v], limits=(0, 1)
         )
     )
+
+# if this notebook is run via `make docs` then the environment variable is set
+makedocs = os.getenv("MAKEDOCS") is not None
+logger.info(f"Running nb with {makedocs=}")
 ```
 
 
 ```python
 setup_logging(logging.INFO)
 
+_fig_path = Path("./images")
 paths = get_paths("../data")
 paths
 ```
+
+
+
+
+    Paths(root_path=PosixPath('../data'), raw='raw', preprocessed='preprocessed', abgeordnetenwatch='abgeordnetenwatch', bundestag='bundestag')
+
+
 
 ## Bundestag sheet data
 
@@ -203,11 +216,32 @@ file
 ```
 
 
+
+
+    PosixPath('../data/preprocessed/bundestag/bundestag.de_votes.parquet')
+
+
+
+
 ```python
 data_bundestag = pl.read_parquet(file)
 
 data_bundestag.head()
 ```
+
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 15)</small><table border="1" class="dataframe"><thead><tr><th>Wahlperiode</th><th>Sitzungnr</th><th>Abstimmnr</th><th>Fraktion/Gruppe</th><th>AbgNr</th><th>Name</th><th>Vorname</th><th>Titel</th><th>Bezeichnung</th><th>Bemerkung</th><th>sheet_name</th><th>date</th><th>title</th><th>issue</th><th>vote</th></tr><tr><td>i64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>datetime[ns]</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>17</td><td>226</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>null</td><td>&quot;Aigner&quot;</td><td>&quot;Ilse&quot;</td><td>null</td><td>&quot;Ilse Aigner&quot;</td><td>null</td><td>&quot;&quot;</td><td>2013-03-01 00:00:00</td><td>&quot;Urheberrechtsgesetz 17/11470 u…</td><td>&quot;2013-03-01 Urheberrechtsgesetz…</td><td>&quot;ja&quot;</td></tr><tr><td>17</td><td>226</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>null</td><td>&quot;Altmaier&quot;</td><td>&quot;Peter&quot;</td><td>null</td><td>&quot;Peter Altmaier&quot;</td><td>null</td><td>&quot;&quot;</td><td>2013-03-01 00:00:00</td><td>&quot;Urheberrechtsgesetz 17/11470 u…</td><td>&quot;2013-03-01 Urheberrechtsgesetz…</td><td>&quot;nichtabgegeben&quot;</td></tr><tr><td>17</td><td>226</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>null</td><td>&quot;Aumer&quot;</td><td>&quot;Peter&quot;</td><td>null</td><td>&quot;Peter Aumer&quot;</td><td>null</td><td>&quot;&quot;</td><td>2013-03-01 00:00:00</td><td>&quot;Urheberrechtsgesetz 17/11470 u…</td><td>&quot;2013-03-01 Urheberrechtsgesetz…</td><td>&quot;ja&quot;</td></tr><tr><td>17</td><td>226</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>null</td><td>&quot;Bär&quot;</td><td>&quot;Dorothee&quot;</td><td>null</td><td>&quot;Dorothee Bär&quot;</td><td>null</td><td>&quot;&quot;</td><td>2013-03-01 00:00:00</td><td>&quot;Urheberrechtsgesetz 17/11470 u…</td><td>&quot;2013-03-01 Urheberrechtsgesetz…</td><td>&quot;nein&quot;</td></tr><tr><td>17</td><td>226</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>null</td><td>&quot;Bareiß&quot;</td><td>&quot;Thomas&quot;</td><td>null</td><td>&quot;Thomas Bareiß&quot;</td><td>null</td><td>&quot;&quot;</td><td>2013-03-01 00:00:00</td><td>&quot;Urheberrechtsgesetz 17/11470 u…</td><td>&quot;2013-03-01 Urheberrechtsgesetz…</td><td>&quot;nichtabgegeben&quot;</td></tr></tbody></table></div>
+
+
 
 Use a single name for "Die Linke"
 
@@ -215,6 +249,20 @@ Use a single name for "Die Linke"
 ```python
 data_bundestag["Fraktion/Gruppe"].value_counts()
 ```
+
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 2)</small><table border="1" class="dataframe"><thead><tr><th>Fraktion/Gruppe</th><th>count</th></tr><tr><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;BÜ90/GR&quot;</td><td>56200</td></tr><tr><td>&quot;DIE LINKE.&quot;</td><td>39747</td></tr><tr><td>&quot;SPD&quot;</td><td>125667</td></tr><tr><td>&quot;AfD&quot;</td><td>37462</td></tr><tr><td>&quot;BSW&quot;</td><td>480</td></tr><tr><td>&quot;Fraktionslos&quot;</td><td>2839</td></tr><tr><td>&quot;Die Linke&quot;</td><td>1792</td></tr><tr><td>&quot;CDU/CSU&quot;</td><td>177595</td></tr><tr><td>&quot;FDP&quot;</td><td>42351</td></tr></tbody></table></div>
+
+
 
 
 ```python
@@ -232,6 +280,20 @@ data_bundestag = data_bundestag.with_columns(
 data_bundestag["Fraktion/Gruppe"].value_counts()
 ```
 
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (8, 2)</small><table border="1" class="dataframe"><thead><tr><th>Fraktion/Gruppe</th><th>count</th></tr><tr><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;BÜ90/GR&quot;</td><td>56200</td></tr><tr><td>&quot;Die Linke&quot;</td><td>41539</td></tr><tr><td>&quot;FDP&quot;</td><td>42351</td></tr><tr><td>&quot;BSW&quot;</td><td>480</td></tr><tr><td>&quot;SPD&quot;</td><td>125667</td></tr><tr><td>&quot;AfD&quot;</td><td>37462</td></tr><tr><td>&quot;CDU/CSU&quot;</td><td>177595</td></tr><tr><td>&quot;Fraktionslos&quot;</td><td>2839</td></tr></tbody></table></div>
+
+
+
 How many things are voted on per day over time?
 
 
@@ -243,18 +305,54 @@ things_per_day_over_time.head()
 ```
 
 
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>n</th></tr><tr><td>datetime[ns]</td><td>u32</td></tr></thead><tbody><tr><td>2016-02-17 00:00:00</td><td>1</td></tr><tr><td>2019-11-29 00:00:00</td><td>3</td></tr><tr><td>2015-03-05 00:00:00</td><td>2</td></tr><tr><td>2022-05-19 00:00:00</td><td>2</td></tr><tr><td>2024-01-18 00:00:00</td><td>2</td></tr></tbody></table></div>
+
+
+
+
 ```python
-plot_poll_counts_over_time(things_per_day_over_time, "date", "n")
+p = plot_poll_counts_over_time(things_per_day_over_time, "date", "n")
+p.show()
+if makedocs:
+    p.save(_fig_path / "bundestag_sheets_polls_over_time.png")
 ```
+
+
+
+![png](fraktionszwang_files/fraktionszwang_16_0.png)
+
+
+
+![](images/bundestag_sheets_polls_over_time.png)
 
 How many members vote per poll over time?
 
 
 ```python
-plot_voting_members_per_poll_over_time(
+p = plot_voting_members_per_poll_over_time(
     data_bundestag, "date", "Abstimmnr", "Bezeichnung"
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "bundestag_sheets_members_per_poll_over_time.png")
 ```
+
+
+
+![png](fraktionszwang_files/fraktionszwang_19_0.png)
+
+
+
+![](images/bundestag_sheets_members_per_poll_over_time.png)
 
 Count of vote types by date, poll and party over time.
 
@@ -271,18 +369,46 @@ member_votes_per_faction_per_poll_per_day_over_time.head()
 ```
 
 
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 6)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>Abstimmnr</th><th>Fraktion/Gruppe</th><th>vote</th><th>n</th><th>vote share</th></tr><tr><td>datetime[ns]</td><td>i64</td><td>str</td><td>str</td><td>u32</td><td>f64</td></tr></thead><tbody><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;BÜ90/GR&quot;</td><td>&quot;nein&quot;</td><td>59</td><td>0.867647</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;BÜ90/GR&quot;</td><td>&quot;nichtabgegeben&quot;</td><td>9</td><td>0.132353</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>&quot;ja&quot;</td><td>217</td><td>0.915612</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>&quot;nichtabgegeben&quot;</td><td>20</td><td>0.084388</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;Die Linke&quot;</td><td>&quot;nein&quot;</td><td>60</td><td>0.789474</td></tr></tbody></table></div>
+
+
+
+
 ```python
 colors = scale_color_manual(
     breaks=["ja", "nein", "nichtabgegeben", "Enthaltung"],
     values=["green", "red", "grey", "orange"],
 )
-plot_voting_shares_over_time(
+p = plot_voting_shares_over_time(
     member_votes_per_faction_per_poll_per_day_over_time,
     "date",
     "Fraktion/Gruppe",
     colors,
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "bundestag_sheets_voting_shares_over_time.png")
 ```
+
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/themes/themeable.py:2486: FutureWarning: You no longer need to use subplots_adjust to make space for the legend or text around the panels. This parameter will be removed in a future version. You can still use 'plot_margin' 'panel_spacing' for your other spacing needs.
+
+
+
+
+![png](fraktionszwang_files/fraktionszwang_24_1.png)
+
+
+
+![](images/bundestag_sheets_voting_shares_over_time.png)
 
 
 ```python
@@ -295,6 +421,20 @@ entropy_per_poll_faction = compute_entropies(
 )
 entropy_per_poll_faction.head(2)
 ```
+
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (2, 5)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>Abstimmnr</th><th>Fraktion/Gruppe</th><th>shannon entropy</th><th>share of max shannon entropy [%]</th></tr><tr><td>datetime[ns]</td><td>i64</td><td>str</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>2017-12-12 00:00:00</td><td>5</td><td>&quot;FDP&quot;</td><td>0.42807</td><td>0.214035</td></tr><tr><td>2016-07-07 00:00:00</td><td>4</td><td>&quot;CDU/CSU&quot;</td><td>0.381382</td><td>0.190691</td></tr></tbody></table></div>
+
+
 
 
 ```python
@@ -311,10 +451,24 @@ party_colors = scale_color_manual(
     ],
     values=["blue", "purple", "green", "black", "red", "yellow", "grey", "salmon"],
 )
-plot_entropy_over_time(
+p = plot_entropy_over_time(
     entropy_per_poll_faction, party_colors, x="date", color="Fraktion/Gruppe"
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "bundestag_sheets_voting_entropy_over_time.png")
 ```
+
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/themes/themeable.py:2486: FutureWarning: You no longer need to use subplots_adjust to make space for the legend or text around the panels. This parameter will be removed in a future version. You can still use 'plot_margin' 'panel_spacing' for your other spacing needs.
+
+
+
+
+![png](fraktionszwang_files/fraktionszwang_27_1.png)
+
+
+
+![](images/bundestag_sheets_voting_entropy_over_time.png)
 
 Now we compute the rolling median of `shannon entropy` over `n_polls_to_average` polls for each `Fraktion/Gruppe`.
 
@@ -327,18 +481,47 @@ entropy_per_poll_faction = compute_rolling_median(
 entropy_per_poll_faction.head()
 ```
 
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 6)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>Abstimmnr</th><th>Fraktion/Gruppe</th><th>shannon entropy</th><th>share of max shannon entropy [%]</th><th>rolling_median</th></tr><tr><td>datetime[ns]</td><td>i64</td><td>str</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;SPD&quot;</td><td>0.644694</td><td>0.322347</td><td>null</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;BÜ90/GR&quot;</td><td>0.563856</td><td>0.281928</td><td>null</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;CDU/CSU&quot;</td><td>0.417456</td><td>0.208728</td><td>null</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;FDP&quot;</td><td>0.423049</td><td>0.211524</td><td>null</td></tr><tr><td>2012-10-18 00:00:00</td><td>1</td><td>&quot;Die Linke&quot;</td><td>0.742488</td><td>0.371244</td><td>null</td></tr></tbody></table></div>
+
+
+
 Now let's plot the original `shannon entropy` and the `shannon_entropy_rolling_median` to see the effect of the rolling median.
 
 
 ```python
-plot_rolling_entropy_over_time(
+p = plot_rolling_entropy_over_time(
     entropy_per_poll_faction,
     party_colors,
     n_polls_to_average,
     "date",
     color="Fraktion/Gruppe",
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "bundestag_sheets_rolling_voting_entropy_over_time.png")
 ```
+
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/geoms/geom_path.py:100: PlotnineWarning: geom_path: Removed 29 rows containing missing values.
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/themes/themeable.py:2486: FutureWarning: You no longer need to use subplots_adjust to make space for the legend or text around the panels. This parameter will be removed in a future version. You can still use 'plot_margin' 'panel_spacing' for your other spacing needs.
+
+
+
+
+![png](fraktionszwang_files/fraktionszwang_32_1.png)
+
+
+
+![](images/bundestag_sheets_rolling_voting_entropy_over_time.png)
 
 ## Abgeordnetenwatch.de data
 
@@ -365,6 +548,41 @@ polls.head(2), polls.tail(2)
 ```
 
 
+
+
+    (shape: (2, 7)
+     ┌─────────┬───────────────┬──────────────┬──────────────┬──────────────┬──────────────┬────────────┐
+     │ poll_id ┆ poll_title    ┆ poll_first_c ┆ poll_descrip ┆ legislature_ ┆ legislature_ ┆ poll_date  │
+     │ ---     ┆ ---           ┆ ommittee     ┆ tion         ┆ id           ┆ period       ┆ ---        │
+     │ i64     ┆ str           ┆ ---          ┆ ---          ┆ ---          ┆ ---          ┆ str        │
+     │         ┆               ┆ str          ┆ str          ┆ i32          ┆ str          ┆            │
+     ╞═════════╪═══════════════╪══════════════╪══════════════╪══════════════╪══════════════╪════════════╡
+     │ 724     ┆ Bundestagswah ┆ null         ┆ Grüne und    ┆ 67           ┆ Bundestag    ┆ 2009-07-03 │
+     │         ┆ lrecht        ┆              ┆ Linke sind   ┆              ┆ 2005 - 2009  ┆            │
+     │         ┆               ┆              ┆ damit ges…   ┆              ┆              ┆            │
+     │ 723     ┆ AWACS-Einsatz ┆ null         ┆ Mit bis zu   ┆ 67           ┆ Bundestag    ┆ 2009-07-02 │
+     │         ┆ in            ┆              ┆ 300 Bundeswe ┆              ┆ 2005 - 2009  ┆            │
+     │         ┆ Afghanistan   ┆              ┆ hrsolda…     ┆              ┆              ┆            │
+     └─────────┴───────────────┴──────────────┴──────────────┴──────────────┴──────────────┴────────────┘,
+     shape: (2, 7)
+     ┌─────────┬───────────────┬──────────────┬──────────────┬──────────────┬──────────────┬────────────┐
+     │ poll_id ┆ poll_title    ┆ poll_first_c ┆ poll_descrip ┆ legislature_ ┆ legislature_ ┆ poll_date  │
+     │ ---     ┆ ---           ┆ ommittee     ┆ tion         ┆ id           ┆ period       ┆ ---        │
+     │ i64     ┆ str           ┆ ---          ┆ ---          ┆ ---          ┆ ---          ┆ str        │
+     │         ┆               ┆ str          ┆ str          ┆ i32          ┆ str          ┆            │
+     ╞═════════╪═══════════════╪══════════════╪══════════════╪══════════════╪══════════════╪════════════╡
+     │ 6147    ┆ Fortsetzung   ┆ Auswärtiger  ┆ Die Bundesre ┆ 161          ┆ Bundestag    ┆ 2025-06-25 │
+     │         ┆ des Bundesweh ┆ Ausschuss    ┆ gierung hat  ┆              ┆ 2025 - 2029  ┆            │
+     │         ┆ reins…        ┆              ┆ einen …      ┆              ┆              ┆            │
+     │ 6146    ┆ Fortsetzung   ┆ Auswärtiger  ┆ Der          ┆ 161          ┆ Bundestag    ┆ 2025-06-26 │
+     │         ┆ des Bundesweh ┆ Ausschuss    ┆ Bundestag    ┆              ┆ 2025 - 2029  ┆            │
+     │         ┆ reins…        ┆              ┆ hat über     ┆              ┆              ┆            │
+     │         ┆               ┆              ┆ einen A…     ┆              ┆              ┆            │
+     └─────────┴───────────────┴──────────────┴──────────────┴──────────────┴──────────────┴────────────┘)
+
+
+
+
 ```python
 tmp = []
 for legislature_id in legislature_ids:
@@ -378,6 +596,42 @@ for legislature_id in legislature_ids:
 votes = pl.concat(tmp, how="diagonal_relaxed")
 votes.head(2), votes.tail(2)
 ```
+
+
+
+
+    (shape: (2, 8)
+     ┌────────────┬─────────────┬─────────┬─────────┬────────────┬────────────┬────────────┬────────────┐
+     │ mandate_id ┆ mandate     ┆ poll_id ┆ vote    ┆ reason_no_ ┆ reason_no_ ┆ politician ┆ legislatur │
+     │ ---        ┆ ---         ┆ ---     ┆ ---     ┆ show       ┆ show_other ┆ name       ┆ e_id       │
+     │ i64        ┆ str         ┆ i64     ┆ str     ┆ ---        ┆ ---        ┆ ---        ┆ ---        │
+     │            ┆             ┆         ┆         ┆ str        ┆ str        ┆ str        ┆ i32        │
+     ╞════════════╪═════════════╪═════════╪═════════╪════════════╪════════════╪════════════╪════════════╡
+     │ 41075      ┆ Marion Seib ┆ 707     ┆ no_show ┆ null       ┆ null       ┆ Marion     ┆ 67         │
+     │            ┆ (Bundestag  ┆         ┆         ┆            ┆            ┆ Seib       ┆            │
+     │            ┆ 2005-20…    ┆         ┆         ┆            ┆            ┆            ┆            │
+     │ 41067      ┆ Franz       ┆ 707     ┆ no_show ┆ null       ┆ null       ┆ Franz Münt ┆ 67         │
+     │            ┆ Müntefering ┆         ┆         ┆            ┆            ┆ efering    ┆            │
+     │            ┆ (Bundestag  ┆         ┆         ┆            ┆            ┆            ┆            │
+     │            ┆ 2…          ┆         ┆         ┆            ┆            ┆            ┆            │
+     └────────────┴─────────────┴─────────┴─────────┴────────────┴────────────┴────────────┴────────────┘,
+     shape: (2, 8)
+     ┌────────────┬─────────────┬─────────┬──────┬─────────────┬─────────────┬─────────────┬────────────┐
+     │ mandate_id ┆ mandate     ┆ poll_id ┆ vote ┆ reason_no_s ┆ reason_no_s ┆ politician  ┆ legislatur │
+     │ ---        ┆ ---         ┆ ---     ┆ ---  ┆ how         ┆ how_other   ┆ name        ┆ e_id       │
+     │ i64        ┆ str         ┆ i64     ┆ str  ┆ ---         ┆ ---         ┆ ---         ┆ ---        │
+     │            ┆             ┆         ┆      ┆ str         ┆ str         ┆ str         ┆ i32        │
+     ╞════════════╪═════════════╪═════════╪══════╪═════════════╪═════════════╪═════════════╪════════════╡
+     │ 69000      ┆ Vanessa-Kim ┆ 6155    ┆ yes  ┆ null        ┆ null        ┆ Vanessa-Kim ┆ 161        │
+     │            ┆ Zobel       ┆         ┆      ┆             ┆             ┆ Zobel       ┆            │
+     │            ┆ (Bundestag  ┆         ┆      ┆             ┆             ┆             ┆            │
+     │            ┆ 2…          ┆         ┆      ┆             ┆             ┆             ┆            │
+     │ 69002      ┆ Armand Zorn ┆ 6155    ┆ yes  ┆ null        ┆ null        ┆ Armand Zorn ┆ 161        │
+     │            ┆ (Bundestag  ┆         ┆      ┆             ┆             ┆             ┆            │
+     │            ┆ 2025 - …    ┆         ┆      ┆             ┆             ┆             ┆            │
+     └────────────┴─────────────┴─────────┴──────┴─────────────┴─────────────┴─────────────┴────────────┘)
+
+
 
 
 ```python
@@ -394,6 +648,52 @@ for legislature_id in legislature_ids:
 mandates = pl.concat(tmp, how="diagonal_relaxed")
 mandates.head(2), mandates.tail(2)
 ```
+
+    611
+    621
+    632
+    709
+    733
+    630
+
+
+
+
+
+    (shape: (2, 17)
+     ┌────────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬─────────┐
+     │ legislatur ┆ legislatu ┆ mandate_i ┆ mandate   ┆ … ┆ fraction_ ┆ fraction_ ┆ all_parti ┆ party   │
+     │ e_id       ┆ re_period ┆ d         ┆ ---       ┆   ┆ starts    ┆ ends      ┆ es        ┆ ---     │
+     │ ---        ┆ ---       ┆ ---       ┆ str       ┆   ┆ ---       ┆ ---       ┆ ---       ┆ str     │
+     │ i32        ┆ str       ┆ i64       ┆           ┆   ┆ list[str] ┆ list[str] ┆ list[str] ┆         │
+     ╞════════════╪═══════════╪═══════════╪═══════════╪═══╪═══════════╪═══════════╪═══════════╪═════════╡
+     │ 67         ┆ Bundestag ┆ 44904     ┆ Ingbert   ┆ … ┆ [null]    ┆ [""]      ┆ ["CDU/CSU ┆ CDU/CSU │
+     │            ┆ 2005 -    ┆           ┆ Liebing   ┆   ┆           ┆           ┆ "]        ┆         │
+     │            ┆ 2009      ┆           ┆ (Bundesta ┆   ┆           ┆           ┆           ┆         │
+     │            ┆           ┆           ┆ g 200…    ┆   ┆           ┆           ┆           ┆         │
+     │ 67         ┆ Bundestag ┆ 44768     ┆ Ulrich    ┆ … ┆ [null]    ┆ [""]      ┆ ["SPD"]   ┆ SPD     │
+     │            ┆ 2005 -    ┆           ┆ Kelber    ┆   ┆           ┆           ┆           ┆         │
+     │            ┆ 2009      ┆           ┆ (Bundesta ┆   ┆           ┆           ┆           ┆         │
+     │            ┆           ┆           ┆ g 2005-…  ┆   ┆           ┆           ┆           ┆         │
+     └────────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴─────────┘,
+     shape: (2, 17)
+     ┌────────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬─────────┐
+     │ legislatur ┆ legislatu ┆ mandate_i ┆ mandate   ┆ … ┆ fraction_ ┆ fraction_ ┆ all_parti ┆ party   │
+     │ e_id       ┆ re_period ┆ d         ┆ ---       ┆   ┆ starts    ┆ ends      ┆ es        ┆ ---     │
+     │ ---        ┆ ---       ┆ ---       ┆ str       ┆   ┆ ---       ┆ ---       ┆ ---       ┆ str     │
+     │ i32        ┆ str       ┆ i64       ┆           ┆   ┆ list[str] ┆ list[str] ┆ list[str] ┆         │
+     ╞════════════╪═══════════╪═══════════╪═══════════╪═══╪═══════════╪═══════════╪═══════════╪═════════╡
+     │ 161        ┆ Bundestag ┆ 68377     ┆ Knut      ┆ … ┆ [null]    ┆ [""]      ┆ ["CDU/CSU ┆ CDU/CSU │
+     │            ┆ 2025 -    ┆           ┆ Abraham   ┆   ┆           ┆           ┆ "]        ┆         │
+     │            ┆ 2029      ┆           ┆ (Bundesta ┆   ┆           ┆           ┆           ┆         │
+     │            ┆           ┆           ┆ g 2025 -… ┆   ┆           ┆           ┆           ┆         │
+     │ 161        ┆ Bundestag ┆ 68376     ┆ Sanae     ┆ … ┆ [null]    ┆ [""]      ┆ ["SPD"]   ┆ SPD     │
+     │            ┆ 2025 -    ┆           ┆ Abdi (Bun ┆   ┆           ┆           ┆           ┆         │
+     │            ┆ 2029      ┆           ┆ destag    ┆   ┆           ┆           ┆           ┆         │
+     │            ┆           ┆           ┆ 2025 - 2… ┆   ┆           ┆           ┆           ┆         │
+     └────────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴─────────┘)
+
+
 
 
 ```python
@@ -414,6 +714,17 @@ data_abgeordnetenwatch = data_abgeordnetenwatch.with_columns(
 with pl.Config(tbl_rows=15):
     display(data_abgeordnetenwatch["party"].value_counts(sort=True))
 ```
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (12, 2)</small><table border="1" class="dataframe"><thead><tr><th>party</th><th>count</th></tr><tr><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;CDU/CSU&quot;</td><td>143375</td></tr><tr><td>&quot;SPD&quot;</td><td>105992</td></tr><tr><td>&quot;FDP&quot;</td><td>38755</td></tr><tr><td>&quot;DIE LINKE&quot;</td><td>29061</td></tr><tr><td>&quot;AfD&quot;</td><td>27763</td></tr><tr><td>&quot;DIE GRÜNEN&quot;</td><td>27320</td></tr><tr><td>&quot;BÜNDNIS 90/DIE GRÜNEN&quot;</td><td>18835</td></tr><tr><td>null</td><td>11910</td></tr><tr><td>&quot;Die Linke. (Gruppe)&quot;</td><td>4404</td></tr><tr><td>&quot;fraktionslos&quot;</td><td>3593</td></tr><tr><td>&quot;BSW (Gruppe)&quot;</td><td>1620</td></tr><tr><td>&quot;Die Linke&quot;</td><td>441</td></tr></tbody></table></div>
+
 
 Clean the data a bit
 
@@ -443,11 +754,36 @@ with pl.Config(tbl_rows=15):
 ```
 
 
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 2)</small><table border="1" class="dataframe"><thead><tr><th>party</th><th>count</th></tr><tr><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;CDU/CSU&quot;</td><td>143375</td></tr><tr><td>&quot;SPD&quot;</td><td>105992</td></tr><tr><td>&quot;BÜNDNIS 90/DIE GRÜNEN&quot;</td><td>46155</td></tr><tr><td>&quot;FDP&quot;</td><td>38755</td></tr><tr><td>&quot;Die Linke&quot;</td><td>33906</td></tr><tr><td>&quot;AfD&quot;</td><td>27763</td></tr><tr><td>null</td><td>11910</td></tr><tr><td>&quot;fraktionslos&quot;</td><td>3593</td></tr><tr><td>&quot;BSW (Gruppe)&quot;</td><td>1620</td></tr></tbody></table></div>
+
+
+
 ```python
 data_abgeordnetenwatch.filter(pl.col("party").is_null()).group_by("legislature_id").agg(
     **{"mandates": pl.col("mandate_id").n_unique()}
 )
 ```
+
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (6, 2)</small><table border="1" class="dataframe"><thead><tr><th>legislature_id</th><th>mandates</th></tr><tr><td>i32</td><td>u32</td></tr></thead><tbody><tr><td>67</td><td>23</td></tr><tr><td>83</td><td>31</td></tr><tr><td>97</td><td>26</td></tr><tr><td>111</td><td>39</td></tr><tr><td>132</td><td>39</td></tr><tr><td>161</td><td>3</td></tr></tbody></table></div>
+
+
 
 
 ```python
@@ -458,21 +794,52 @@ things_per_day_over_time.head()
 ```
 
 
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>n</th></tr><tr><td>date</td><td>u32</td></tr></thead><tbody><tr><td>2019-11-27</td><td>1</td></tr><tr><td>2018-11-08</td><td>5</td></tr><tr><td>2024-12-16</td><td>1</td></tr><tr><td>2023-06-23</td><td>4</td></tr><tr><td>2018-02-22</td><td>1</td></tr></tbody></table></div>
+
+
+
+
 ```python
-# TODO: missing polls? Abstimmungsnr counts seem higher than poll_ids - plot side by side
+p = plot_poll_counts_over_time(things_per_day_over_time, "date", "n")
+p.show()
+if makedocs:
+    p.save(_fig_path / "abgeordnetenwatch_polls_over_time.png")
 ```
 
 
-```python
-plot_poll_counts_over_time(things_per_day_over_time, "date", "n")
-```
+
+![png](fraktionszwang_files/fraktionszwang_48_0.png)
+
+
+
+![](images/abgeordnetenwatch_polls_over_time.png)
 
 
 ```python
-plot_voting_members_per_poll_over_time(
+p = plot_voting_members_per_poll_over_time(
     data_abgeordnetenwatch, "date", "poll_id", "mandate_id"
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "abgeordnetenwatch_members_per_poll_over_time.png")
 ```
+
+
+
+![png](fraktionszwang_files/fraktionszwang_50_0.png)
+
+
+
+![](images/abgeordnetenwatch_members_per_poll_over_time.png)
 
 
 ```python
@@ -487,10 +854,24 @@ colors = scale_color_manual(
     breaks=["yes", "no", "no_show", "abstain"],
     values=["green", "red", "grey", "orange"],
 )
-plot_voting_shares_over_time(
+p = plot_voting_shares_over_time(
     member_votes_per_faction_per_poll_per_day_over_time, "date", "party", colors
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "abgeordnetenwatch_voting_shares_over_time.png")
 ```
+
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/themes/themeable.py:2486: FutureWarning: You no longer need to use subplots_adjust to make space for the legend or text around the panels. This parameter will be removed in a future version. You can still use 'plot_margin' 'panel_spacing' for your other spacing needs.
+
+
+
+
+![png](fraktionszwang_files/fraktionszwang_53_1.png)
+
+
+
+![](images/abgeordnetenwatch_voting_shares_over_time.png)
 
 
 ```python
@@ -503,6 +884,20 @@ entropy_per_poll_faction = compute_entropies(
 )
 entropy_per_poll_faction.head()
 ```
+
+
+
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 5)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>poll_id</th><th>party</th><th>shannon entropy</th><th>share of max shannon entropy [%]</th></tr><tr><td>date</td><td>i64</td><td>str</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>2019-05-09</td><td>1680</td><td>&quot;fraktionslos&quot;</td><td>1.721928</td><td>0.860964</td></tr><tr><td>2020-11-25</td><td>3959</td><td>&quot;AfD&quot;</td><td>0.807751</td><td>0.403876</td></tr><tr><td>2018-05-17</td><td>1333</td><td>&quot;BÜNDNIS 90/DIE GRÜNEN&quot;</td><td>0.554778</td><td>0.277389</td></tr><tr><td>2023-04-28</td><td>5011</td><td>&quot;CDU/CSU&quot;</td><td>0.635973</td><td>0.317987</td></tr><tr><td>2019-06-06</td><td>1684</td><td>&quot;CDU/CSU&quot;</td><td>0.291818</td><td>0.145909</td></tr></tbody></table></div>
+
+
 
 
 ```python
@@ -519,8 +914,22 @@ party_colors = scale_color_manual(
     ],
     values=["blue", "purple", "green", "black", "red", "yellow", "grey", "salmon"],
 )
-plot_entropy_over_time(entropy_per_poll_faction, party_colors)
+p = plot_entropy_over_time(entropy_per_poll_faction, party_colors)
+p.show()
+if makedocs:
+    p.save(_fig_path / "abgeordnetenwatch_voting_entropy_over_time.png")
 ```
+
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/themes/themeable.py:2486: FutureWarning: You no longer need to use subplots_adjust to make space for the legend or text around the panels. This parameter will be removed in a future version. You can still use 'plot_margin' 'panel_spacing' for your other spacing needs.
+
+
+
+
+![png](fraktionszwang_files/fraktionszwang_56_1.png)
+
+
+
+![](images/abgeordnetenwatch_voting_entropy_over_time.png)
 
 
 ```python
@@ -536,9 +945,24 @@ entropy_per_poll_faction = compute_rolling_median(
 
 
 ```python
-plot_rolling_entropy_over_time(
+p = plot_rolling_entropy_over_time(
     entropy_per_poll_faction.filter(pl.col("party").is_not_null()),
     party_colors,
     n_polls_to_average,
 )
+p.show()
+if makedocs:
+    p.save(_fig_path / "abgeordnetenwatch_rolling_voting_entropy_over_time.png")
 ```
+
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/geoms/geom_path.py:100: PlotnineWarning: geom_path: Removed 29 rows containing missing values.
+    /Users/eric/PetProjects/bundestag/.venv/lib/python3.12/site-packages/plotnine/themes/themeable.py:2486: FutureWarning: You no longer need to use subplots_adjust to make space for the legend or text around the panels. This parameter will be removed in a future version. You can still use 'plot_margin' 'panel_spacing' for your other spacing needs.
+
+
+
+
+![png](fraktionszwang_files/fraktionszwang_59_1.png)
+
+
+
+![](images/abgeordnetenwatch_rolling_voting_entropy_over_time.png)
