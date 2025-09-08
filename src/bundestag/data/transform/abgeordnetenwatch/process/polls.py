@@ -40,9 +40,24 @@ def parse_poll_data(poll: schemas.Poll) -> dict:
     return d
 
 
+SCHEMA_GET_POLLS_DATA = pl.Schema(
+    {
+        "poll_id": pl.Int64(),
+        "poll_title": pl.String(),
+        "poll_first_committee": pl.String(),
+        "poll_description": pl.String(),
+        "legislature_id": pl.Int64(),
+        "legislature_period": pl.String(),
+        "poll_date": pl.String(),
+    }
+)
+
+
 def get_polls_data(legislature_id: int, path: Path) -> pl.DataFrame:
     "Parses info from poll json files for `legislature_id`"
     info = load_polls_json(legislature_id, path=path)
     polls = schemas.PollResponse(**info)
-    df = pl.DataFrame([parse_poll_data(v) for v in polls.data])
+    df = pl.DataFrame(
+        [parse_poll_data(v) for v in polls.data], schema=SCHEMA_GET_POLLS_DATA
+    )
     return df

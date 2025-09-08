@@ -40,6 +40,18 @@ def parse_vote_data(vote: schemas.Vote) -> dict:
     return d
 
 
+SCHEMA_GET_VOTES_DATA = pl.Schema(
+    {
+        "mandate_id": pl.Int64(),
+        "mandate": pl.String(),
+        "poll_id": pl.Int64(),
+        "vote": pl.String(),
+        "reason_no_show": pl.String(),
+        "reason_no_show_other": pl.String(),
+    }
+)
+
+
 def get_votes_data(
     legislature_id: int,
     poll_id: int,
@@ -60,7 +72,7 @@ def get_votes_data(
 
     if n_none > 0:
         logger.warning(f"Removed {n_none} votes because of their id being None")
-    df = pl.DataFrame(df)
+    df = pl.DataFrame(df, schema=SCHEMA_GET_VOTES_DATA)
 
     return df
 
@@ -85,13 +97,12 @@ def compile_votes_data(
         id_duplicates = df.filter(pl.col("mandate_id").is_duplicated())[
             "mandate_id"
         ].unique()
-        # id_duplicates = df.loc[df.duplicated(subset=["mandate_id"]), "mandate_id"].unique()
+
         if len(id_duplicates) > 0:
             logger.warning(
                 f"Dropping duplicates for mandate_ids ({len(id_duplicates):_}):\n{df.filter(pl.col('mandate_id').is_in(pl.lit(id_duplicates)))}"
             )
             df = df.unique("mandate_id", keep="first", maintain_order=True)
-            # df = df.drop_duplicates(subset=["mandate_id"])
 
         df_all_votes.append(df)
 
