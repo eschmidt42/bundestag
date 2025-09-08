@@ -1,5 +1,6 @@
 import logging
 import time
+from enum import StrEnum
 from pathlib import Path
 from time import perf_counter
 
@@ -38,6 +39,7 @@ def request_and_store_poll_ids(
     t_sleep: float,
     path: Path,
     random_state: int = 42,
+    timeout: float = 42.0,
 ):
     "Loops over remaining poll ids and request them individually with random sleep times"
 
@@ -56,7 +58,7 @@ def request_and_store_poll_ids(
             time.sleep(_t)
 
         # collect vote data
-        data = request_vote_data(poll_id, dry=dry)
+        data = request_vote_data(poll_id, dry=dry, timeout=timeout)
 
         # store vote data
         store_vote_json(path, data, poll_id, dry=dry)
@@ -71,6 +73,7 @@ def get_all_remaining_vote_data(
     t_sleep: float = 1,
     dt_rv_scale: float = 0.1,
     ask_user: bool = True,
+    timeout: float = 42,
 ):
     "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
     logger.info("Collecting remaining vote data")
@@ -104,7 +107,16 @@ def get_all_remaining_vote_data(
     if not do_download:
         return
 
-    request_and_store_poll_ids(dt_rv_scale, remaining_poll_ids, dry, t_sleep, path)
+    request_and_store_poll_ids(
+        dt_rv_scale, remaining_poll_ids, dry, t_sleep, path, timeout=timeout
+    )
+
+
+class EntityEnum(StrEnum):
+    mandate = "candidacies-mandates"
+    poll = "polls"
+    vote = "vote"
+    all = "all"
 
 
 def run(
@@ -117,10 +129,14 @@ def run(
     dt_rv_scale: float = 0.1,
     ask_user: bool = True,
     assume_yes: bool = False,
+    entity: EntityEnum = EntityEnum.all,
+    timeout: float = 42.0,
 ):
     "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
     start_time = perf_counter()
-    logger.info(f"Start downloading abgeordnetenwatch data for {legislature_id=}")
+    logger.info(
+        f"Start downloading abgeordnetenwatch {entity=} data for {legislature_id=}"
+    )
 
     if not dry and (raw_path is None):
         raise ValueError(f"When {dry=} `raw_path` cannot be None.")
@@ -130,22 +146,30 @@ def run(
         ensure_path_exists(raw_path, assume_yes=assume_yes)
 
     # polls
-    data = request_poll_data(legislature_id, dry=dry, num_polls=max_polls)
-    store_polls_json(raw_path, data, legislature_id, dry=dry)
+    if entity in [EntityEnum.all, EntityEnum.poll]:
+        data = request_poll_data(
+            legislature_id, dry=dry, num_polls=max_polls, timeout=timeout
+        )
+        store_polls_json(raw_path, data, legislature_id, dry=dry)
 
     # mandates
-    data = request_mandates_data(legislature_id, dry=dry, num_mandates=max_mandates)
-    store_mandates_json(raw_path, data, legislature_id, dry=dry)
+    if entity in [EntityEnum.all, EntityEnum.mandate]:
+        data = request_mandates_data(
+            legislature_id, dry=dry, num_mandates=max_mandates, timeout=timeout
+        )
+        store_mandates_json(raw_path, data, legislature_id, dry=dry)
 
     # votes
-    get_all_remaining_vote_data(
-        legislature_id,
-        raw_path,
-        dry=dry,
-        t_sleep=t_sleep,
-        dt_rv_scale=dt_rv_scale,
-        ask_user=ask_user,
-    )
+    if entity in [EntityEnum.all, EntityEnum.vote]:
+        get_all_remaining_vote_data(
+            legislature_id,
+            raw_path,
+            dry=dry,
+            t_sleep=t_sleep,
+            dt_rv_scale=dt_rv_scale,
+            ask_user=ask_user,
+            timeout=timeout,
+        )
     dt = str(perf_counter() - start_time)
     logger.info(
         f"Done downloading abgeordnetenwatch data for {legislature_id=} after {dt}."

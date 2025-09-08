@@ -28,6 +28,7 @@ class TestRequestPollData:
         mock_get.assert_called_once_with(
             "https://www.abgeordnetenwatch.de/api/v2/polls",
             params={"field_legislature": 111, "range_end": 500},
+            timeout=42,
         )
 
     @patch("httpx.get")
@@ -59,7 +60,8 @@ class TestRequestMandatesData:
         assert result == {"mandates": "data"}
         mock_get.assert_called_once_with(
             "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates",
-            params={"parliament_period": 111},
+            params={"parliament_period": 111, "range_end": 300},
+            timeout=42,
         )
 
     @patch("httpx.get")
@@ -91,7 +93,8 @@ class TestRequestVoteData:
         assert result == {"votes": "data"}
         mock_get.assert_called_once_with(
             "https://www.abgeordnetenwatch.de/api/v2/polls/123",
-            params={"related_data": "votes"},
+            params={"related_data": "votes", "range_end": 999},
+            timeout=42,
         )
 
     @patch("httpx.get")
