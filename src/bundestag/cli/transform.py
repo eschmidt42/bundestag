@@ -3,7 +3,7 @@ import logging
 import typer
 
 import bundestag.paths as paths
-from bundestag.cli.utils import OPTION_DRY
+from bundestag.cli.utils import ARGUMENT_LEGISLATURE_ID, OPTION_DATA_PATH, OPTION_DRY
 from bundestag.data.transform.abgeordnetenwatch.transform import (
     run as _transform_abgeordnetenwatch,
 )
@@ -18,7 +18,7 @@ app = typer.Typer()
 @app.command(help="Transform bundestag sheet data.")
 def bundestag_sheets(
     dry: bool = OPTION_DRY,
-    data_path: str = typer.Argument("data", help="Root dir for data storage"),
+    data_path: str = OPTION_DATA_PATH,
     sheet_source: SheetsSource = typer.Option(
         SheetsSource.json_file.value,
         help=f"bundestag_sheet specific parameter. Switch between xlsx uri sources. Options: {[k.value for k in SheetsSource]}",
@@ -37,12 +37,9 @@ def bundestag_sheets(
 
 @app.command(help="Transform abgeordnetenwatch data.")
 def abgeordnetenwatch_data(
-    legislature_id: int = typer.Argument(
-        111,
-        help="Bundestag legislature id value, see https://www.abgeordnetenwatch.de/bundestag -> Button 'Open Data'",
-    ),
+    legislature_id: int = ARGUMENT_LEGISLATURE_ID,
     dry: bool = OPTION_DRY,
-    data_path: str = typer.Argument("data", help="Root dir for data storage"),
+    data_path: str = OPTION_DATA_PATH,
 ):
     _paths = paths.get_paths(data_path)
 

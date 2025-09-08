@@ -3,7 +3,12 @@ import logging
 import typer
 
 import bundestag.paths as paths
-from bundestag.cli.utils import OPTION_DRY
+from bundestag.cli.utils import (
+    ARGUMENT_LEGISLATURE_ID,
+    OPTION_DATA_PATH,
+    OPTION_DRY,
+    OPTION_Y,
+)
 from bundestag.data.download.abgeordnetenwatch.download import (
     run as download_abgeordnetenwatch,
 )
@@ -18,12 +23,9 @@ app = typer.Typer()
 
 @app.command(help="Download data from abgeordnetenwatch.")
 def abgeordnetenwatch(
-    legislature_id: int = typer.Argument(
-        111,
-        help="Bundestag legislature id value, see https://www.abgeordnetenwatch.de/bundestag -> Button 'Open Data'",
-    ),
+    legislature_id: int = ARGUMENT_LEGISLATURE_ID,
     dry: bool = OPTION_DRY,
-    data_path: str = typer.Option("data", help="Root dir for data storage"),
+    data_path: str = OPTION_DATA_PATH,
     max_mandates: int = typer.Option(
         999,
         help="Max number of mandates to download (abgeordnetenwatch specific)",
@@ -32,10 +34,7 @@ def abgeordnetenwatch(
         999,
         help="Max number of polls to download (abgeordnetenwatch specific)",
     ),
-    y: bool = typer.Option(
-        default=False,
-        help="Assume yes to all prompts and run non-interactively.",
-    ),
+    y: bool = OPTION_Y,
 ):
     _paths = paths.get_paths(data_path)
 
@@ -52,14 +51,11 @@ def abgeordnetenwatch(
 @app.command(help="Download data from the bundestag.")
 def bundestag(
     dry: bool = OPTION_DRY,
-    data_path: str = typer.Option("data", help="Root dir for data storage"),
+    data_path: str = OPTION_DATA_PATH,
     nmax: int = typer.Option(
         None, help="Max number of sheets to download (bundestag_sheet specific)"
     ),
-    y: bool = typer.Option(
-        default=False,
-        help="Assume yes to all prompts and run non-interactively.",
-    ),
+    y: bool = OPTION_Y,
     do_create_xlsx_uris_json: bool = typer.Option(
         False,
         help="bundestag_sheet specific parameter. If passed then a new xlsx_uris.json will be created from https://www.bundestag.de/parlament/plenum/abstimmung/liste.",
@@ -86,11 +82,8 @@ def bundestag(
 @app.command(help="Download data from huggingface.")
 def huggingface(
     dry: bool = OPTION_DRY,
-    data_path: str = typer.Option("data", help="Root dir for data storage"),
-    y: bool = typer.Option(
-        default=False,
-        help="Assume yes to all prompts and run non-interactively.",
-    ),
+    data_path: str = OPTION_DATA_PATH,
+    y: bool = OPTION_Y,
 ):
     _paths = paths.get_paths(data_path)
 
