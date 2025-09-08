@@ -67,6 +67,10 @@ update-dev-env:
 
 .PHONY: docs
 docs:
+	MAKEDOCS=true uv run jupyter nbconvert --to notebook --execute docs/fraktionszwang.ipynb && \
+	uv run jupyter nbconvert --ClearMetadataPreprocessor.enabled=True --ClearOutput.enabled=True --to markdown docs/fraktionszwang.ipynb  && \
+	rm docs/fraktionszwang.nbconvert.ipynb && \
+	uv run jupyter nbconvert --clear-output docs/fraktionszwang.ipynb && \
 	MAKEDOCS=true uv run jupyter nbconvert --to notebook --execute docs/analysis-highlights.ipynb && \
 	uv run jupyter nbconvert --ClearMetadataPreprocessor.enabled=True --ClearOutput.enabled=True --to markdown docs/analysis-highlights.ipynb  && \
 	rm docs/analysis-highlights.nbconvert.ipynb && \
