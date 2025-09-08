@@ -276,7 +276,6 @@ binder = [
     { name = "matplotlib" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "polars" },
     { name = "pyarrow" },
     { name = "pydantic" },
@@ -299,7 +298,6 @@ data = [
     { name = "matplotlib" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "polars" },
     { name = "pyarrow" },
     { name = "pydantic" },
@@ -350,7 +348,6 @@ database = [
     { name = "openpyxl" },
     { name = "packaging" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "petl" },
     { name = "pillow" },
     { name = "plotly" },
@@ -407,7 +404,6 @@ docs = [
     { name = "mkdocstrings", extra = ["python"] },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "polars" },
     { name = "pyarrow" },
     { name = "pydantic" },
@@ -430,7 +426,6 @@ gui = [
     { name = "matplotlib" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "polars" },
     { name = "pyarrow" },
     { name = "pydantic" },
@@ -453,7 +448,6 @@ ml = [
     { name = "matplotlib" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "polars" },
     { name = "pyarrow" },
     { name = "pydantic" },
@@ -481,7 +475,6 @@ style-and-test = [
     { name = "matplotlib" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "pandera" },
     { name = "pip-audit" },
     { name = "polars" },
     { name = "pre-commit" },
@@ -515,7 +508,6 @@ binder = [
     { name = "matplotlib", specifier = ">=3.7.1" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "polars", specifier = ">=1.32.3" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "pydantic", specifier = ">=1.10.7" },
@@ -538,7 +530,6 @@ data = [
     { name = "matplotlib", specifier = ">=3.7.1" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "polars", specifier = ">=1.32.3" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "pydantic", specifier = ">=1.10.7" },
@@ -589,7 +580,6 @@ database = [
     { name = "packaging", specifier = ">=23.1" },
     { name = "pandas" },
     { name = "pandas", specifier = ">=1.5.3" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "petl", specifier = ">=1.7.12" },
     { name = "pillow", specifier = ">=9.5.0" },
     { name = "plotly", specifier = ">=5.14.1" },
@@ -648,7 +638,6 @@ docs = [
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.21.2" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "polars", specifier = ">=1.32.3" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "pydantic", specifier = ">=1.10.7" },
@@ -673,7 +662,6 @@ gui = [
     { name = "matplotlib", specifier = ">=3.7.1" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "polars", specifier = ">=1.32.3" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "pydantic", specifier = ">=1.10.7" },
@@ -696,7 +684,6 @@ ml = [
     { name = "matplotlib", specifier = ">=3.7.1" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "polars", specifier = ">=1.32.3" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "pydantic", specifier = ">=1.10.7" },
@@ -726,7 +713,6 @@ style-and-test = [
     { name = "matplotlib", specifier = ">=3.7.1" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas" },
-    { name = "pandera", specifier = ">=0.14.5" },
     { name = "pip-audit", specifier = ">=2.5.5" },
     { name = "polars", specifier = ">=1.32.3" },
     { name = "pre-commit", specifier = ">=3.2.2" },
@@ -3514,22 +3500,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pandera"
-version = "0.26.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "packaging" },
-    { name = "pydantic" },
-    { name = "typeguard" },
-    { name = "typing-extensions" },
-    { name = "typing-inspect" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e7/da/035a97d01fb8fdc87f5af27ca083c01c424a4e0ec0ec8a3bb0f1a4cba026/pandera-0.26.0.tar.gz", hash = "sha256:37dbca1e53d12f70e576c45d886a31e454b48990c40d92c3466c26d28141b07b", size = 556602, upload-time = "2025-08-13T01:13:27.997Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/01/b3/69a35fe27eda46e2b0adbab1c66a925efd7806f8fc814f4419d21442ab67/pandera-0.26.0-py3-none-any.whl", hash = "sha256:85e4ab058e8e6c1f13f364450e080fcb52c8320bb40ca952342ac8709d1a7a4e", size = 291592, upload-time = "2025-08-13T01:13:26.193Z" },
-]
-
-[[package]]
 name = "pandocfilters"
 version = "1.5.1"
 source = { registry = "https://pypi.org/simple" }
@@ -5430,18 +5400,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/66/b1eb52839f563623d185f0927eb3530ee4d5ffe9d377cdaf5346b306689e/triton-3.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:31c1d84a5c0ec2c0f8e8a072d7fd150cab84a9c239eaddc6706c081bfae4eb04", size = 155560068, upload-time = "2025-07-30T19:58:37.081Z" },
     { url = "https://files.pythonhosted.org/packages/30/7b/0a685684ed5322d2af0bddefed7906674f67974aa88b0fae6e82e3b766f6/triton-3.4.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:00be2964616f4c619193cb0d1b29a99bd4b001d7dc333816073f92cf2a8ccdeb", size = 155569223, upload-time = "2025-07-30T19:58:44.017Z" },
     { url = "https://files.pythonhosted.org/packages/20/63/8cb444ad5cdb25d999b7d647abac25af0ee37d292afc009940c05b82dda0/triton-3.4.0-cp313-cp313t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:7936b18a3499ed62059414d7df563e6c163c5e16c3773678a3ee3d417865035d", size = 155659780, upload-time = "2025-07-30T19:58:51.171Z" },
-]
-
-[[package]]
-name = "typeguard"
-version = "4.4.4"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c7/68/71c1a15b5f65f40e91b65da23b8224dad41349894535a97f63a52e462196/typeguard-4.4.4.tar.gz", hash = "sha256:3a7fd2dffb705d4d0efaed4306a704c89b9dee850b688f060a8b1615a79e5f74", size = 75203, upload-time = "2025-06-18T09:56:07.624Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1b/a9/e3aee762739c1d7528da1c3e06d518503f8b6c439c35549b53735ba52ead/typeguard-4.4.4-py3-none-any.whl", hash = "sha256:b5f562281b6bfa1f5492470464730ef001646128b180769880468bd84b68b09e", size = 34874, upload-time = "2025-06-18T09:56:05.999Z" },
 ]
 
 [[package]]
