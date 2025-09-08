@@ -98,7 +98,7 @@ def download_sheet(uri: str, sheet_dir: Path, dry: bool = False):
 
     Args:
         uri (str): URI to download
-        sheet_path (Path | str): Directory to write downloaded sheet to
+        sheet_dir (Path | str): Directory to write downloaded sheet to
         dry (bool, optional): Switch to deactivate downloading. Defaults to False.
     """
 
@@ -128,7 +128,7 @@ def download_multiple_sheets(
 
     Args:
         uris (dict[str, str]): Dict of sheets to download
-        sheet_path (Path | str): Path to write the sheets to
+        sheet_dir (Path | str): Path to write the sheets to
         t_sleep (float, optional): Wait time in seconds between downloaded files. Defaults to 0.01.
         nmax (int, optional): Maximum number of sheets to download. Defaults to None.
         dry (bool, optional): Switch for dry run. Defaults to False.

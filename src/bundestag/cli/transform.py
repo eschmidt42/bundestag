@@ -1,3 +1,9 @@
+"""
+# Transform CLI
+
+This module provides CLI commands to transform downloaded data.
+"""
+
 import logging
 
 import typer

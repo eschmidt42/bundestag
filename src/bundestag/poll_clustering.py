@@ -7,7 +7,6 @@ import gensim.corpora as corpora
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import plotly.express as px
 import polars as pl
 import seaborn as sns
 import spacy
@@ -28,7 +27,7 @@ def remove_numeric_and_empty(text: list[str]) -> list[str]:
 
 def make_topic_scores_dense(scores: list[list[tuple[int, Any]]]) -> np.ndarray:
     "Transforms `scores` (result of lda_model[corpus]) to a numpy array of shape (Ndoc,Ntopic)"
-    # ntopic = max([v[0] for d in scores for v in d])
+
     topic_ids = [v for (v, _) in itertools.chain(*scores)]
     non_int_topic_ids = [v for v in topic_ids if not isinstance(v, int)]
     if len(non_int_topic_ids) > 0:
@@ -51,23 +50,12 @@ def make_topic_scores_dense(scores: list[list[tuple[int, Any]]]) -> np.ndarray:
     return dense
 
 
-def clean_text(
-    s: str, nlp: spacy.language.Language
-) -> list[str]:  # , col: str = "poll_title"
+def clean_text(s: str, nlp: spacy.language.Language) -> list[str]:
     logger.debug("Cleaning texts")
     _s = " ".join(s.split("\n")).replace("\xa0", " ")
     _texts = remove_stopwords_and_punctuation(_s, nlp)
     _texts = remove_numeric_and_empty(_texts)
     return _texts
-
-    # return list(
-    #     df[col]
-    #     .str.split("\n")
-    #     .str.join(" ")
-    #     .str.replace("\xa0", " ")
-    #     .map_elements(remove_stopwords_and_punctuation, nlp=nlp, return_dtype=pl.List)
-    #     .map_elements(remove_numeric_and_empty)
-    # )
 
 
 class SpacyTransformer:
@@ -183,24 +171,15 @@ def compare_word_frequencies(
     return ax
 
 
-def pca_plot_lda_topics(
-    df_polls: pl.DataFrame,
-    st: SpacyTransformer,
-    original_text_col: str,
-    nlp_feature_cols: list,
-):
-    "Visualises `nlp_feature_cols` columns in `df_polls` by performing a PCA and reducing to 2 dimensions."
-
+def preprocess_polls_for_plotting(
+    df_polls: pl.DataFrame, st: SpacyTransformer, nlp_feature_cols: list[str]
+) -> pl.DataFrame:
     dense = df_polls[nlp_feature_cols].to_numpy()
     pca_model = decomposition.PCA(n_components=2).fit(dense)
     X = pca_model.transform(dense)
 
     most_relevant_topic = dense.argmax(axis=1)
     most_relevant_topic_p = dense[range(len(dense)), most_relevant_topic]
-
-    # df_polls = df_polls.drop(
-    #     ["lda_pca_component_0", "lda_pca_component_1"]
-    # )
 
     tmp = pl.DataFrame(
         {
@@ -214,14 +193,4 @@ def pca_plot_lda_topics(
         }
     )
     df_polls = pl.concat((df_polls, tmp), how="horizontal")
-
-    fig = px.scatter(
-        data_frame=df_polls,
-        x="lda_pca_component_0",
-        y="lda_pca_component_1",
-        hover_data=[original_text_col, "most_relevant_topic_p"],
-        color="most_relevant_topic_full",
-        title=f"{original_text_col}-based LDA Model visualised",
-    )
-    fig.update_layout(legend=dict(y=-1, x=0.01), height=700, width=1400)
-    return fig
+    return df_polls
