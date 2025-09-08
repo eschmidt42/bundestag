@@ -1,5 +1,4 @@
 import pandas as pd
-import plotly.graph_objects as go
 import polars as pl
 import pytest
 from fastai.tabular.all import (
@@ -10,8 +9,6 @@ from sklearn import decomposition
 from bundestag.vote_prediction import (
     get_embeddings,
     get_poll_proponents,
-    plot_politician_embeddings,
-    plot_poll_embeddings,
     plot_predictions,
     poll_splitter,
 )
@@ -86,32 +83,3 @@ def test_plot_predictions(
     splits: tuple[list[int], list[int]],
 ):
     plot_predictions(learn, df_all_votes, df_mandates, df_polls, splits, y_col)
-
-
-@pytest.mark.skip("skipping plot")
-@pytest.mark.slow
-def test_plot_poll_embeddings(
-    df_all_votes: pl.DataFrame,
-    df_mandates: pl.DataFrame,
-    df_polls: pl.DataFrame,
-    embeddings: dict,
-):
-    fig = plot_poll_embeddings(df_all_votes, df_polls, embeddings, df_mandates)
-
-    assert isinstance(fig, go.Figure)
-
-
-@pytest.mark.skip("skipping plot")
-@pytest.mark.slow
-def test_plot_politician_embeddings(
-    df_all_votes: pl.DataFrame,
-    df_mandates: pl.DataFrame,
-    embeddings: dict,
-):
-    fig = plot_politician_embeddings(
-        df_all_votes,
-        df_mandates,
-        embeddings,
-    )
-
-    assert isinstance(fig, go.Figure)

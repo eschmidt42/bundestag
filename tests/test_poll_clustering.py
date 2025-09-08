@@ -2,7 +2,6 @@ from functools import partial
 
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 import polars as pl
 import pytest
 import spacy
@@ -13,7 +12,6 @@ from bundestag.poll_clustering import (
     compare_word_frequencies,
     get_word_frequencies,
     make_topic_scores_dense,
-    pca_plot_lda_topics,
     remove_numeric_and_empty,
     remove_stopwords_and_punctuation,
 )
@@ -215,27 +213,6 @@ class TestSpacyTransformer:
         if return_new_cols:
             assert isinstance(new_cols, list)
             assert all([c in new_cols for c in self.expected_nlp_cols])
-
-    @pytest.mark.skip(
-        "Works but something to be run elsewhere, not as a unit test that opens a window."
-    )
-    def test_pca_plot_lda_topics(
-        self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer
-    ):
-        spacy_transformer.fit_lda(
-            df_polls[self.nlp_col].to_list(),
-            num_topics=self.num_topics,
-        )
-        df_lda, nlp_feature_cols = spacy_transformer.transform(
-            df_polls, col=self.nlp_col, return_new_cols=True
-        )
-        assert isinstance(df_lda, pl.DataFrame)
-        assert isinstance(nlp_feature_cols, list)
-
-        # line to test
-        ax = pca_plot_lda_topics(df_lda, spacy_transformer, self.col, nlp_feature_cols)
-
-        assert isinstance(ax, go.Figure)
 
 
 def test_get_word_frequencies():

@@ -2,11 +2,10 @@ import logging
 
 import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 import polars as pl
 import torch
 from fastai.tabular.all import TabularLearner
+from plotnine import aes, geom_point, ggplot, labs, scale_color_manual
 from sklearn import decomposition
 
 logger = logging.getLogger(__name__)
@@ -194,9 +193,9 @@ def plot_poll_embeddings(
     df_polls: pl.DataFrame,
     embeddings: dict[str, pl.DataFrame],
     df_mandates: pl.DataFrame,
+    colors: scale_color_manual,
     col: str = "poll_id",
-    palette: dict[str, str] | None = None,
-) -> go.Figure:
+) -> ggplot:
     tmp = (
         df_all_votes.unique(subset=col)
         .join(
@@ -209,16 +208,21 @@ def plot_poll_embeddings(
     proponents = get_poll_proponents(df_all_votes, df_mandates)
     tmp = tmp.join(proponents.select([col, "strongest proponent"]), on=col)
 
-    palette = PALETTE if palette is None else palette
+    x = f"{col}__emb_component_0"
+    y = f"{col}__emb_component_1"
 
-    return px.scatter(
-        data_frame=tmp,
-        x=f"{col}__emb_component_0",
-        y=f"{col}__emb_component_1",
-        title="Poll embeddings",
-        hover_data=["poll_title"],
-        color="strongest proponent",
-        color_discrete_map=palette,
+    return (
+        ggplot(
+            tmp,
+            aes(x, y, color="strongest proponent"),
+        )
+        + geom_point()
+        + labs(
+            title="Poll embeddings",
+            x="PCA dim #0",
+            y="PCA dim #1",
+        )
+        + colors
     )
 
 
@@ -226,9 +230,10 @@ def plot_politician_embeddings(
     df_all_votes: pl.DataFrame,
     df_mandates: pl.DataFrame,
     embeddings: dict[str, pl.DataFrame],
+    colors: scale_color_manual,
     col: str = "politician name",
     palette: dict[str, str] | None = None,
-) -> go.Figure:
+) -> ggplot:
     tmp = (
         df_all_votes.unique(subset="mandate_id")
         .join(
@@ -240,12 +245,48 @@ def plot_politician_embeddings(
 
     palette = PALETTE if palette is None else palette
 
-    return px.scatter(
-        data_frame=tmp,
-        x=f"{col}__emb_component_0",
-        y=f"{col}__emb_component_1",
-        title="Mandate embeddings",
-        color="party",
-        hover_data=["politician name"],
-        color_discrete_map=palette,
+    x = f"{col}__emb_component_0"
+    y = f"{col}__emb_component_1"
+
+    return (
+        ggplot(
+            tmp,
+            aes(x, y, color="party"),
+        )
+        + geom_point()
+        + labs(
+            title="Mandate embeddings",
+            x="PCA dim #0",
+            y="PCA dim #1",
+        )
+        + colors
     )
+
+
+# def plot_politician_embeddings(
+#     df_all_votes: pl.DataFrame,
+#     df_mandates: pl.DataFrame,
+#     embeddings: dict[str, pl.DataFrame],
+#     col: str = "politician name",
+#     palette: dict[str, str] | None = None,
+# ) -> go.Figure:
+#     tmp = (
+#         df_all_votes.unique(subset="mandate_id")
+#         .join(
+#             df_mandates.select(["mandate_id", "party"]),
+#             on="mandate_id",
+#         )
+#         .join(embeddings[col], on=col)
+#     )
+
+#     palette = PALETTE if palette is None else palette
+
+#     return px.scatter(
+#         data_frame=tmp,
+#         x=f"{col}__emb_component_0",
+#         y=f"{col}__emb_component_1",
+#         title="Mandate embeddings",
+#         color="party",
+#         hover_data=["politician name"],
+#         color_discrete_map=palette,
+#     )
