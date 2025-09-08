@@ -261,32 +261,3 @@ def plot_politician_embeddings(
         )
         + colors
     )
-
-
-# def plot_politician_embeddings(
-#     df_all_votes: pl.DataFrame,
-#     df_mandates: pl.DataFrame,
-#     embeddings: dict[str, pl.DataFrame],
-#     col: str = "politician name",
-#     palette: dict[str, str] | None = None,
-# ) -> go.Figure:
-#     tmp = (
-#         df_all_votes.unique(subset="mandate_id")
-#         .join(
-#             df_mandates.select(["mandate_id", "party"]),
-#             on="mandate_id",
-#         )
-#         .join(embeddings[col], on=col)
-#     )
-
-#     palette = PALETTE if palette is None else palette
-
-#     return px.scatter(
-#         data_frame=tmp,
-#         x=f"{col}__emb_component_0",
-#         y=f"{col}__emb_component_1",
-#         title="Mandate embeddings",
-#         color="party",
-#         hover_data=["politician name"],
-#         color_discrete_map=palette,
-#     )
