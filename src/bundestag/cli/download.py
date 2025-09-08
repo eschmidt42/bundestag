@@ -9,6 +9,7 @@ from bundestag.cli.utils import (
     OPTION_DRY,
     OPTION_Y,
 )
+from bundestag.data.download.abgeordnetenwatch.download import EntityEnum
 from bundestag.data.download.abgeordnetenwatch.download import (
     run as download_abgeordnetenwatch,
 )
@@ -21,11 +22,15 @@ logger = logging.getLogger(__name__)
 app = typer.Typer()
 
 
-@app.command(help="Download data from abgeordnetenwatch.")
+@app.command(help="Download data from the abgeordnetenwatch API.")
 def abgeordnetenwatch(
     legislature_id: int = ARGUMENT_LEGISLATURE_ID,
     dry: bool = OPTION_DRY,
     data_path: str = OPTION_DATA_PATH,
+    entity: EntityEnum = typer.Option(
+        EntityEnum.all,
+        help="Entity to request.",
+    ),
     max_mandates: int = typer.Option(
         999,
         help="Max number of mandates to download (abgeordnetenwatch specific)",
@@ -35,6 +40,9 @@ def abgeordnetenwatch(
         help="Max number of polls to download (abgeordnetenwatch specific)",
     ),
     y: bool = OPTION_Y,
+    timeout: float = typer.Option(
+        42.0, help="Timeout in seconds to use with httpx get requests."
+    ),
 ):
     _paths = paths.get_paths(data_path)
 
@@ -45,6 +53,8 @@ def abgeordnetenwatch(
         max_mandates=max_mandates,
         max_polls=max_polls,
         assume_yes=y,
+        entity=entity,
+        timeout=timeout,
     )
 
 

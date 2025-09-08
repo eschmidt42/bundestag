@@ -1,10 +1,15 @@
 import json
 import logging
-import typing as T
 from pathlib import Path
 
-import bundestag.data.utils as data_utils
 import bundestag.schemas as schemas
+from bundestag.data.utils import (
+    get_location,
+    get_mandates_filename,
+    get_polls_filename,
+    get_votes_filename,
+    load_json,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +19,8 @@ def store_polls_json(
 ):
     "Write poll data to file"
 
-    file = data_utils.get_location(
-        data_utils.get_polls_filename(legislature_id), path=path, dry=dry, mkdir=False
+    file = get_location(
+        get_polls_filename(legislature_id), path=path, dry=dry, mkdir=False
     )
 
     if dry:
@@ -32,8 +37,8 @@ def store_mandates_json(
 ):
     "Write mandates data to file"
 
-    file = data_utils.get_location(
-        data_utils.get_mandates_filename(legislature_id),
+    file = get_location(
+        get_mandates_filename(legislature_id),
         path=path,
         dry=dry,
         mkdir=False,
@@ -51,18 +56,16 @@ def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
     "Write votes data to file"
 
     if dry:
-        _votes_file = data_utils.get_votes_filename(42, poll_id)
-        _location = data_utils.get_location(
-            _votes_file, path=path, dry=dry, mkdir=False
-        )
+        _votes_file = get_votes_filename(42, poll_id)
+        _location = get_location(_votes_file, path=path, dry=dry, mkdir=False)
         logger.debug(f"Dry mode - Writing votes info to {_location}")
         return
     if votes is None:
         raise ValueError(f"votes cannot be None for {dry=}")
 
     legislature_id = votes["data"]["field_legislature"]["id"]
-    file = data_utils.get_location(
-        data_utils.get_votes_filename(legislature_id, poll_id),
+    file = get_location(
+        get_votes_filename(legislature_id, poll_id),
         path=path,
         dry=dry,
         mkdir=True,
@@ -82,7 +85,9 @@ def list_votes_dirs(path: Path) -> dict[int, Path]:
     # get all legislature ids for which there are directories present
     vote_dirs = list(path.glob("votes_legislature_*"))
     if len(vote_dirs) == 0:
-        logger.error(f"No vote directories found in {path}")
+        logger.warning(
+            f"No vote directories found in {path}. Returning empty dict of vote dirs."
+        )
         return {}
 
     # create a dict with legislature ids as keys and the corresponding file paths as values
@@ -112,7 +117,7 @@ def list_polls_files(legislature_id: int, path: Path) -> dict[int, Path]:
 
 def check_stored_vote_ids(
     legislature_id: int | None, path: Path
-) -> T.Dict[int, T.Dict[int, Path]]:
+) -> dict[int, dict[int, Path]]:
     "Check which vote ids are already stored"
 
     legislature_ids = list_votes_dirs(path=path)
@@ -151,7 +156,7 @@ def check_stored_vote_ids(
 
 def check_possible_poll_ids(
     legislature_id: int, path: Path, dry: bool = False
-) -> T.List[int]:
+) -> list[int]:
     """Collect available poll ids for given legislature id
 
     Args:
@@ -162,11 +167,12 @@ def check_possible_poll_ids(
     Returns:
         T.List[int]: List of poll identifiers
     """
-    polls_file = data_utils.get_polls_filename(legislature_id)
+    logger.info("Checking possible poll ids")
+    polls_file = get_polls_filename(legislature_id)
     polls_file = path / polls_file
 
     logger.debug(f"Reading {polls_file=}")
-    data = data_utils.load_json(polls_file, dry=dry)
+    data = load_json(polls_file, dry=dry)
 
     if dry:
         return []
@@ -175,6 +181,6 @@ def check_possible_poll_ids(
 
     poll_ids = list(set([v.id for v in polls.data]))
 
-    logger.debug(f"Identified {len(poll_ids)} unique poll ids")
+    logger.info(f"Identified {len(poll_ids)} unique poll ids")
 
     return poll_ids

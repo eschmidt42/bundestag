@@ -65,9 +65,32 @@ def parse_mandate_data(mandate: schemas.Mandate, missing: str = "unknown") -> di
     return d
 
 
+SCHEMA_GET_MANDATES_DATA = pl.Schema(
+    {
+        "legislature_id": pl.Int64(),
+        "legislature_period": pl.String(),
+        "mandate_id": pl.Int64(),
+        "mandate": pl.String(),
+        "politician_id": pl.Int64(),
+        "politician": pl.String(),
+        "politician_url": pl.String(),
+        "start_date": pl.String(),
+        "end_date": pl.String(),
+        "constituency_id": pl.Int64(),
+        "constituency_name": pl.String(),
+        "fraction_names": pl.List(pl.String()),
+        "fraction_ids": pl.List(pl.Int64()),
+        "fraction_starts": pl.List(pl.String()),
+        "fraction_ends": pl.List(pl.String()),
+    }
+)
+
+
 def get_mandates_data(legislature_id: int, path: Path) -> pl.DataFrame:
     "Parses info from mandate json file(s) for `legislature_id`"
     info = load_mandate_json(legislature_id, path=path)
     mandates = schemas.MandatesResponse(**info)
-    df = pl.DataFrame([parse_mandate_data(m) for m in mandates.data])
+    df = pl.DataFrame(
+        [parse_mandate_data(m) for m in mandates.data], schema=SCHEMA_GET_MANDATES_DATA
+    )
     return df
