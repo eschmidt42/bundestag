@@ -33,7 +33,7 @@ from rich import print as pprint
 
 from bundestag.fine_logging import setup_logging
 from bundestag.paths import get_paths
-from bundestag.similarity import (
+from bundestag.ml.similarity import (
     get_votes_by_party,
     pivot_party_votes_df,
     prepare_votes_of_mdb,
@@ -42,8 +42,8 @@ from bundestag.similarity import (
     plot,
     align_party_with_all_parties,
 )
-from bundestag.poll_clustering import SpacyTransformer, clean_text
-from bundestag.vote_prediction import (
+from bundestag.ml.poll_clustering import SpacyTransformer, clean_text
+from bundestag.ml.vote_prediction import (
     plot_predictions,
     get_embeddings,
     plot_politician_embeddings,
