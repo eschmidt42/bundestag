@@ -6,7 +6,7 @@ import polars as pl
 import pytest
 import spacy
 
-from bundestag.poll_clustering import (
+from bundestag.ml.poll_clustering import (
     SpacyTransformer,
     clean_text,
     compare_word_frequencies,

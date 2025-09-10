@@ -4,7 +4,7 @@ import ipywidgets as widgets
 import matplotlib.pyplot as plt
 import polars as pl
 
-from bundestag import similarity as sim
+from bundestag.ml import similarity as sim
 
 
 class GUI:

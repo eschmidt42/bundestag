@@ -6,7 +6,7 @@ import polars as pl
 import pytest
 
 import bundestag.data.transform.bundestag_sheets as transform_bs
-from bundestag.similarity import (
+from bundestag.ml.similarity import (
     align_mdb_with_parties,
     align_party_with_all_parties,
     align_party_with_party,
