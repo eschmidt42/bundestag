@@ -2,7 +2,7 @@
 
 [project]
 name = "bundestag"
-version = "0.1.3a1"
+version = "0.1.3a2"
 description = "Download, transform and analyse roll call votes in the german federal parliament, aka the 'Bundestag'"
 readme = "README.md"
 authors = [
