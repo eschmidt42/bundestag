@@ -1,6 +1,6 @@
 [project]
 name = "bundestag"
-version = "0.1.2"
+version = "0.1.2b"
 description = "Download, parse and analyse votes in the german federal parliament, aka 'Bundestag'"
 readme = "README.md"
 authors = [

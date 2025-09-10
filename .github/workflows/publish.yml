@@ -13,7 +13,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Set up uv
-      uses: astral-sh/setup-uv@v1
+      uses: astral-sh/setup-uv@v6
     - name: Build a binary wheel and a source tarball
       run: uv build --sdist --wheel
     - name: Store the distribution packages
