@@ -3,67 +3,39 @@ SHELL = /bin/bash
 .PHONY: help
 help:
 	@echo "Commands:"
-	@echo "venv             : creates .venv"
 	@echo "install-dev-env  : install dependencies into virtual environment for development."
-	@echo "install-docs-env : install dependencies into virtual environment for docs+development."
-	@echo "compile-binder   : update the binder environment requirements in .binder/requirements.txt."
 	@echo "update-dev-env   : pip install new dev requriements into the environment."
+	@echo "install-docs-env : install dependencies into virtual environment for docs+development."
 	@echo "docs             : create documentation."
 	@echo "serve-docs       : serve documentation."
+	@echo "compile-binder   : update the binder environment requirements in .binder/requirements.txt."
 	@echo "test             : run pytests."
 	@echo "tarballs         : create tarballs of data/raw and data/preprocessed for storage on huggingface datasets https://huggingface.co/datasets/Bingpot/bundestag/."
 
-# create a virtual environment
-.PHONY: venv
-venv:
-	uv venv
-
 # ==============================================================================
-# install requirements
+# dev
 # ==============================================================================
 
-
-# environment to generate documentation and development
-.PHONY: install-docs-env
-install-docs-env:
-	uv sync --group ml --group gui --group style_and_test --group data --group docs && \
-	uv run python3 -m spacy download de_core_news_sm
-
-# environment for development
 .PHONY: install-dev-env
 install-dev-env:
-	uv sync --group ml --group gui --group style_and_test --group data && \
+	uv sync --all-extras --group dev --group tests --group docs && \
 	uv run python3 -m spacy download de_core_news_sm && \
 	uv run pre-commit install
 
-.PHONY: install-ci-env
-install-ci-env:
-	uv sync --group ml --group gui --group style_and_test --group data && \
-	uv run python3 -m spacy download de_core_news_sm
-
-
-# ==============================================================================
-# compile requirements
-# ==============================================================================
-
-.PHONY: compile-binder
-compile-binder:
-	uv export --group binder --format requirements.txt -o .binder/requirements.txt
-
-
-# ==============================================================================
-# update requirements and virtual env
-# ==============================================================================
-
 .PHONY: update-dev-env
 update-dev-env:
-	uv sync --group ml --group gui --group style_and_test --group database --group docs && \
+	uv sync --all-extras --group dev --group tests --group docs && \
 	uv run spacy download de_core_news_sm
 
+# ==============================================================================
+# docs
+# ==============================================================================
 
-# ==============================================================================
-# make docs
-# ==============================================================================
+.PHONY: install-docs-env
+install-docs-env:
+	uv sync --group binder --group docs && \
+	uv run python3 -m spacy download de_core_news_sm
+
 
 .PHONY: docs
 docs:
@@ -81,16 +53,32 @@ serve-docs:
 	uv run python -m mkdocs serve
 
 # ==============================================================================
-# make test
+# ci tests
+# ==============================================================================
+
+.PHONY: install-ci-env
+install-ci-env:
+	uv sync --all-extras --group tests && \
+	uv run python3 -m spacy download de_core_news_sm
+
+# ==============================================================================
+# binder
+# ==============================================================================
+
+.PHONY: compile-binder
+compile-binder:
+	uv export --group binder --format requirements.txt -o .binder/requirements.txt
+
+# ==============================================================================
+# test
 # ==============================================================================
 
 .PHONY: test
 test:
 	uv run pytest tests
 
-
 # ==============================================================================
-# make balls
+# make balls for huggingface uploads / downloads
 # ==============================================================================
 
 .PHONY: tarballs
