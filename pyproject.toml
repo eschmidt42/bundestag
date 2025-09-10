@@ -1,10 +1,33 @@
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
 [project]
 name = "bundestag"
 version = "0.1.3a1"
-description = "Download, parse and analyse votes in the german federal parliament, aka 'Bundestag'"
+description = "Download, transform and analyse roll call votes in the german federal parliament, aka the 'Bundestag'"
 readme = "README.md"
 authors = [
     { name = "eschmidt42", email = "11818904+eschmidt42@users.noreply.github.com" }
+]
+license = { file = "LICENSE" }
+# https://pypi.org/classifiers/
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 3 - Alpha",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Topic :: Sociology",
+
+  # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 requires-python = ">=3.10.0"
 dependencies = [
@@ -42,6 +65,12 @@ optional-dependencies = { ml = [
 [project.scripts]
 bundestag = "bundestag.cli.__main__:app"
 get_xlsx_uris = "bundestag.get_xlsx_uris:app"
+
+[project.urls]
+Homepage = "https://github.com/eschmidt42/bundestag"
+Documentation = "https://eschmidt42.github.io/bundestag/"
+Repository = "https://github.com/eschmidt42/bundestag"
+Issues = "https://github.com/eschmidt42/bundestag/issues"
 
 [build-system]
 requires = ["hatchling"]
