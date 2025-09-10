@@ -50,6 +50,22 @@ def abgeordnetenwatch(
         42.0, help="Timeout in seconds to use with httpx get requests."
     ),
 ):
+    """Download data from the abgeordnetenwatch API.
+
+    Args:
+        legislature_id (int): The ID of the legislature to download data for. Defaults to 111.
+        dry (bool, optional): If `True`, don't actually download anything. Defaults to False.
+        data_path (str, optional): The path to the data directory. Defaults to "data".
+        entity (EntityEnum, optional): The entity to request from the API. Defaults to EntityEnum.all.
+        max_mandates (int, optional): Maximum number of mandates to download. Defaults to 999.
+        max_polls (int, optional): Maximum number of polls to download. Defaults to 999.
+        y (bool, optional): Assume yes to all prompts. Defaults to False.
+        timeout (float, optional): Timeout in seconds for HTTP requests. Defaults to 42.0.
+
+    Examples:
+        To download all data for legislature 161:
+        `bundestag download abgeordnetenwatch 161`
+    """
     _paths = paths.get_paths(data_path)
 
     download_abgeordnetenwatch(
@@ -81,6 +97,20 @@ def bundestag(
         help="bundestag_sheet specific parameter. Max number of pages to flip though on https://www.bundestag.de/parlament/plenum/abstimmung/liste/ to create uris_xlsx.json",
     ),
 ):
+    """Download data from the bundestag.
+
+    Args:
+        dry (bool, optional): If `True`, don't actually download anything. Defaults to False.
+        data_path (str, optional): The path to the data directory. Defaults to "data".
+        nmax (int, optional): Max number of sheets to download. Defaults to None.
+        y (bool, optional): Assume yes to all prompts. Defaults to False.
+        do_create_xlsx_uris_json (bool, optional): If `True`, a new `xlsx_uris.json` will be created. Defaults to False.
+        max_pages (int, optional): Max number of pages to search for Excel file URIs. Defaults to 20.
+
+    Examples:
+        To recreate the Excel file URIs list by searching up to 50 pages:
+        `bundestag download bundestag --do-create-xlsx-uris-json`
+    """
     _paths = paths.get_paths(data_path)
 
     download_bundestag_sheets(
@@ -101,6 +131,17 @@ def huggingface(
     data_path: str = OPTION_DATA_PATH,
     y: bool = OPTION_Y,
 ):
+    """Download data from huggingface.
+
+    Args:
+        dry (bool, optional): If `True`, don't actually download anything. Defaults to False.
+        data_path (str, optional): The path to the data directory. Defaults to "data".
+        y (bool, optional): Assume yes to all prompts. Defaults to False.
+
+    Examples:
+        To download the data from Hugging Face:
+        `bundestag download huggingface`
+    """
     _paths = paths.get_paths(data_path)
 
     download_huggingface(
