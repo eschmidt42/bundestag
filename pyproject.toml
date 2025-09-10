@@ -8,8 +8,36 @@ authors = [
 ]
 requires-python = ">=3.10.0"
 dependencies = [
-
+    "beautifulsoup4>=4.12.2",
+    "fastexcel>=0.14.0",
+    "fastparquet>=2023.2.0",
+    "pandas",
+    "openpyxl>=3.1.2",
+    "frictionless>=5.11.1",
+    "matplotlib>=3.7.1",
+    "polars>=1.32.3",
+    "pyarrow>=21.0.0",
+    "pydantic>=1.10.7",
+    "rich>=12.6.0",
+    "typer>=0.7.0",
+    "xlrd>=2.0.1",
+    "xlsxwriter>=3.2.5",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.10.1",
+    "selenium>=4.35.0",
+    "urllib3>=1.26.15",
 ]
+# https://github.com/astral-sh/uv/issues/9011
+optional-dependencies = { ml = [
+    "fastcore>=1.5.29",
+    "fastai>=2.7.12",
+    "gensim>=4.3.1",
+    "scikit-learn>=1.2.2",
+    "spacy>=3.5.2",
+    "seaborn>=0.12.2",
+    "plotnine>=0.15.0",
+    "numpy>=1.24.2",
+] }
 
 [project.scripts]
 bundestag = "bundestag.cli.__main__:app"
@@ -20,133 +48,28 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-data = [
-    "beautifulsoup4>=4.12.2",
-    "fastcore>=1.5.29",
-    "fastexcel>=0.14.0",
-    "fastparquet>=2023.2.0",
-    "frictionless>=5.11.1",
-    "ipywidgets",
-    "jupyterlab",
-    "matplotlib>=3.7.1",
-    "openpyxl>=3.1.2",
-    "pandas",
-    "polars>=1.32.3",
-    "pyarrow>=21.0.0",
-    "pydantic>=1.10.7",
-    "rich>=12.6.0",
-    "seaborn>=0.12.2",
-    "plotnine>=0.15.0",
-    "typer[all]>=0.7.0",
-    "xlrd>=2.0.1",
-    "xlsxwriter>=3.2.5",
+
+ml = [
+    "bundestag[ml]",
 ]
-gui = [
+dev = [
     "ipywidgets>=8.0.6",
     "jupyterlab>=3.6.3",
-    {include-group = "data"},
 ]
-ml = [
-    "fastai>=2.7.12",
-    "gensim>=4.3.1",
-    "scikit-learn>=1.2.2",
-    "spacy>=3.5.2",
-    {include-group = "data"},
-]
-style_and_test = [
+tests = [
     "coverage>=7.2.3",
     "dirty-equals>=0.9.0",
     "inline-snapshot>=0.27.2",
-    "jupyterlab>=3.6.3",
     "pip-audit>=2.5.5",
     "pre-commit>=3.2.2",
     "pytest>=7.3.1",
-    {include-group = "data"},
-    {include-group = "gui"},
-    {include-group = "ml"},
 ]
 docs = [
-    "kaleido>=0.2.1",
     "mkdocs>=1.4.2",
     "mkdocstrings[python]>=0.21.2",
-    {include-group = "data"},
-    {include-group = "gui"},
-    {include-group = "ml"},
 ]
-database = [
-    "attrs>=23.1.0",
-    "beautifulsoup4>=4.12.2",
-    "certifi>=2022.12.7",
-    "chardet>=5.1.0",
-    "charset-normalizer>=3.1.0",
-    "click>=8.1.3",
-    "colorama>=0.4.6",
-    "commonmark>=0.9.1",
-    "contourpy>=1.0.7",
-    "cramjam>=2.6.2",
-    "cryptography>=40.0.2",
-    "cycler>=0.11.0",
-    "decorator>=5.1.1",
-    "et-xmlfile>=1.1.0",
-    "fastcore>=1.5.29",
-    "fastparquet>=2023.2.0",
-    "fonttools>=4.39.3",
-    "frictionless>=5.11.1",
-    "fsspec>=2023.4.0",
-    "httpx>=0.28.1",
-    "humanize>=4.6.0",
-    "idna>=3.4",
-    "importlib-resources>=5.12.0",
-    "isodate>=0.6.1",
-    "jinja2>=3.1.2",
-    "jsonschema>=4.17.3",
-    "kiwisolver>=1.4.4",
-    "marko>=1.3.0",
-    "markupsafe>=2.1.2",
-    "matplotlib>=3.7.1",
-    "multimethod>=1.9.1",
-    "mypy-extensions>=1.0.0",
-    "numpy>=1.24.2",
-    "openpyxl>=3.1.2",
-    "packaging>=23.1",
-    "pandas>=1.5.3",
-    "petl>=1.7.12",
-    "pillow>=9.5.0",
-    "pydantic>=1.10.7",
-    "pydantic-settings>=2.10.1",
-    "pygments>=2.15.0",
-    "pymysql>=1.0.3",
-    "pyparsing>=3.0.9",
-    "pyrsistent>=0.19.3",
-    "python-dateutil>=2.8.2",
-    "python-slugify>=8.0.1",
-    "pytz>=2023.3",
-    "pyyaml>=6.0",
-    "requests>=2.28.2",
-    "rfc3986>=2.0.0",
-    "rich>=12.6.0",
-    "seaborn>=0.12.2",
-    "selenium>=4.35.0",
-    "shellingham>=1.5.0.post1",
-    "simpleeval>=0.9.13",
-    "six>=1.16.0",
-    "soupsieve>=2.4.1",
-    "stringcase>=1.2.0",
-    "tabulate>=0.9.0",
-    "tenacity>=8.2.2",
-    "text-unidecode>=1.3",
-    "typer[all]>=0.7.0",
-    "typing-extensions>=4.5.0",
-    "typing-inspect>=0.8.0",
-    "urllib3>=1.26.15",
-    "validators>=0.20.0",
-    "wrapt>=1.15.0",
-    "xlrd>=2.0.1",
-    "zipp>=3.15.0",
-    {include-group = "data"},
-]
+
 binder = [
-    {include-group = "data"},
+    {include-group = "dev"},
     {include-group = "ml"},
-    {include-group = "gui"},
 ]
