@@ -6,7 +6,7 @@ from fastai.tabular.all import (
 )
 from sklearn import decomposition
 
-from bundestag.vote_prediction import (
+from bundestag.ml.vote_prediction import (
     get_embeddings,
     get_poll_proponents,
     plot_predictions,
