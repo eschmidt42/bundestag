@@ -3,9 +3,11 @@ from pathlib import Path
 
 
 def fix_empty_fraction_in_json(file_path: Path):
-    """
-    Reads a JSON file, replaces "fraction": [] with "fraction": null,
+    """Reads a JSON file, replaces "fraction": [] with "fraction": null,
     and writes the changes back to the file.
+
+    Args:
+        file_path (Path): Path to file to fix.
     """
     try:
         with file_path.open("r", encoding="utf-8") as f:
@@ -26,9 +28,7 @@ def fix_empty_fraction_in_json(file_path: Path):
 
 
 def main():
-    """
-    Loops through all JSON files in the specified directory and applies the fix.
-    """
+    """Loops through all JSON files in the specified directory and applies the fix."""
     directory = Path("data/raw/abgeordnetenwatch/votes_legislature_132/")
 
     if not directory.is_dir():

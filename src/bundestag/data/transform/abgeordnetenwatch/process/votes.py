@@ -13,6 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 def load_vote_json(legislature_id: int, poll_id: int, path: Path) -> dict:
+    """Loads vote data from a JSON file for a given legislature and poll.
+
+    Args:
+        legislature_id (int): The ID of the legislature.
+        poll_id (int): The ID of the poll.
+        path (Path): The path to the directory containing the vote data files.
+
+    Returns:
+        dict: A dictionary containing the vote data from the JSON file.
+    """
     votes_fname = get_votes_filename(legislature_id, poll_id)
     file = get_location(
         votes_fname,
@@ -28,6 +38,14 @@ def load_vote_json(legislature_id: int, poll_id: int, path: Path) -> dict:
 
 
 def parse_vote_data(vote: schemas.Vote) -> dict:
+    """Parses a single vote object into a dictionary.
+
+    Args:
+        vote (schemas.Vote): The vote object to parse.
+
+    Returns:
+        dict: A dictionary containing the parsed vote data.
+    """
     d = {
         "mandate_id": vote.mandate.id,
         "mandate": vote.mandate.label,
@@ -58,7 +76,18 @@ def get_votes_data(
     path: Path,
     validate: bool = False,
 ) -> pl.DataFrame:
-    "Parses info from vote json files for `legislature_id` and `poll_id`"
+    """Parses vote information from a JSON file for a specific poll and returns it as a Polars DataFrame.
+
+    Args:
+        legislature_id (int): The ID of the legislature.
+        poll_id (int): The ID of the poll.
+        path (Path): The path to the directory containing the vote data files.
+        validate (bool, optional): A flag for validation (currently unused). Defaults to False.
+
+    Returns:
+        pl.DataFrame: A Polars DataFrame containing the parsed vote data for the specified poll.
+    """
+
     data = load_vote_json(legislature_id, poll_id, path=path)
     votes = schemas.VoteResponse(**data)
     n_none = 0
@@ -80,7 +109,20 @@ def get_votes_data(
 def compile_votes_data(
     legislature_id: int, path: Path, validate: bool = False
 ) -> pl.DataFrame:
-    "Compiles the individual politicians' votes for a specific legislature period"
+    """Compiles the individual politicians' votes for a specific legislature period into a single DataFrame.
+
+    This function iterates through all the stored vote files for a given legislature,
+    loads the data for each poll, and concatenates them into one large DataFrame.
+    It also handles and logs duplicate `mandate_id` entries within a single poll's data.
+
+    Args:
+        legislature_id (int): The ID of the legislature for which to compile the votes.
+        path (Path): The path to the directory containing the vote data files.
+        validate (bool, optional): A flag for validation (currently unused). Defaults to False.
+
+    Returns:
+        pl.DataFrame: A Polars DataFrame containing all the vote data for the specified legislature.
+    """
 
     known_id_combos = check_stored_vote_ids(legislature_id=legislature_id, path=path)
 

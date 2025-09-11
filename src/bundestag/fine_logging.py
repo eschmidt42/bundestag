@@ -8,6 +8,21 @@ def setup_logging(
     rich_level=logging.INFO,
     fmt: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 ):
+    """Configures logging for the application using rich for pretty output.
+
+    This function sets up a root logger with a `RichHandler`. It's designed
+    to be idempotent, meaning it can be called multiple times without creating
+    duplicate handlers. It also preserves pytest's `LogCaptureHandler` to ensure
+    log capturing in tests is not disturbed.
+
+    Args:
+        root_level (int, optional): The logging level for the root logger.
+                                    Defaults to `logging.INFO`.
+        rich_level (int, optional): The logging level for the `RichHandler`.
+                                    Defaults to `logging.INFO`.
+        fmt (str, optional): The format string for the log messages.
+                             Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s".
+    """
     # If logging is already configured with a single RichHandler at the
     # requested level, do nothing (idempotent).
     is_same_level = logging.root.level == root_level

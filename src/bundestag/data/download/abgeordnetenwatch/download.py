@@ -29,6 +29,16 @@ def identify_remaining_poll_ids(
     possible_ids: list[int],
     known_ids: dict[int, Path],
 ) -> list[int]:
+    """Identifies poll IDs that have not yet been downloaded.
+
+    Args:
+        possible_ids (list[int]): A list of all possible poll IDs for a given legislature.
+        known_ids (dict[int, Path]): A dictionary of poll IDs that have already been downloaded,
+                                     mapping poll ID to the path of the stored data.
+
+    Returns:
+        list[int]: A list of poll IDs that still need to be downloaded.
+    """
     return [v for v in possible_ids if v not in known_ids]
 
 
@@ -41,7 +51,17 @@ def request_and_store_poll_ids(
     random_state: int = 42,
     timeout: float = 42.0,
 ):
-    "Loops over remaining poll ids and request them individually with random sleep times"
+    """Loops over remaining poll ids and requests them individually with random sleep times.
+
+    Args:
+        dt_rv_scale (float): The scale parameter for the normal distribution used to generate random sleep times.
+        remaining_poll_ids (list[int]): A list of poll IDs to be downloaded.
+        dry (bool): If True, the function will not actually download any data, but will only log the actions it would have taken.
+        t_sleep (float): The base sleep time between requests.
+        path (Path): The path to the directory where the downloaded data should be stored.
+        random_state (int, optional): The random seed for the random number generator. Defaults to 42.
+        timeout (float, optional): The timeout for the HTTP requests. Defaults to 42.0.
+    """
 
     dt_rv = stats.norm(scale=dt_rv_scale)
 
@@ -75,7 +95,17 @@ def get_all_remaining_vote_data(
     ask_user: bool = True,
     timeout: float = 42,
 ):
-    "Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk."
+    """Loop through the remaining polls for `legislature_id` to collect all votes and write them to disk.
+
+    Args:
+        legislature_id (int): The ID of the legislature to download data for.
+        path (Path): The path to the directory where the downloaded data should be stored.
+        dry (bool, optional): If True, the function will not actually download any data, but will only log the actions it would have taken. Defaults to False.
+        t_sleep (float, optional): The base sleep time between requests. Defaults to 1.
+        dt_rv_scale (float, optional): The scale parameter for the normal distribution used to generate random sleep times. Defaults to 0.1.
+        ask_user (bool, optional): If True, the user will be prompted for confirmation before downloading the data. Defaults to True.
+        timeout (float, optional): The timeout for the HTTP requests. Defaults to 42.
+    """
     logger.info("Collecting remaining vote data")
 
     # Get known legislature_id / poll_id combinations
@@ -132,7 +162,24 @@ def run(
     entity: EntityEnum = EntityEnum.all,
     timeout: float = 42.0,
 ):
-    "Run the abgeordnetenwatch data collection pipeline for the given legislature id."
+    """Run the abgeordnetenwatch data collection pipeline for the given legislature id.
+
+    Args:
+        legislature_id (int): The ID of the legislature to download data for.
+        dry (bool, optional): If True, the function will not actually download any data, but will only log the actions it would have taken. Defaults to False.
+        raw_path (Path, optional): The path to the directory where the downloaded data should be stored. Defaults to Path("data/abgeordnetenwatch").
+        max_polls (int, optional): The maximum number of polls to download. Defaults to 999.
+        max_mandates (int, optional): The maximum number of mandates to download. Defaults to 999.
+        t_sleep (float, optional): The base sleep time between requests. Defaults to 1.
+        dt_rv_scale (float, optional): The scale parameter for the normal distribution used to generate random sleep times. Defaults to 0.1.
+        ask_user (bool, optional): If True, the user will be prompted for confirmation before downloading the data. Defaults to True.
+        assume_yes (bool, optional): If True, the function will assume the user has answered "yes" to any prompts. Defaults to False.
+        entity (EntityEnum, optional): The type of data to download. Defaults to EntityEnum.all.
+        timeout (float, optional): The timeout for the HTTP requests. Defaults to 42.0.
+
+    Raises:
+        ValueError: If `dry` is False and `raw_path` is not provided.
+    """
     start_time = perf_counter()
     logger.info(
         f"Start downloading abgeordnetenwatch {entity=} data for {legislature_id=}"

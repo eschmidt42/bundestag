@@ -17,7 +17,14 @@ logger = logging.getLogger(__name__)
 def store_polls_json(
     path: Path, polls: dict | None, legislature_id: int, dry: bool = False
 ):
-    "Write poll data to file"
+    """Write poll data to file.
+
+    Args:
+        path (Path): The path to the directory where the poll data should be stored.
+        polls (dict | None): A dictionary containing the poll data.
+        legislature_id (int): The ID of the legislature the polls belong to.
+        dry (bool, optional): If True, simulates the file writing without actually writing to disk. Defaults to False.
+    """
 
     file = get_location(
         get_polls_filename(legislature_id), path=path, dry=dry, mkdir=False
@@ -35,7 +42,14 @@ def store_polls_json(
 def store_mandates_json(
     path: Path, mandates: dict | None, legislature_id: int, dry: bool = False
 ):
-    "Write mandates data to file"
+    """Write mandates data to file.
+
+    Args:
+        path (Path): The path to the directory where the mandates data should be stored.
+        mandates (dict | None): A dictionary containing the mandates data.
+        legislature_id (int): The ID of the legislature the mandates belong to.
+        dry (bool, optional): If True, simulates the file writing without actually writing to disk. Defaults to False.
+    """
 
     file = get_location(
         get_mandates_filename(legislature_id),
@@ -53,7 +67,17 @@ def store_mandates_json(
 
 
 def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
-    "Write votes data to file"
+    """Write votes data to file.
+
+    Args:
+        path (Path): The path to the directory where the votes data should be stored.
+        votes (dict | None): A dictionary containing the votes data.
+        poll_id (int): The ID of the poll the votes belong to.
+        dry (bool, optional): If True, simulates the file writing without actually writing to disk. Defaults to False.
+
+    Raises:
+        ValueError: If `votes` is None and `dry` is False.
+    """
 
     if dry:
         _votes_file = get_votes_filename(42, poll_id)
@@ -78,7 +102,14 @@ def store_vote_json(path: Path, votes: dict | None, poll_id: int, dry=False):
 
 
 def list_votes_dirs(path: Path) -> dict[int, Path]:
-    "List all votes_legislature_* directories"
+    """List all votes_legislature_* directories.
+
+    Args:
+        path (Path): The path to search for vote directories.
+
+    Returns:
+        dict[int, Path]: A dictionary mapping legislature IDs to their corresponding directory paths.
+    """
 
     dir2int = lambda x: int(str(x).split("_")[-1])
 
@@ -97,7 +128,15 @@ def list_votes_dirs(path: Path) -> dict[int, Path]:
 
 
 def list_polls_files(legislature_id: int, path: Path) -> dict[int, Path]:
-    "List all polls_legislature_* files"
+    """List all polls_legislature_* files.
+
+    Args:
+        legislature_id (int): The ID of the legislature to list poll files for.
+        path (Path): The path to the directory containing the vote data.
+
+    Returns:
+        dict[int, Path]: A dictionary mapping poll IDs to their corresponding file paths.
+    """
 
     file2int = lambda x: int(str(x).split("_")[-2])
 
@@ -118,7 +157,16 @@ def list_polls_files(legislature_id: int, path: Path) -> dict[int, Path]:
 def check_stored_vote_ids(
     legislature_id: int | None, path: Path
 ) -> dict[int, dict[int, Path]]:
-    "Check which vote ids are already stored"
+    """Check which vote ids are already stored.
+
+    Args:
+        legislature_id (int | None): The ID of the legislature to check for stored vote IDs. If None, checks all legislatures.
+        path (Path): The path to the directory containing the vote data.
+
+    Returns:
+        dict[int, dict[int, Path]]: A nested dictionary where the outer keys are legislature IDs and the inner keys are poll IDs,
+                                     with the values being the paths to the corresponding vote files.
+    """
 
     legislature_ids = list_votes_dirs(path=path)
 
@@ -157,15 +205,15 @@ def check_stored_vote_ids(
 def check_possible_poll_ids(
     legislature_id: int, path: Path, dry: bool = False
 ) -> list[int]:
-    """Collect available poll ids for given legislature id
+    """Collect available poll ids for given legislature id.
 
     Args:
-        legislature_id (int): Legislature identifier
-        path (Path, optional): Path to poll files. Defaults to None.
-        dry (bool, optional): Dry or not. Defaults to False.
+        legislature_id (int): Legislature identifier.
+        path (Path): Path to poll files.
+        dry (bool, optional): If True, simulates the operation without reading files. Defaults to False.
 
     Returns:
-        T.List[int]: List of poll identifiers
+        list[int]: List of poll identifiers.
     """
     logger.info("Checking possible poll ids")
     polls_file = get_polls_filename(legislature_id)

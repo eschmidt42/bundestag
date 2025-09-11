@@ -10,6 +10,20 @@ logger = logging.getLogger(__name__)
 
 
 def run(path: Path, dry: bool = False, assume_yes: bool = False):
+    """Downloads and extracts the dataset from Hugging Face.
+
+    This function downloads both the raw and preprocessed data archives (`raw.tar.gz`, `preprocessed.tar.gz`)
+    from the `Bingpot/bundestag` dataset on Hugging Face, saves them to the specified path,
+    and then extracts their contents.
+
+    Args:
+        path (Path): The local directory path to download and extract the data to.
+        dry (bool, optional): If True, the function will only log the actions it would take
+                              without downloading or extracting any files. Defaults to False.
+        assume_yes (bool, optional): If True, it will automatically create the destination path
+                                     if it doesn't exist without prompting. Defaults to False.
+    """
+
     start_time = perf_counter()
     logger.info(f"Loading and extracting dataset from huggingface to {path.absolute()}")
 

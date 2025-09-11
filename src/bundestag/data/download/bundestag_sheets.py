@@ -27,6 +27,19 @@ RE_SHEET = re.compile("(XLSX?)")
 def get_title_and_href(
     soup: BeautifulSoup, pattern: re.Pattern | None = None
 ) -> dict[str, str]:
+    """Extracts titles and corresponding hrefs from a BeautifulSoup object.
+
+    This function searches for table cells with the data-th attribute "Dokument" and extracts the title
+    and the href to an Excel sheet (.xlsx or .xls).
+
+    Args:
+        soup (BeautifulSoup): The BeautifulSoup object to parse.
+        pattern (re.Pattern | None, optional): A regex pattern to filter the links by title. Defaults to None.
+
+    Returns:
+        dict[str, str]: A dictionary mapping the title of the document to the URI of the Excel sheet.
+    """
+
     uris = {}
     elements = soup.find_all("td", attrs={"data-th": "Dokument"})
     for element in elements:
@@ -62,14 +75,14 @@ def get_title_and_href(
 def collect_sheet_uris(
     html_file_paths: list[Path], pattern: re.Pattern | None = None
 ) -> dict[str, str]:
-    """Extracting URIs to roll call votes stored in excel sheets
+    """Extracts URIs to roll call votes stored in Excel sheets from a list of HTML files.
 
     Args:
-        html_file_paths (list[Path]): List of files to parse
-        pattern (re.Pattern, optional): Regular expression pattern to use to identify URIs. Defaults to None.
+        html_file_paths (list[Path]): A list of paths to HTML files to parse.
+        pattern (re.Pattern, optional): A regular expression pattern to use to identify URIs within the HTML files. Defaults to None.
 
     Returns:
-        list[str]: List of identified URIs
+        dict[str, str]: A dictionary of identified URIs, mapping the title to the URI.
     """
 
     logger.info("Extracting URIs to excel sheets from htm files")
@@ -90,19 +103,26 @@ def collect_sheet_uris(
 
 
 def get_sheet_path(uri: str, sheet_dir: str | Path) -> Path:
+    """Constructs the local file path for a downloaded Excel sheet.
+
+    Args:
+        uri (str): The URI of the Excel sheet.
+        sheet_dir (str | Path): The directory where the sheet will be saved.
+
+    Returns:
+        Path: The full path to the local file.
+    """
     return Path(sheet_dir) / get_sheet_filename(uri)
 
 
 def download_sheet(uri: str, sheet_dir: Path, dry: bool = False):
-    """Downloads a single excel sheet given `uri` and writes to `sheet_path`
+    """Downloads a single Excel sheet given a URI and writes it to a specified directory.
 
     Args:
-        uri (str): URI to download
-        sheet_dir (Path | str): Directory to write downloaded sheet to
-        dry (bool, optional): Switch to deactivate downloading. Defaults to False.
+        uri (str): The URI of the Excel sheet to download.
+        sheet_dir (Path): The directory to which the downloaded sheet will be written.
+        dry (bool, optional): If True, the download is skipped. Defaults to False.
     """
-
-    "Downloads a single excel sheet given `uri` and writes to `sheet_path`"
 
     if dry:
         return
@@ -124,14 +144,17 @@ def download_multiple_sheets(
     nmax: int | None = None,
     dry: bool = False,
 ):
-    """Downloads multiple excel sheets containing roll call votes using `uris`, writing to `sheet_path`
+    """Downloads multiple Excel sheets containing roll call votes.
+
+    This function iterates through a dictionary of URIs, downloads each Excel sheet, and saves it to the specified directory.
+    It can skip files that are already downloaded and not empty.
 
     Args:
-        uris (dict[str, str]): Dict of sheets to download
-        sheet_dir (Path | str): Path to write the sheets to
-        t_sleep (float, optional): Wait time in seconds between downloaded files. Defaults to 0.01.
-        nmax (int, optional): Maximum number of sheets to download. Defaults to None.
-        dry (bool, optional): Switch for dry run. Defaults to False.
+        uris (dict[str, str]): A dictionary of sheet titles to URIs to download.
+        sheet_dir (Path): The path to the directory where the sheets will be saved.
+        t_sleep (float, optional): The wait time in seconds between downloading files. Defaults to 0.01.
+        nmax (int, optional): The maximum number of sheets to download. If None, all sheets are downloaded. Defaults to None.
+        dry (bool, optional): If True, performs a dry run without downloading files. Defaults to False.
     """
 
     n = min(nmax, len(uris)) if nmax else len(uris)
@@ -163,6 +186,18 @@ def download_multiple_sheets(
 
 
 def create_xlsx_uris_dict(max_pages: int = 3) -> dict[str, str]:
+    """Creates a dictionary of XLSX URIs by scraping the Bundestag website.
+
+    This function uses Selenium to navigate through the pages of the Bundestag's roll call vote list,
+    extracting the URIs of all .xlsx files.
+
+    Args:
+        max_pages (int, optional): The maximum number of pages to scrape. Defaults to 3.
+
+    Returns:
+        dict[str, str]: A dictionary mapping the title of the document to the URI of the Excel sheet.
+    """
+
     from selenium import webdriver
     from selenium.webdriver.common.by import By
 
@@ -228,6 +263,13 @@ def create_xlsx_uris_dict(max_pages: int = 3) -> dict[str, str]:
 
 
 def store_xlsx_uris(json_path: Path, xlsx_uris: dict[str, str]):
+    """Stores a dictionary of XLSX URIs to a JSON file.
+
+    Args:
+        json_path (Path): The path to the JSON file where the URIs will be stored.
+        xlsx_uris (dict[str, str]): A dictionary of XLSX URIs to store.
+    """
+
     logger.info(f"Writing to {json_path}")
     with json_path.open("w") as f:
         json.dump(xlsx_uris, f, indent=4)
@@ -251,6 +293,28 @@ def run(
     do_create_xlsx_uris_json: bool = False,
     max_pages: int = 5,
 ):
+    """Main function to run the Bundestag sheet download process.
+
+    This function can either collect sheet URIs from local HTML files or from a JSON file.
+    It can also create the JSON file by scraping the Bundestag website.
+
+    Args:
+        html_dir (Path): The directory containing HTML files (if source is 'html_file').
+        sheet_dir (Path): The directory where the downloaded Excel sheets will be stored.
+        t_sleep (float, optional): The time to sleep between downloads. Defaults to 0.01.
+        nmax (int | None, optional): The maximum number of sheets to download. Defaults to None.
+        dry (bool, optional): If True, performs a dry run without downloading. Defaults to False.
+        pattern (re.Pattern, optional): The regex pattern to find HTML files. Defaults to RE_HTM.
+        assume_yes (bool, optional): If True, assumes "yes" to any prompts. Defaults to False.
+        source (Source, optional): The source of the sheet URIs ('html_file' or 'json_file'). Defaults to Source.json_file.
+        json_filename (str, optional): The name of the JSON file with URIs. Defaults to "xlsx_uris.json".
+        do_create_xlsx_uris_json (bool, optional): If True, creates the JSON file by scraping. Defaults to False.
+        max_pages (int, optional): The maximum number of pages to scrape when creating the JSON file. Defaults to 5.
+
+    Raises:
+        ValueError: If the source is 'json_file' and the JSON file does not exist.
+    """
+
     start_time = perf_counter()
     logger.info("Start downloading bundestag sheets")
 

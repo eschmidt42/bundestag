@@ -11,6 +11,16 @@ logger = logging.getLogger(__name__)
 
 
 def load_mandate_json(legislature_id: int, path: Path, dry: bool = False) -> dict:
+    """Loads mandate data from a JSON file for a given legislature.
+
+    Args:
+        legislature_id (int): The ID of the legislature for which to load mandate data.
+        path (Path): The path to the directory containing the mandate data files.
+        dry (bool, optional): If True, simulates file loading without reading the file. Defaults to False.
+
+    Returns:
+        dict: A dictionary containing the mandate data from the JSON file.
+    """
     mandates_fname = get_mandates_filename(legislature_id)
     file = get_location(
         mandates_fname,
@@ -26,6 +36,15 @@ def load_mandate_json(legislature_id: int, path: Path, dry: bool = False) -> dic
 
 
 def parse_mandate_data(mandate: schemas.Mandate, missing: str = "unknown") -> dict:
+    """Parses a single mandate object into a dictionary.
+
+    Args:
+        mandate (schemas.Mandate): The mandate object to parse.
+        missing (str, optional): The value to use for missing fraction data. Defaults to "unknown".
+
+    Returns:
+        dict: A dictionary containing the parsed mandate data.
+    """
     d = {
         "legislature_id": mandate.parliament_period.id,
         "legislature_period": mandate.parliament_period.label,
@@ -87,7 +106,16 @@ SCHEMA_GET_MANDATES_DATA = pl.Schema(
 
 
 def get_mandates_data(legislature_id: int, path: Path) -> pl.DataFrame:
-    "Parses info from mandate json file(s) for `legislature_id`"
+    """Parses mandate information from a JSON file and returns it as a Polars DataFrame.
+
+    Args:
+        legislature_id (int): The ID of the legislature for which to parse mandate data.
+        path (Path): The path to the directory containing the mandate data files.
+
+    Returns:
+        pl.DataFrame: A Polars DataFrame containing the parsed mandate data.
+    """
+
     info = load_mandate_json(legislature_id, path=path)
     mandates = schemas.MandatesResponse(**info)
     df = pl.DataFrame(
