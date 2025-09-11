@@ -18,6 +18,18 @@ logger = logging.getLogger(__name__)
 
 
 def transform_mandates_data(df: pl.DataFrame) -> pl.DataFrame:
+    """Transforms mandates data by extracting party information.
+
+    This function adds two new columns to the DataFrame:
+    - 'all_parties': A list of all parties a politician has been a member of, extracted from the 'fraction_names' column.
+    - 'party': The most recent party of the politician, taken as the last element from the 'all_parties' list.
+
+    Args:
+        df (pl.DataFrame): The input DataFrame containing mandates data.
+
+    Returns:
+        pl.DataFrame: The transformed DataFrame with added party information.
+    """
     df = df.with_columns(
         **{"all_parties": pl.col("fraction_names").map_elements(get_parties_from_col)}
     ).with_columns(**{"party": pl.col("all_parties").list.last()})
@@ -26,25 +38,72 @@ def transform_mandates_data(df: pl.DataFrame) -> pl.DataFrame:
 
 
 def transform_votes_data(df: pl.DataFrame) -> pl.DataFrame:
+    """Transforms votes data by extracting the politician's name.
+
+    This function adds a 'politician name' column to the DataFrame by extracting the name
+    from the 'mandate' column, which typically has the format "Politician Name (Party)".
+
+    Args:
+        df (pl.DataFrame): The input DataFrame containing votes data.
+
+    Returns:
+        pl.DataFrame: The transformed DataFrame with the added 'politician name' column.
+    """
     df = df.with_columns(
         **{"politician name": pl.col("mandate").str.extract(r"^(.*?) \s*\(", 1)}
     )
     return df
 
 
-def get_votes_parquet_path(legislature_id: int, preprocessed_path: Path):
+def get_votes_parquet_path(legislature_id: int, preprocessed_path: Path) -> Path:
+    """Constructs the file path for the votes Parquet file.
+
+    Args:
+        legislature_id (int): The ID of the legislature.
+        preprocessed_path (Path): The path to the directory for preprocessed data.
+
+    Returns:
+        Path: The full path to the votes Parquet file.
+    """
     return preprocessed_path / f"votes_{legislature_id}.parquet"
 
 
-def get_votes_csv_path(legislature_id: int, preprocessed_path: Path):
+def get_votes_csv_path(legislature_id: int, preprocessed_path: Path) -> Path:
+    """Constructs the file path for the votes CSV file.
+
+    Args:
+        legislature_id (int): The ID of the legislature.
+        preprocessed_path (Path): The path to the directory for preprocessed data.
+
+    Returns:
+        Path: The full path to the votes CSV file.
+    """
     return preprocessed_path / f"votes_{legislature_id}.csv"
 
 
-def get_mandates_parquet_path(legislature_id: int, preprocessed_path: Path):
+def get_mandates_parquet_path(legislature_id: int, preprocessed_path: Path) -> Path:
+    """Constructs the file path for the mandates Parquet file.
+
+    Args:
+        legislature_id (int): The ID of the legislature.
+        preprocessed_path (Path): The path to the directory for preprocessed data.
+
+    Returns:
+        Path: The full path to the mandates Parquet file.
+    """
     return preprocessed_path / f"mandates_{legislature_id}.parquet"
 
 
-def get_polls_parquet_path(legislature_id: int, preprocessed_path: Path):
+def get_polls_parquet_path(legislature_id: int, preprocessed_path: Path) -> Path:
+    """Constructs the file path for the polls Parquet file.
+
+    Args:
+        legislature_id (int): The ID of the legislature.
+        preprocessed_path (Path): The path to the directory for preprocessed data.
+
+    Returns:
+        Path: The full path to the polls Parquet file.
+    """
     return preprocessed_path / f"polls_{legislature_id}.parquet"
 
 
@@ -56,6 +115,25 @@ def run(
     validate: bool = False,
     assume_yes: bool = False,
 ):
+    """Runs the full data transformation pipeline for abgeordnetenwatch data for a given legislature.
+
+    This function performs the following steps:
+    1. Loads and processes polls data, then saves it as a Parquet file.
+    2. Loads, transforms, and processes mandates data, then saves it as a Parquet file.
+    3. Compiles and transforms votes data, then saves it as both CSV and Parquet files.
+
+    Args:
+        legislature_id (int): The ID of the legislature to process.
+        raw_path (Path): The path to the directory containing the raw data.
+        preprocessed_path (Path): The path to the directory where the preprocessed data will be saved.
+        dry (bool): If True, the function will only log the actions it would take without writing any files.
+        validate (bool, optional): A flag for validation during vote compilation. Defaults to False.
+        assume_yes (bool, optional): If True, it will automatically create the preprocessed path if it doesn't exist. Defaults to False.
+
+    Raises:
+        ValueError: If `dry` is False and either `raw_path` or `preprocessed_path` is not provided.
+        ValueError: If `raw_path` does not exist.
+    """
     logger.info(f"Start transforming abgeordnetenwatch data for {legislature_id=}")
     start_time = perf_counter()
 

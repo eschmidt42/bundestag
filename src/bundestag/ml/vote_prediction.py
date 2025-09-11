@@ -27,7 +27,22 @@ def poll_splitter(
     shuffle: bool = True,
     seed: int | None = None,
 ) -> tuple[list[int], list[int]]:
-    "Split the polls into train and test set."
+    """Splits the DataFrame into training and validation sets based on poll IDs.
+
+    This function ensures that all votes for a given poll are in the same set (either training or validation),
+    preventing data leakage between the sets.
+
+    Args:
+        df (pl.DataFrame): The DataFrame to be split.
+        poll_col (str, optional): The name of the column containing poll IDs. Defaults to "poll_id".
+        valid_pct (float, optional): The fraction of polls to be used for the validation set. Defaults to 0.2.
+        shuffle (bool, optional): Whether to shuffle the indices within the train and validation sets. Defaults to True.
+        seed (int | None, optional): A seed for the random number generator for reproducibility. Defaults to None.
+
+    Returns:
+        tuple[list[int], list[int]]: A tuple containing two lists of indices: the first for the training set,
+                                     and the second for the validation set.
+    """
 
     polls = df[poll_col].unique()
     n = len(polls)
@@ -67,7 +82,24 @@ def plot_predictions(
     n_worst_politicians: int = 20,
     n_worst_polls: int = 5,
 ):
-    "Plot absolute and relative confusion matrix as well as the accuracy."
+    """Analyzes and displays the model's prediction performance.
+
+    This function performs several analyses on the validation set predictions:
+    1. Calculates and logs the overall accuracy.
+    2. Creates a confusion matrix (though it's not explicitly displayed, the data is prepared).
+    3. Identifies and displays the politicians whose votes were most inaccurately predicted.
+    4. Identifies and displays the polls that were most inaccurately predicted.
+
+    Args:
+        learn (TabularLearner): The trained fastai learner.
+        df_all_votes (pl.DataFrame): The complete DataFrame of all votes.
+        df_mandates (pl.DataFrame): The DataFrame containing mandate and politician information.
+        df_polls (pl.DataFrame): The DataFrame containing poll information.
+        splits (tuple[list[int], list[int]]): The train/validation splits of indices.
+        y_col (str, optional): The name of the target variable column. Defaults to "vote".
+        n_worst_politicians (int, optional): The number of most inaccurately predicted politicians to display. Defaults to 20.
+        n_worst_polls (int, optional): The number of most inaccurately predicted polls to display. Defaults to 5.
+    """
 
     from IPython.display import display
 
@@ -92,13 +124,6 @@ def plot_predictions(
     )
     M = M.fill_null(0.0)
 
-    # display(
-
-    #     M.with_columns(total=M.sum_horizontal())
-    #     .pipe(lambda x: (x.T / x["total"]).T)
-    #     .drop(columns=["total"])
-    #     .style.background_gradient(axis=1),
-    # )
     df_valid = df_valid.with_columns(
         **{"prediction_correct": pl.col("vote") == pl.col("vote_pred")}
     )
@@ -137,8 +162,24 @@ def get_embeddings(
         x.detach().numpy()
     ),
 ) -> dict[str, pd.DataFrame]:
-    """Collects embeddings from tabular_learner.model and returns them with optional transformation
-    via `transform_func` (e.g. sklearn.decomposition.PCA)"""
+    """Extracts and optionally transforms embeddings from a trained fastai TabularLearner.
+
+    This function iterates through the embedding layers of the model for each categorical
+    variable, extracts the embedding weights, and applies a transformation function
+    (by default, PCA to reduce to 2 dimensions).
+
+    Args:
+        learn (TabularLearner): The trained fastai learner containing the model with embeddings.
+        transform_func (callable, optional): A function to apply to the extracted embedding tensors.
+                                            Defaults to a lambda function that performs PCA to 2 components.
+                                            If set to None or another non-callable, no transformation is applied.
+
+    Returns:
+        dict[str, pd.DataFrame]: A dictionary where keys are the names of the categorical variables
+                                 and values are pandas DataFrames containing the (transformed) embeddings.
+                                 Each DataFrame includes the original category labels.
+    """
+
     embeddings = {}
 
     for i, name in enumerate(learn.dls.classes):
@@ -160,7 +201,21 @@ def get_embeddings(
 def get_poll_proponents(
     df_all_votes: pl.DataFrame, df_mandates: pl.DataFrame
 ) -> pl.DataFrame:
-    "Computes which party most strongly endorsed (% yes votes of party) a poll"
+    """Identifies the political party that most strongly supported each poll.
+
+    "Strongest support" is defined as the party with the highest percentage of "yes"
+    votes among its members for a given poll.
+
+    Args:
+        df_all_votes (pl.DataFrame): DataFrame containing all vote records, including
+                                     'poll_id', 'vote', and 'politician name'.
+        df_mandates (pl.DataFrame): DataFrame with mandate information, linking
+                                    'politician' names to their 'party'.
+
+    Returns:
+        pl.DataFrame: A DataFrame with one row per 'poll_id', indicating the
+                      'strongest proponent' party for that poll.
+    """
 
     votes_slim = df_all_votes.select(["poll_id", "vote", "politician name"])
     politician_votes = votes_slim.join(
@@ -196,6 +251,26 @@ def plot_poll_embeddings(
     colors: scale_color_manual,
     col: str = "poll_id",
 ) -> ggplot:
+    """Visualizes poll embeddings in a 2D scatter plot.
+
+    This function takes poll embeddings (typically reduced to 2 dimensions via PCA),
+    joins them with poll metadata (like title and strongest proponent party), and
+    creates a scatter plot where each point is a poll, colored by the party that
+    most strongly supported it.
+
+    Args:
+        df_all_votes (pl.DataFrame): DataFrame containing all vote data to determine proponents.
+        df_polls (pl.DataFrame): DataFrame with poll metadata, including 'poll_title'.
+        embeddings (dict[str, pl.DataFrame]): A dictionary of embedding DataFrames, where the key
+                                              is the name of the embedded feature (e.g., 'poll_id').
+        df_mandates (pl.DataFrame): DataFrame with mandate data to link politicians to parties.
+        colors (scale_color_manual): A plotnine color scale for coloring the points by party.
+        col (str, optional): The name of the column containing the poll identifiers.
+                             Defaults to "poll_id".
+
+    Returns:
+        ggplot: A plotnine ggplot object representing the scatter plot of poll embeddings.
+    """
     tmp = (
         df_all_votes.unique(subset=col)
         .join(
@@ -234,6 +309,27 @@ def plot_politician_embeddings(
     col: str = "politician name",
     palette: dict[str, str] | None = None,
 ) -> ggplot:
+    """Visualizes politician embeddings in a 2D scatter plot.
+
+    This function takes politician embeddings (typically reduced to 2 dimensions),
+    joins them with mandate data to get party affiliation, and creates a scatter
+    plot where each point is a politician, colored by their party.
+
+    Args:
+        df_all_votes (pl.DataFrame): DataFrame containing all vote data, used to identify
+                                     unique mandates.
+        df_mandates (pl.DataFrame): DataFrame linking mandates to parties and politicians.
+        embeddings (dict[str, pl.DataFrame]): A dictionary of embedding DataFrames, with keys
+                                              like 'politician name'.
+        colors (scale_color_manual): A plotnine color scale for the plot.
+        col (str, optional): The column name for the politician identifier in the embeddings.
+                             Defaults to "politician name".
+        palette (dict[str, str] | None, optional): A color palette dictionary to use.
+                                                   Defaults to a predefined PALETTE.
+
+    Returns:
+        ggplot: A plotnine ggplot object showing the politician embeddings.
+    """
     tmp = (
         df_all_votes.unique(subset="mandate_id")
         .join(
