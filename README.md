@@ -43,6 +43,18 @@ uv install bundestag
 
 to get access to the cli to download and transform bundestag roll call votes data from bundestag.de or abgeordnetenwatch.de.
 
+By to keep things light the machine learning dependencies are made optional. If you want to get those and related functionality as well run
+
+```shell
+pip install bundestag[ml]
+```
+
+or
+
+```shell
+uv install bundestag[ml]
+```
+
 For development
 
 ```shell
@@ -118,3 +130,8 @@ Module for collecting and storing XLSX URIs from Bundestag data sources. Also do
 ```shell
 bundestag download bundestag_sheet --do-create-xlsx-uris-json
 ```
+
+### Notebooks
+
+* [fraktionszwang]((https://github.com/eschmidt42/bundestag/blob/main/docs/fraktionszwang.ipynb))
+* [embedded members of parliament](https://github.com/eschmidt42/bundestag/blob/main/docs/analysis-highlights.ipynb)

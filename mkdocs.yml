@@ -17,11 +17,21 @@ nav:
     - data:
       - __init__: bundestag/data.md
       - download:
-        - abgeordnetenwatch: bundestag/data/download/abgeordnetenwatch.md
+        - abgeordnetenwatch:
+          - cli: bundestag/data/download/abgeordnetenwatch/cli.md
+          - download: bundestag/data/download/abgeordnetenwatch/download.md
+          - request: bundestag/data/download/abgeordnetenwatch/request.md
+          - store: bundestag/data/download/abgeordnetenwatch/store.md
         - bundestag_sheets: bundestag/data/download/bundestag_sheets.md
         - huggingface: bundestag/data/download/huggingface.md
       - transform:
-        - abgeordnetenwatch: bundestag/data/transform/abgeordnetenwatch.md
+        - abgeordnetenwatch:
+          - helper: bundestag/data/transform/abgeordnetenwatch/helper.md
+          - transform: bundestag/data/transform/abgeordnetenwatch/transform.md
+          - process:
+            - mandates: bundestag/data/transform/abgeordnetenwatch/process/mandates.md
+            - polls: bundestag/data/transform/abgeordnetenwatch/process/polls.md
+            - votes: bundestag/data/transform/abgeordnetenwatch/process/votes.md
         - bundestag_sheets: bundestag/data/transform/bundestag_sheets.md
       - utils: bundestag/data/utils.md
     - ml:
