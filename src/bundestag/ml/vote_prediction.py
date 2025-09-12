@@ -59,7 +59,7 @@ def poll_splitter(
     )
 
     df = df.with_columns(
-        **{"is validation set": pl.col(poll_col).is_in(pl.lit(polls1))}
+        **{"is validation set": pl.col(poll_col).is_in(list(polls1))}
     ).with_row_index(name="index")
 
     ix0 = df.filter(pl.col("is validation set").not_())["index"].to_list()

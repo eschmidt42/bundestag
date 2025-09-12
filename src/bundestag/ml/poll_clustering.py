@@ -10,7 +10,6 @@ import pandas as pd
 import polars as pl
 import seaborn as sns
 import spacy
-from sklearn import decomposition
 
 logger = logging.getLogger(__name__)
 
@@ -283,43 +282,3 @@ def compare_word_frequencies(
     ax.set(title=title)
     plt.tight_layout()
     return ax
-
-
-def preprocess_polls_for_plotting(
-    df_polls: pl.DataFrame, st: SpacyTransformer, nlp_feature_cols: list[str]
-) -> pl.DataFrame:
-    """Preprocesses poll data for visualization by reducing dimensionality and identifying key topics.
-
-    This function performs the following steps:
-    1. Applies PCA to reduce the LDA topic score features to 2 dimensions.
-    2. Identifies the most relevant topic for each poll based on the highest score.
-    3. Adds the PCA components and topic information as new columns to the DataFrame.
-
-    Args:
-        df_polls (pl.DataFrame): The DataFrame containing poll data with LDA topic scores.
-        st (SpacyTransformer): The fitted SpacyTransformer object, used to access topic descriptions.
-        nlp_feature_cols (list[str]): A list of column names corresponding to the LDA topic scores.
-
-    Returns:
-        pl.DataFrame: The enhanced DataFrame with new columns for PCA components and topic analysis, ready for plotting.
-    """
-    dense = df_polls[nlp_feature_cols].to_numpy()
-    pca_model = decomposition.PCA(n_components=2).fit(dense)
-    X = pca_model.transform(dense)
-
-    most_relevant_topic = dense.argmax(axis=1)
-    most_relevant_topic_p = dense[range(len(dense)), most_relevant_topic]
-
-    tmp = pl.DataFrame(
-        {
-            "lda_pca_component_0": pl.Series(X[:, 0]),
-            "lda_pca_component_1": pl.Series(X[:, 1]),
-            "most_relevant_topic_p": pl.Series(most_relevant_topic_p),
-            "most_relevant_topic_ix": pl.Series(most_relevant_topic),
-            "most_relevant_topic_full": pl.Series(
-                [st.lda_topics[ix] for ix in most_relevant_topic]
-            ),
-        }
-    )
-    df_polls = pl.concat((df_polls, tmp), how="horizontal")
-    return df_polls

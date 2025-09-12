@@ -11,6 +11,7 @@ help:
 	@echo "compile-binder   : update the binder environment requirements in .binder/requirements.txt."
 	@echo "test             : run pytests."
 	@echo "tarballs         : create tarballs of data/raw and data/preprocessed for storage on huggingface datasets https://huggingface.co/datasets/Bingpot/bundestag/."
+	@echo "coverage         : compute test coverage"
 
 # ==============================================================================
 # dev
@@ -76,6 +77,14 @@ compile-binder:
 .PHONY: test
 test:
 	uv run pytest tests
+
+# ==============================================================================
+# coverage
+# ==============================================================================
+
+.PHONY: coverage
+coverage:
+	uv run pytest --cov=src --cov-report html  tests
 
 # ==============================================================================
 # make balls for huggingface uploads / downloads

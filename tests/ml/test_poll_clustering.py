@@ -226,9 +226,25 @@ def test_get_word_frequencies():
     assert res["c"] == 1
 
 
-@pytest.mark.skip(
-    "Works but something to be run elsewhere, not as a unit test that opens a window."
-)
+@pytest.fixture(autouse=True)
+def use_matplotlib_agg():
+    """Force matplotlib to use the Agg backend in tests to avoid GUI popups."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+
+    # silence the non-interactive FigureCanvasAgg show warning from plt.show()
+    import warnings
+
+    warnings.filterwarnings(
+        "ignore",
+        message="FigureCanvasAgg is non-interactive, and thus cannot be shown",
+        category=UserWarning,
+    )
+
+    yield
+
+
 def test_compare_word_frequencies():
     df = pd.DataFrame(
         {"c": ["a b c", "a b", "a"], "d": [["a", "b", "c"], ["a", "b"], ["a"]]}

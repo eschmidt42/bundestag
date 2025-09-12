@@ -42,9 +42,9 @@ def run(path: Path, dry: bool = False, assume_yes: bool = False):
 
         raw_tar = path / "raw.tar.gz"
         logger.info(f"Extracting raw data at {raw_tar.absolute()}")
-        tar = tarfile.open(raw_tar)
-        tar.extractall(path=path)
-        tar.close()
+
+        with tarfile.open(raw_tar) as tar:
+            tar.extractall(path=path, filter="data")
         logger.info("Done extracting raw data")
 
         # preprocessed data
@@ -58,9 +58,8 @@ def run(path: Path, dry: bool = False, assume_yes: bool = False):
 
         preprocessed_tar = path / "preprocessed.tar.gz"
         logger.info(f"Extracting preprocessed data at {preprocessed_tar.absolute()}")
-        tar = tarfile.open(path / "preprocessed.tar.gz")
-        tar.extractall(path=path)
-        tar.close()
+        with tarfile.open(preprocessed_tar) as tar:
+            tar.extractall(path=path, filter="data")
         logger.info("Done extracting preprocessed data")
 
     dt = str(perf_counter() - start_time)
