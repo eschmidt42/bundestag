@@ -185,7 +185,9 @@ def download_multiple_sheets(
     )
 
 
-def create_xlsx_uris_dict(max_pages: int = 3) -> dict[str, str]:
+def create_xlsx_uris_dict(
+    max_pages: int = 3, t_wait_scroll: float = 1.0, t_wait_load: float = 2.0
+) -> dict[str, str]:
     """Creates a dictionary of XLSX URIs by scraping the Bundestag website.
 
     This function uses Selenium to navigate through the pages of the Bundestag's roll call vote list,
@@ -243,11 +245,13 @@ def create_xlsx_uris_dict(max_pages: int = 3) -> dict[str, str]:
             driver.execute_script(
                 "arguments[0].scrollIntoView({block: 'center'});", next_button
             )
-            time.sleep(1)  # Allow time for scrolling
+
+            time.sleep(t_wait_scroll)  # Allow time for scrolling
 
             logger.info(f"clicking the button")
             next_button.click()
-            time.sleep(2)  # Wait for the next page to load
+
+            time.sleep(t_wait_load)  # Wait for the next page to load
 
         except Exception as e:
             logger.error(f"Error: {e}")
