@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/data/transform/abgeordnetenwatch/helper/" />
+      <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
+    <title>helper - bundestag</title>
+    <link rel="stylesheet" href="../../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "helper";
+        var mkdocs_page_input_path = "bundestag/data/transform/abgeordnetenwatch/helper.md";
+        var mkdocs_page_url = "/bundestag/bundestag/data/transform/abgeordnetenwatch/helper/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >data</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../../">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >transform</a>
+    <ul class="current">
+                <li class="toctree-l3 current"><a class="reference internal current" >abgeordnetenwatch</a>
+    <ul class="current">
+                <li class="toctree-l4 current"><a class="reference internal current" href="#">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+          <li class="breadcrumb-item">data</li>
+          <li class="breadcrumb-item">transform</li>
+          <li class="breadcrumb-item">abgeordnetenwatch</li>
+      <li class="breadcrumb-item active">helper</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/data/transform/abgeordnetenwatch/helper.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.data.transform.abgeordnetenwatch.helper"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.helper.extract_party_from_string" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">extract_party_from_string</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extracts a party name from a string.</p>
+<p>The function is designed to handle strings that may contain additional information after the party name,
+specifically patterns like "Party Name seit YYYY-MM-DD". It uses a regex to find the party name.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>s</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input string, potentially containing a party name.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the input is not a string, or if the regex fails to find a match in a string containing "seit".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>str</code></b>(                  <code><span title="str">str</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The extracted party name.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/helper.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_party_from_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a party name from a string.</span>
+
+<span class="sd">    The function is designed to handle strings that may contain additional information after the party name,</span>
+<span class="sd">    specifically patterns like &quot;Party Name seit YYYY-MM-DD&quot;. It uses a regex to find the party name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (str): The input string, potentially containing a party name.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the input is not a string, or if the regex fails to find a match in a string containing &quot;seit&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted party name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">s</span><span class="si">=}</span><span class="s2"> to be of type string.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;seit&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">PARTY_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;failed to match </span><span class="si">{</span><span class="n">PARTY_PATTERN</span><span class="si">=}</span><span class="s2">/&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.helper.get_parties_from_col" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_parties_from_col</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extracts party names from a Polars Series of strings.</p>
+<p>This function applies the <code>extract_party_from_string</code> function to each element of a Polars Series.
+If the series is empty, it returns a series with a single 'unknown' value.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>elements</code></b>
+                  (<code><span title="polars.Series">Series</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A Polars Series containing strings with party information.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>missing</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;unknown&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The value to return if the input series is empty. Defaults to "unknown".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.Series">Series</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.Series: A Polars Series with the extracted party names.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/helper.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_parties_from_col</span><span class="p">(</span><span class="n">elements</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">missing</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts party names from a Polars Series of strings.</span>
+
+<span class="sd">    This function applies the `extract_party_from_string` function to each element of a Polars Series.</span>
+<span class="sd">    If the series is empty, it returns a series with a single &#39;unknown&#39; value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        elements (pl.Series): A Polars Series containing strings with party information.</span>
+<span class="sd">        missing (str, optional): The value to return if the input series is empty. Defaults to &quot;unknown&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.Series: A Polars Series with the extracted party names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">elements</span><span class="o">.</span><span class="n">map_elements</span><span class="p">(</span><span class="n">extract_party_from_string</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">missing</span><span class="p">])</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../download/huggingface/" class="btn btn-neutral float-left" title="huggingface"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../transform/" class="btn btn-neutral float-right" title="transform">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../../../download/huggingface/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../transform/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../../..";</script>
+    <script src="../../../../../js/theme_extra.js"></script>
+    <script src="../../../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

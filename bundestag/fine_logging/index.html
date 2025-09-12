@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/fine_logging/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>fine_logging - bundestag</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "fine_logging";
+        var mkdocs_page_input_path = "bundestag/fine_logging.md";
+        var mkdocs_page_url = "/bundestag/bundestag/fine_logging/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">fine_logging</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+      <li class="breadcrumb-item active">fine_logging</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/fine_logging.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.fine_logging"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.fine_logging.setup_logging" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">setup_logging</span><span class="p">(</span><span class="n">root_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">rich_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Configures logging for the application using rich for pretty output.</p>
+<p>This function sets up a root logger with a <code>RichHandler</code>. It's designed
+to be idempotent, meaning it can be called multiple times without creating
+duplicate handlers. It also preserves pytest's <code>LogCaptureHandler</code> to ensure
+log capturing in tests is not disturbed.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>root_level</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code><span title="logging.INFO">INFO</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The logging level for the root logger.
+                        Defaults to <code>logging.INFO</code>.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rich_level</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code><span title="logging.INFO">INFO</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The logging level for the <code>RichHandler</code>.
+                        Defaults to <code>logging.INFO</code>.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>fmt</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The format string for the log messages.
+                 Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/fine_logging.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setup_logging</span><span class="p">(</span>
+    <span class="n">root_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="n">rich_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configures logging for the application using rich for pretty output.</span>
+
+<span class="sd">    This function sets up a root logger with a `RichHandler`. It&#39;s designed</span>
+<span class="sd">    to be idempotent, meaning it can be called multiple times without creating</span>
+<span class="sd">    duplicate handlers. It also preserves pytest&#39;s `LogCaptureHandler` to ensure</span>
+<span class="sd">    log capturing in tests is not disturbed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root_level (int, optional): The logging level for the root logger.</span>
+<span class="sd">                                    Defaults to `logging.INFO`.</span>
+<span class="sd">        rich_level (int, optional): The logging level for the `RichHandler`.</span>
+<span class="sd">                                    Defaults to `logging.INFO`.</span>
+<span class="sd">        fmt (str, optional): The format string for the log messages.</span>
+<span class="sd">                             Defaults to &quot;%(asctime)s - %(name)s - %(levelname)s - %(message)s&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If logging is already configured with a single RichHandler at the</span>
+    <span class="c1"># requested level, do nothing (idempotent).</span>
+    <span class="n">is_same_level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="n">root_level</span>
+    <span class="n">is_same_root_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">handlers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">is_same_rich_handler</span> <span class="o">=</span> <span class="n">is_same_root_count</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">RichHandler</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_same_rich_handler</span> <span class="ow">and</span> <span class="n">is_same_level</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Detect pytest&#39;s capture handler (LogCaptureHandler) by name and</span>
+    <span class="c1"># preserve it so caplog can continue capturing logs in tests.</span>
+    <span class="n">capture_handlers</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">handlers</span> <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;LogCaptureHandler&quot;</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Create or reuse a RichHandler</span>
+    <span class="n">rich_handler</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">RichHandler</span><span class="p">):</span>
+            <span class="n">rich_handler</span> <span class="o">=</span> <span class="n">h</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">rich_handler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rich_handler</span> <span class="o">=</span> <span class="n">RichHandler</span><span class="p">()</span>
+
+    <span class="n">rich_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">rich_level</span><span class="p">)</span>
+
+    <span class="c1"># Apply formatter: accept either a format string or a logging.Formatter</span>
+    <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">fmt</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+        <span class="n">rich_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+
+    <span class="c1"># Build new handlers list: always include capture handlers (if any),</span>
+    <span class="c1"># then the RichHandler. If there were no capture handlers, this</span>
+    <span class="c1"># replaces existing handlers with a single RichHandler as expected.</span>
+    <span class="n">new_handlers</span> <span class="o">=</span> <span class="n">capture_handlers</span><span class="p">[:]</span>  <span class="c1"># copy</span>
+    <span class="c1"># Avoid adding the same RichHandler twice</span>
+    <span class="k">if</span> <span class="n">rich_handler</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_handlers</span><span class="p">:</span>
+        <span class="n">new_handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rich_handler</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="n">new_handlers</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">root_level</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../gui/" class="btn btn-neutral float-left" title="gui"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../paths/" class="btn btn-neutral float-right" title="paths">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../gui/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../paths/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

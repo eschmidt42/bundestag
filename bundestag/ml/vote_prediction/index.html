@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/ml/vote_prediction/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>vote_prediction - bundestag</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "vote_prediction";
+        var mkdocs_page_input_path = "bundestag/ml/vote_prediction.md";
+        var mkdocs_page_url = "/bundestag/bundestag/ml/vote_prediction/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >ml</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">vote_prediction</a>
+    <ul class="current">
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+          <li class="breadcrumb-item">ml</li>
+      <li class="breadcrumb-item active">vote_prediction</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/ml/vote_prediction.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.ml.vote_prediction"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.vote_prediction.get_embeddings" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_embeddings</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="n">transform_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()))</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Extracts and optionally transforms embeddings from a trained fastai TabularLearner.</p>
+<p>This function iterates through the embedding layers of the model for each categorical
+variable, extracts the embedding weights, and applies a transformation function
+(by default, PCA to reduce to 2 dimensions).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>learn</code></b>
+                  (<code><span title="fastai.tabular.all.TabularLearner">TabularLearner</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The trained fastai learner containing the model with embeddings.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>transform_func</code></b>
+                  (<code><span title="callable">callable</span></code>, default:
+                      <code>lambda x: <span title="fit_transform">fit_transform</span>(<span title="numpy">numpy</span>())</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A function to apply to the extracted embedding tensors.
+                                Defaults to a lambda function that performs PCA to 2 components.
+                                If set to None or another non-callable, no transformation is applied.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="pandas.DataFrame">DataFrame</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>dict[str, pd.DataFrame]: A dictionary where keys are the names of the categorical variables
+                     and values are pandas DataFrames containing the (transformed) embeddings.
+                     Each DataFrame includes the original category labels.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/vote_prediction.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_embeddings</span><span class="p">(</span>
+    <span class="n">learn</span><span class="p">:</span> <span class="n">TabularLearner</span><span class="p">,</span>
+    <span class="n">transform_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="p">),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts and optionally transforms embeddings from a trained fastai TabularLearner.</span>
+
+<span class="sd">    This function iterates through the embedding layers of the model for each categorical</span>
+<span class="sd">    variable, extracts the embedding weights, and applies a transformation function</span>
+<span class="sd">    (by default, PCA to reduce to 2 dimensions).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        learn (TabularLearner): The trained fastai learner containing the model with embeddings.</span>
+<span class="sd">        transform_func (callable, optional): A function to apply to the extracted embedding tensors.</span>
+<span class="sd">                                            Defaults to a lambda function that performs PCA to 2 components.</span>
+<span class="sd">                                            If set to None or another non-callable, no transformation is applied.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, pd.DataFrame]: A dictionary where keys are the names of the categorical variables</span>
+<span class="sd">                                 and values are pandas DataFrames containing the (transformed) embeddings.</span>
+<span class="sd">                                 Each DataFrame includes the original category labels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">embeddings</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">classes</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">learn</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">classes</span><span class="p">[</span><span class="n">name</span><span class="p">])))</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">embeds</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">t</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">transform_func</span><span class="p">):</span>
+            <span class="n">emb</span> <span class="o">=</span> <span class="n">transform_func</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        <span class="n">embeddings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">emb</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">__emb_component_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">emb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># type: ignore</span>
+            <span class="p">],</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">learn</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">classes</span><span class="p">[</span><span class="n">name</span><span class="p">]})</span>
+
+    <span class="k">return</span> <span class="n">embeddings</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.vote_prediction.get_poll_proponents" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_poll_proponents</span><span class="p">(</span><span class="n">df_all_votes</span><span class="p">,</span> <span class="n">df_mandates</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Identifies the political party that most strongly supported each poll.</p>
+<p>"Strongest support" is defined as the party with the highest percentage of "yes"
+votes among its members for a given poll.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df_all_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame containing all vote records, including
+                         'poll_id', 'vote', and 'politician name'.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_mandates</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame with mandate information, linking
+                        'politician' names to their 'party'.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A DataFrame with one row per 'poll_id', indicating the
+          'strongest proponent' party for that poll.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/vote_prediction.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_poll_proponents</span><span class="p">(</span>
+    <span class="n">df_all_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_mandates</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Identifies the political party that most strongly supported each poll.</span>
+
+<span class="sd">    &quot;Strongest support&quot; is defined as the party with the highest percentage of &quot;yes&quot;</span>
+<span class="sd">    votes among its members for a given poll.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df_all_votes (pl.DataFrame): DataFrame containing all vote records, including</span>
+<span class="sd">                                     &#39;poll_id&#39;, &#39;vote&#39;, and &#39;politician name&#39;.</span>
+<span class="sd">        df_mandates (pl.DataFrame): DataFrame with mandate information, linking</span>
+<span class="sd">                                    &#39;politician&#39; names to their &#39;party&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A DataFrame with one row per &#39;poll_id&#39;, indicating the</span>
+<span class="sd">                      &#39;strongest proponent&#39; party for that poll.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">votes_slim</span> <span class="o">=</span> <span class="n">df_all_votes</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;poll_id&quot;</span><span class="p">,</span> <span class="s2">&quot;vote&quot;</span><span class="p">,</span> <span class="s2">&quot;politician name&quot;</span><span class="p">])</span>
+    <span class="n">politician_votes</span> <span class="o">=</span> <span class="n">votes_slim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">df_mandates</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;politician&quot;</span><span class="p">,</span> <span class="s2">&quot;party&quot;</span><span class="p">]),</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;politician name&quot;</span><span class="p">,</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;politician&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">poll_agreement</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">politician_votes</span><span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;poll_id&quot;</span><span class="p">,</span> <span class="s2">&quot;party&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+            <span class="n">yesses</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="n">total</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;yes %&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;yesses&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;total&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">})</span>
+    <span class="p">)</span>
+
+    <span class="n">proponents</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">poll_agreement</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;yes %&quot;</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;poll_id&quot;</span><span class="p">],</span> <span class="n">maintain_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">last</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;party&quot;</span><span class="p">:</span> <span class="s2">&quot;strongest proponent&quot;</span><span class="p">})</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">proponents</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.vote_prediction.plot_politician_embeddings" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">plot_politician_embeddings</span><span class="p">(</span><span class="n">df_all_votes</span><span class="p">,</span> <span class="n">df_mandates</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;politician name&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Visualizes politician embeddings in a 2D scatter plot.</p>
+<p>This function takes politician embeddings (typically reduced to 2 dimensions),
+joins them with mandate data to get party affiliation, and creates a scatter
+plot where each point is a politician, colored by their party.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df_all_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame containing all vote data, used to identify
+                         unique mandates.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_mandates</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame linking mandates to parties and politicians.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>embeddings</code></b>
+                  (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="polars.DataFrame">DataFrame</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>A dictionary of embedding DataFrames, with keys
+                                  like 'politician name'.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>colors</code></b>
+                  (<code><span title="plotnine.scale_color_manual">scale_color_manual</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A plotnine color scale for the plot.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;politician name&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The column name for the politician identifier in the embeddings.
+                 Defaults to "politician name".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>palette</code></b>
+                  (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>] | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A color palette dictionary to use.
+                                       Defaults to a predefined PALETTE.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ggplot</code></b>(                  <code><span title="plotnine.ggplot">ggplot</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>A plotnine ggplot object showing the politician embeddings.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/vote_prediction.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_politician_embeddings</span><span class="p">(</span>
+    <span class="n">df_all_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">df_mandates</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">embeddings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="n">scale_color_manual</span><span class="p">,</span>
+    <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;politician name&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ggplot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualizes politician embeddings in a 2D scatter plot.</span>
+
+<span class="sd">    This function takes politician embeddings (typically reduced to 2 dimensions),</span>
+<span class="sd">    joins them with mandate data to get party affiliation, and creates a scatter</span>
+<span class="sd">    plot where each point is a politician, colored by their party.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df_all_votes (pl.DataFrame): DataFrame containing all vote data, used to identify</span>
+<span class="sd">                                     unique mandates.</span>
+<span class="sd">        df_mandates (pl.DataFrame): DataFrame linking mandates to parties and politicians.</span>
+<span class="sd">        embeddings (dict[str, pl.DataFrame]): A dictionary of embedding DataFrames, with keys</span>
+<span class="sd">                                              like &#39;politician name&#39;.</span>
+<span class="sd">        colors (scale_color_manual): A plotnine color scale for the plot.</span>
+<span class="sd">        col (str, optional): The column name for the politician identifier in the embeddings.</span>
+<span class="sd">                             Defaults to &quot;politician name&quot;.</span>
+<span class="sd">        palette (dict[str, str] | None, optional): A color palette dictionary to use.</span>
+<span class="sd">                                                   Defaults to a predefined PALETTE.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ggplot: A plotnine ggplot object showing the politician embeddings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df_all_votes</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;mandate_id&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">df_mandates</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;mandate_id&quot;</span><span class="p">,</span> <span class="s2">&quot;party&quot;</span><span class="p">]),</span>
+            <span class="n">on</span><span class="o">=</span><span class="s2">&quot;mandate_id&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">embeddings</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">palette</span> <span class="o">=</span> <span class="n">PALETTE</span> <span class="k">if</span> <span class="n">palette</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">palette</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">__emb_component_0&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">__emb_component_1&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">ggplot</span><span class="p">(</span>
+            <span class="n">tmp</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;party&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">geom_point</span><span class="p">()</span>
+        <span class="o">+</span> <span class="n">labs</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Mandate embeddings&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s2">&quot;PCA dim #0&quot;</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PCA dim #1&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">colors</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.vote_prediction.plot_poll_embeddings" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">plot_poll_embeddings</span><span class="p">(</span><span class="n">df_all_votes</span><span class="p">,</span> <span class="n">df_polls</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">df_mandates</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;poll_id&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Visualizes poll embeddings in a 2D scatter plot.</p>
+<p>This function takes poll embeddings (typically reduced to 2 dimensions via PCA),
+joins them with poll metadata (like title and strongest proponent party), and
+creates a scatter plot where each point is a poll, colored by the party that
+most strongly supported it.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df_all_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame containing all vote data to determine proponents.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_polls</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame with poll metadata, including 'poll_title'.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>embeddings</code></b>
+                  (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="polars.DataFrame">DataFrame</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>A dictionary of embedding DataFrames, where the key
+                                  is the name of the embedded feature (e.g., 'poll_id').</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_mandates</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame with mandate data to link politicians to parties.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>colors</code></b>
+                  (<code><span title="plotnine.scale_color_manual">scale_color_manual</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A plotnine color scale for coloring the points by party.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;poll_id&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The name of the column containing the poll identifiers.
+                 Defaults to "poll_id".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ggplot</code></b>(                  <code><span title="plotnine.ggplot">ggplot</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>A plotnine ggplot object representing the scatter plot of poll embeddings.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/vote_prediction.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_poll_embeddings</span><span class="p">(</span>
+    <span class="n">df_all_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">df_polls</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">embeddings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">df_mandates</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="n">scale_color_manual</span><span class="p">,</span>
+    <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;poll_id&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ggplot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualizes poll embeddings in a 2D scatter plot.</span>
+
+<span class="sd">    This function takes poll embeddings (typically reduced to 2 dimensions via PCA),</span>
+<span class="sd">    joins them with poll metadata (like title and strongest proponent party), and</span>
+<span class="sd">    creates a scatter plot where each point is a poll, colored by the party that</span>
+<span class="sd">    most strongly supported it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df_all_votes (pl.DataFrame): DataFrame containing all vote data to determine proponents.</span>
+<span class="sd">        df_polls (pl.DataFrame): DataFrame with poll metadata, including &#39;poll_title&#39;.</span>
+<span class="sd">        embeddings (dict[str, pl.DataFrame]): A dictionary of embedding DataFrames, where the key</span>
+<span class="sd">                                              is the name of the embedded feature (e.g., &#39;poll_id&#39;).</span>
+<span class="sd">        df_mandates (pl.DataFrame): DataFrame with mandate data to link politicians to parties.</span>
+<span class="sd">        colors (scale_color_manual): A plotnine color scale for coloring the points by party.</span>
+<span class="sd">        col (str, optional): The name of the column containing the poll identifiers.</span>
+<span class="sd">                             Defaults to &quot;poll_id&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ggplot: A plotnine ggplot object representing the scatter plot of poll embeddings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df_all_votes</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">df_polls</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;poll_title&quot;</span><span class="p">]),</span>
+            <span class="n">on</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">embeddings</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">proponents</span> <span class="o">=</span> <span class="n">get_poll_proponents</span><span class="p">(</span><span class="n">df_all_votes</span><span class="p">,</span> <span class="n">df_mandates</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proponents</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;strongest proponent&quot;</span><span class="p">]),</span> <span class="n">on</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">__emb_component_0&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">__emb_component_1&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">ggplot</span><span class="p">(</span>
+            <span class="n">tmp</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;strongest proponent&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">geom_point</span><span class="p">()</span>
+        <span class="o">+</span> <span class="n">labs</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Poll embeddings&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s2">&quot;PCA dim #0&quot;</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PCA dim #1&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">colors</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.vote_prediction.plot_predictions" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">plot_predictions</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="n">df_all_votes</span><span class="p">,</span> <span class="n">df_mandates</span><span class="p">,</span> <span class="n">df_polls</span><span class="p">,</span> <span class="n">splits</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s1">&#39;vote&#39;</span><span class="p">,</span> <span class="n">n_worst_politicians</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_worst_polls</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Analyzes and displays the model's prediction performance.</p>
+<p>This function performs several analyses on the validation set predictions:
+1. Calculates and logs the overall accuracy.
+2. Creates a confusion matrix (though it's not explicitly displayed, the data is prepared).
+3. Identifies and displays the politicians whose votes were most inaccurately predicted.
+4. Identifies and displays the polls that were most inaccurately predicted.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>learn</code></b>
+                  (<code><span title="fastai.tabular.all.TabularLearner">TabularLearner</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The trained fastai learner.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_all_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The complete DataFrame of all votes.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_mandates</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing mandate and politician information.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df_polls</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing poll information.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>splits</code></b>
+                  (<code><span title="tuple">tuple</span>[<span title="list">list</span>[<span title="int">int</span>], <span title="list">list</span>[<span title="int">int</span>]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>The train/validation splits of indices.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y_col</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;vote&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The name of the target variable column. Defaults to "vote".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>n_worst_politicians</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>20</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The number of most inaccurately predicted politicians to display. Defaults to 20.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>n_worst_polls</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>5</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The number of most inaccurately predicted polls to display. Defaults to 5.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/vote_prediction.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_predictions</span><span class="p">(</span>
+    <span class="n">learn</span><span class="p">:</span> <span class="n">TabularLearner</span><span class="p">,</span>
+    <span class="n">df_all_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">df_mandates</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">df_polls</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">splits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+    <span class="n">y_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;vote&quot;</span><span class="p">,</span>
+    <span class="n">n_worst_politicians</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="n">n_worst_polls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyzes and displays the model&#39;s prediction performance.</span>
+
+<span class="sd">    This function performs several analyses on the validation set predictions:</span>
+<span class="sd">    1. Calculates and logs the overall accuracy.</span>
+<span class="sd">    2. Creates a confusion matrix (though it&#39;s not explicitly displayed, the data is prepared).</span>
+<span class="sd">    3. Identifies and displays the politicians whose votes were most inaccurately predicted.</span>
+<span class="sd">    4. Identifies and displays the polls that were most inaccurately predicted.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        learn (TabularLearner): The trained fastai learner.</span>
+<span class="sd">        df_all_votes (pl.DataFrame): The complete DataFrame of all votes.</span>
+<span class="sd">        df_mandates (pl.DataFrame): The DataFrame containing mandate and politician information.</span>
+<span class="sd">        df_polls (pl.DataFrame): The DataFrame containing poll information.</span>
+<span class="sd">        splits (tuple[list[int], list[int]]): The train/validation splits of indices.</span>
+<span class="sd">        y_col (str, optional): The name of the target variable column. Defaults to &quot;vote&quot;.</span>
+<span class="sd">        n_worst_politicians (int, optional): The number of most inaccurately predicted politicians to display. Defaults to 20.</span>
+<span class="sd">        n_worst_polls (int, optional): The number of most inaccurately predicted polls to display. Defaults to 5.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+
+    <span class="n">y_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">()</span>
+    <span class="n">make_numpy</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">make_numpy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+
+    <span class="n">make_pred_readable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">learn</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+
+    <span class="n">pred_col</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y_col</span><span class="si">}</span><span class="s2">_pred&quot;</span>
+    <span class="n">df_all_votes</span> <span class="o">=</span> <span class="n">df_all_votes</span><span class="o">.</span><span class="n">with_row_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+    <span class="n">y_pred_reabale</span> <span class="o">=</span> <span class="n">make_pred_readable</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+
+    <span class="n">df_valid</span> <span class="o">=</span> <span class="n">df_all_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))</span>
+
+    <span class="n">df_valid</span> <span class="o">=</span> <span class="n">df_valid</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">pred_col</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y_pred_reabale</span><span class="p">)})</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="n">df_valid</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">y_col</span><span class="p">,</span> <span class="n">pred_col</span><span class="p">])</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">y_col</span><span class="p">,</span>
+        <span class="n">on</span><span class="o">=</span><span class="n">pred_col</span><span class="p">,</span>
+        <span class="n">aggregate_function</span><span class="o">=</span><span class="s2">&quot;len&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">fill_null</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="n">df_valid</span> <span class="o">=</span> <span class="n">df_valid</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote_pred&quot;</span><span class="p">)}</span>
+    <span class="p">)</span>
+
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">df_valid</span><span class="p">[</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_valid</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overall accuracy = </span><span class="si">{</span><span class="n">acc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> %&quot;</span><span class="p">)</span>
+
+    <span class="n">df_valid</span> <span class="o">=</span> <span class="n">df_valid</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">df_mandates</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;politician&quot;</span><span class="p">,</span> <span class="s2">&quot;party&quot;</span><span class="p">]),</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;politician name&quot;</span><span class="p">,</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;politician&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_polls</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;poll_id&quot;</span><span class="p">,</span> <span class="s2">&quot;poll_title&quot;</span><span class="p">]),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;poll_id&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">n_worst_politicians</span><span class="si">}</span><span class="s2"> most inaccurately predicted politicians:&quot;</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df_valid</span><span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;politician name&quot;</span><span class="p">,</span> <span class="s2">&quot;party&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span>
+        <span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n_worst_politicians</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">n_worst_polls</span><span class="si">}</span><span class="s2"> most inaccurately predicted polls:&quot;</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df_valid</span><span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;poll_id&quot;</span><span class="p">,</span> <span class="s2">&quot;poll_title&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span>
+        <span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;prediction_correct&quot;</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n_worst_polls</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.vote_prediction.poll_splitter" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">poll_splitter</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">poll_col</span><span class="o">=</span><span class="s1">&#39;poll_id&#39;</span><span class="p">,</span> <span class="n">valid_pct</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Splits the DataFrame into training and validation sets based on poll IDs.</p>
+<p>This function ensures that all votes for a given poll are in the same set (either training or validation),
+preventing data leakage between the sets.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame to be split.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>poll_col</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;poll_id&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The name of the column containing poll IDs. Defaults to "poll_id".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>valid_pct</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.2</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The fraction of polls to be used for the validation set. Defaults to 0.2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>shuffle</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Whether to shuffle the indices within the train and validation sets. Defaults to True.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>seed</code></b>
+                  (<code><span title="int">int</span> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A seed for the random number generator for reproducibility. Defaults to None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="tuple">tuple</span>[<span title="list">list</span>[<span title="int">int</span>], <span title="list">list</span>[<span title="int">int</span>]]</code>
+              –
+              <div class="doc-md-description">
+                <p>tuple[list[int], list[int]]: A tuple containing two lists of indices: the first for the training set,
+                         and the second for the validation set.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/vote_prediction.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">poll_splitter</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">poll_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;poll_id&quot;</span><span class="p">,</span>
+    <span class="n">valid_pct</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Splits the DataFrame into training and validation sets based on poll IDs.</span>
+
+<span class="sd">    This function ensures that all votes for a given poll are in the same set (either training or validation),</span>
+<span class="sd">    preventing data leakage between the sets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame to be split.</span>
+<span class="sd">        poll_col (str, optional): The name of the column containing poll IDs. Defaults to &quot;poll_id&quot;.</span>
+<span class="sd">        valid_pct (float, optional): The fraction of polls to be used for the validation set. Defaults to 0.2.</span>
+<span class="sd">        shuffle (bool, optional): Whether to shuffle the indices within the train and validation sets. Defaults to True.</span>
+<span class="sd">        seed (int | None, optional): A seed for the random number generator for reproducibility. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[list[int], list[int]]: A tuple containing two lists of indices: the first for the training set,</span>
+<span class="sd">                                     and the second for the validation set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">polls</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">poll_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">polls</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="n">polls1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">polls</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">valid_pct</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Splitting votes by polls (num train = </span><span class="si">{</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">polls1</span><span class="p">)</span><span class="si">}</span><span class="s2">, num valid = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">polls1</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="s2">&quot;is validation set&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">poll_col</span><span class="p">)</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">polls1</span><span class="p">))}</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">with_row_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+
+    <span class="n">ix0</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;is validation set&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">())[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+    <span class="n">ix1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;is validation set&quot;</span><span class="p">))[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">ix0</span><span class="p">)</span>
+        <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">ix1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">ix0</span><span class="p">,</span> <span class="n">ix1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../similarity/" class="btn btn-neutral float-left" title="similarity"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../gui/" class="btn btn-neutral float-right" title="gui">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../similarity/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../gui/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

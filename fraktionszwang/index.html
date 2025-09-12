@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/fraktionszwang/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Fraktionszwang - bundestag</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Fraktionszwang";
+        var mkdocs_page_input_path = "fraktionszwang.md";
+        var mkdocs_page_url = "/bundestag/fraktionszwang/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Fraktionszwang</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#tldr">TL;DR</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#bundestag-sheet-data">Bundestag sheet data</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#collect-data">Collect data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clean-the-data">Clean the data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#plot-metrics-over-time">Plot metrics over time</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#abgeordnetenwatchde-data">Abgeordnetenwatch.de data</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#collect-data_1">Collect data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clean-the-data_1">Clean the data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#plot-metrics-over-time_1">Plot metrics over time</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Analysis</li>
+      <li class="breadcrumb-item active">Fraktionszwang</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/fraktionszwang.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="inspection-roll-call-votes-namentliche-abstimmungen-data-for-fraktionszwang">Inspection roll call votes / namentliche Abstimmungen data for "Fraktionszwang"</h1>
+<blockquote>
+<p>Get insight into <a href="https://de.wikipedia.org/wiki/Fraktionsdisziplin">"Fraktionszwang"</a> using voting behavior data from the bundestag and abgeordnetenwatch.</p>
+</blockquote>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li>Measured diversity of votes by party using entropy.</li>
+<li>All parties have their members largely voting along party line, but not deviation is the norm. The only group voting close to radically random is those of the factionless.</li>
+</ul>
+<h2 id="setup">Setup</h2>
+<p>Fraktionszwang should become evident by how diverse the votes are by one party across different polls.</p>
+<p>To collect data, if not already present in <code>../data/preprocessed</code> run</p>
+<pre><code>uv run bundestag download huggingface
+</code></pre>
+<pre><code class="language-python">%load_ext autoreload
+%autoreload 2
+</code></pre>
+<pre><code class="language-python">import polars as pl
+from plotnine import (
+    ggplot,
+    aes,
+    geom_point,
+    labs,
+    scale_y_continuous,
+    facet_wrap,
+    theme,
+    geom_line,
+    scale_color_manual,
+)
+import os
+from pathlib import Path
+from bundestag.fine_logging import setup_logging
+import logging
+from bundestag.paths import get_paths
+import math
+from bundestag.data.transform.abgeordnetenwatch.transform import (
+    get_polls_parquet_path,
+    get_votes_parquet_path,
+    get_mandates_parquet_path,
+)
+
+logger = logging.getLogger(__name__)
+
+
+def plot_poll_counts_over_time(df: pl.dataframe, x: str, y: str) -&gt; ggplot:
+    return (
+        ggplot(df, aes(&quot;date&quot;, &quot;n&quot;))
+        + geom_point()
+        + labs(title=&quot;# polls per day over time&quot;, x=&quot;Date&quot;, y=&quot;# unique polls&quot;)
+        + scale_y_continuous(breaks=[0, 2, 4, 6, 8, 10])
+    )
+
+
+def plot_voting_members_per_poll_over_time(
+    df: pl.DataFrame, x: str, poll: str, member: str
+) -&gt; ggplot:
+    members_per_poll_per_day_over_time = df.group_by([x, poll]).agg(
+        pl.col(member).n_unique().alias(&quot;n&quot;)
+    )
+    return (
+        ggplot(members_per_poll_per_day_over_time, aes(x, &quot;n&quot;))
+        + geom_point()
+        + labs(
+            title=&quot;# Members voting per poll per day over time&quot;, x=&quot;Date&quot;, y=&quot;# members&quot;
+        )
+    )
+
+
+def compute_vote_shares(
+    df: pl.DataFrame, x: str, poll: str, party: str, vote: str, member: str
+) -&gt; pl.DataFrame:
+    member_votes_per_faction_per_poll_per_day_over_time = (
+        df.group_by([x, poll, party, vote])
+        .agg(pl.col(member).n_unique().alias(&quot;n&quot;))
+        .sort(x, poll, party, vote)
+    )
+    return member_votes_per_faction_per_poll_per_day_over_time.with_columns(
+        (pl.col(&quot;n&quot;) / pl.sum(&quot;n&quot;).over([x, poll, party])).alias(&quot;vote share&quot;)
+    )
+
+
+def plot_voting_shares_over_time(
+    df: pl.DataFrame, x: str, party: str, colors: scale_color_manual
+) -&gt; ggplot:
+    return (
+        ggplot(
+            df,
+            aes(x, &quot;vote share&quot;, color=&quot;vote&quot;),
+        )
+        + geom_point(alpha=0.3)
+        + labs(
+            title=&quot;Voting shares per poll per day over time&quot;,
+            x=&quot;Date&quot;,
+            y=&quot;Vote fraction&quot;,
+        )
+        + facet_wrap(party, ncol=1)
+        + scale_y_continuous(limits=(0, 1), breaks=[0, 0.25, 0.5, 0.75, 1.0])
+        + theme(figure_size=(10, 16), subplots_adjust={&quot;hspace&quot;: 0.35})
+        + colors
+    )
+
+
+def get_max_entropy(df: pl.DataFrame, col: str) -&gt; float:
+    return -math.log2(1 / df[col].n_unique())
+
+
+def compute_entropies(
+    df: pl.DataFrame, t: str, poll: str, party: str, vote: str
+) -&gt; pl.DataFrame:
+    max_entropy = get_max_entropy(df, vote)
+    return (
+        df.with_columns(**{&quot;log p&quot;: pl.col(&quot;vote share&quot;).log(base=2)})
+        .group_by([t, poll, party])
+        .agg(
+            **{
+                &quot;shannon entropy&quot;: -pl.when(pl.col(&quot;vote share&quot;) &gt; 0)
+                .then(pl.col(&quot;vote share&quot;) * pl.col(&quot;log p&quot;))
+                .otherwise(0)
+                .sum()
+            }
+        )
+        .with_columns(
+            **{
+                &quot;share of max shannon entropy [%]&quot;: pl.col(&quot;shannon entropy&quot;)
+                / max_entropy
+            }
+        )
+    )
+
+
+def compute_rolling_median(
+    df: pl.DataFrame,
+    n: int,
+    x: str,
+    party: str,
+    y: str = &quot;share of max shannon entropy [%]&quot;,
+) -&gt; pl.DataFrame:
+    return df.sort(x).with_columns(
+        pl.col(y).rolling_median(window_size=n).over(party).alias(&quot;rolling_median&quot;)
+    )
+
+
+def plot_entropy_over_time(
+    df: pl.DataFrame,
+    party_colors: scale_color_manual,
+    x: str = &quot;date&quot;,
+    y: str = &quot;share of max shannon entropy [%]&quot;,
+    color: str = &quot;party&quot;,
+) -&gt; ggplot:
+    return (
+        ggplot(df, aes(x, y, color=color))
+        + geom_point(alpha=0.3)
+        + labs(
+            title=&quot;Voting entropy per poll per day over time&quot;,
+            x=&quot;Date&quot;,
+            y=&quot;Shannon entropy (smaller = more Fraktionszwang)&quot;,
+        )
+        + facet_wrap(color, ncol=1)
+        + theme(figure_size=(10, 16), subplots_adjust={&quot;hspace&quot;: 0.35})
+        + party_colors
+        + scale_y_continuous(labels=lambda v: [f&quot;{x * 100:.0f}%&quot; for x in v])
+    )
+
+
+def plot_rolling_entropy_over_time(
+    df: pl.DataFrame,
+    party_colors: scale_color_manual,
+    n_polls_to_average: int,
+    x: str = &quot;date&quot;,
+    y: str = &quot;rolling_median&quot;,
+    color: str = &quot;party&quot;,
+) -&gt; ggplot:
+    return (
+        ggplot(df, aes(x=x, color=color))
+        + geom_line(aes(y=y))
+        + labs(
+            title=f&quot;Relative voting entropy per poll per day over time with rolling median (n={n_polls_to_average})&quot;,
+            x=&quot;Date&quot;,
+            y=&quot;Share of Shannon entropy relative to maximum (smaller = more Fraktionszwang)&quot;,
+        )
+        + theme(figure_size=(8, 6), subplots_adjust={&quot;hspace&quot;: 0.35})
+        + party_colors
+        + scale_y_continuous(
+            labels=lambda v: [f&quot;{x * 100:.0f}%&quot; for x in v], limits=(0, 1)
+        )
+    )
+
+
+# if this notebook is run via `make docs` then the environment variable is set
+makedocs = os.getenv(&quot;MAKEDOCS&quot;) is not None
+logger.info(f&quot;Running nb with {makedocs=}&quot;)
+</code></pre>
+<pre><code class="language-python">setup_logging(logging.INFO)
+
+_fig_path = Path(&quot;./images&quot;)
+paths = get_paths(&quot;../data&quot;)
+paths
+</code></pre>
+<h2 id="bundestag-sheet-data">Bundestag sheet data</h2>
+<h3 id="collect-data">Collect data</h3>
+<pre><code class="language-python">file = paths.preprocessed_bundestag / &quot;bundestag.de_votes.parquet&quot;
+file
+</code></pre>
+<pre><code class="language-python">data_bundestag = pl.read_parquet(file)
+
+data_bundestag.head()
+</code></pre>
+<h3 id="clean-the-data">Clean the data</h3>
+<p>Use a single name for "Die Linke"</p>
+<pre><code class="language-python">data_bundestag[&quot;Fraktion/Gruppe&quot;].value_counts()
+</code></pre>
+<pre><code class="language-python">data_bundestag = data_bundestag.with_columns(
+    **{
+        &quot;Fraktion/Gruppe&quot;: pl.when(pl.col(&quot;Fraktion/Gruppe&quot;).eq(pl.lit(&quot;DIE LINKE.&quot;)))
+        .then(pl.lit(&quot;Die Linke&quot;))
+        .otherwise(pl.col(&quot;Fraktion/Gruppe&quot;))
+    }
+)
+</code></pre>
+<pre><code class="language-python">data_bundestag[&quot;Fraktion/Gruppe&quot;].value_counts()
+</code></pre>
+<h3 id="plot-metrics-over-time">Plot metrics over time</h3>
+<p>How many things are voted on per day over time?</p>
+<pre><code class="language-python">things_per_day_over_time = data_bundestag.group_by(&quot;date&quot;).agg(
+    pl.col(&quot;Abstimmnr&quot;).n_unique().alias(&quot;n&quot;)
+)
+things_per_day_over_time.head()
+</code></pre>
+<pre><code class="language-python">p = plot_poll_counts_over_time(things_per_day_over_time, &quot;date&quot;, &quot;n&quot;)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;bundestag_sheets_polls_over_time.png&quot;)
+</code></pre>
+<p>How many members vote per poll over time?</p>
+<pre><code class="language-python">p = plot_voting_members_per_poll_over_time(
+    data_bundestag, &quot;date&quot;, &quot;Abstimmnr&quot;, &quot;Bezeichnung&quot;
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;bundestag_sheets_members_per_poll_over_time.png&quot;)
+</code></pre>
+<p>Count of vote types by date, poll and party over time.</p>
+<pre><code class="language-python">member_votes_per_faction_per_poll_per_day_over_time = compute_vote_shares(
+    data_bundestag, &quot;date&quot;, &quot;Abstimmnr&quot;, &quot;Fraktion/Gruppe&quot;, &quot;vote&quot;, &quot;Bezeichnung&quot;
+)
+</code></pre>
+<pre><code class="language-python">member_votes_per_faction_per_poll_per_day_over_time.head()
+</code></pre>
+<pre><code class="language-python">colors = scale_color_manual(
+    breaks=[&quot;ja&quot;, &quot;nein&quot;, &quot;nichtabgegeben&quot;, &quot;Enthaltung&quot;],
+    values=[&quot;green&quot;, &quot;red&quot;, &quot;grey&quot;, &quot;orange&quot;],
+)
+p = plot_voting_shares_over_time(
+    member_votes_per_faction_per_poll_per_day_over_time,
+    &quot;date&quot;,
+    &quot;Fraktion/Gruppe&quot;,
+    colors,
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;bundestag_sheets_voting_shares_over_time.png&quot;)
+</code></pre>
+<pre><code class="language-python">entropy_per_poll_faction = compute_entropies(
+    member_votes_per_faction_per_poll_per_day_over_time,
+    &quot;date&quot;,
+    &quot;Abstimmnr&quot;,
+    &quot;Fraktion/Gruppe&quot;,
+    &quot;vote&quot;,
+)
+entropy_per_poll_faction.head(2)
+</code></pre>
+<pre><code class="language-python">party_colors = scale_color_manual(
+    breaks=[
+        &quot;AfD&quot;,
+        &quot;BSW&quot;,
+        &quot;BÜ90/GR&quot;,
+        &quot;CDU/CSU&quot;,
+        &quot;Die Linke&quot;,
+        &quot;FDP&quot;,
+        &quot;Fraktionslos&quot;,
+        &quot;SPD&quot;,
+    ],
+    values=[&quot;blue&quot;, &quot;purple&quot;, &quot;green&quot;, &quot;black&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;grey&quot;, &quot;salmon&quot;],
+)
+p = plot_entropy_over_time(
+    entropy_per_poll_faction, party_colors, x=&quot;date&quot;, color=&quot;Fraktion/Gruppe&quot;
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;bundestag_sheets_voting_entropy_over_time.png&quot;)
+</code></pre>
+<p>Now we compute the rolling median of <code>shannon entropy</code> over <code>n_polls_to_average</code> polls for each <code>Fraktion/Gruppe</code>.</p>
+<pre><code class="language-python">n_polls_to_average = 30
+entropy_per_poll_faction = compute_rolling_median(
+    entropy_per_poll_faction, n_polls_to_average, &quot;date&quot;, &quot;Fraktion/Gruppe&quot;
+)
+entropy_per_poll_faction.head()
+</code></pre>
+<p>Now let's plot the original <code>shannon entropy</code> and the <code>shannon_entropy_rolling_median</code> to see the effect of the rolling median.</p>
+<pre><code class="language-python">p = plot_rolling_entropy_over_time(
+    entropy_per_poll_faction,
+    party_colors,
+    n_polls_to_average,
+    &quot;date&quot;,
+    color=&quot;Fraktion/Gruppe&quot;,
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;bundestag_sheets_rolling_voting_entropy_over_time.png&quot;)
+</code></pre>
+<h2 id="abgeordnetenwatchde-data">Abgeordnetenwatch.de data</h2>
+<h3 id="collect-data_1">Collect data</h3>
+<p>First, collect data for the individual legislative periods</p>
+<pre><code class="language-python">legislature_ids = [67, 83, 97, 111, 132, 161]
+</code></pre>
+<pre><code class="language-python">tmp = []
+for legislature_id in legislature_ids:
+    p = get_polls_parquet_path(legislature_id, paths.preprocessed_abgeordnetenwatch)
+    if not p.exists():
+        continue
+    _mandates = pl.read_parquet(p)
+    _mandates = _mandates.with_columns(**{&quot;legislature_id&quot;: legislature_id})
+    tmp.append(_mandates)
+
+polls = pl.concat(tmp, how=&quot;diagonal_relaxed&quot;)
+polls.head(2), polls.tail(2)
+</code></pre>
+<pre><code class="language-python">tmp = []
+for legislature_id in legislature_ids:
+    p = get_votes_parquet_path(legislature_id, paths.preprocessed_abgeordnetenwatch)
+    if not p.exists():
+        continue
+    _mandates = pl.read_parquet(p)
+    _mandates = _mandates.with_columns(**{&quot;legislature_id&quot;: legislature_id})
+    tmp.append(_mandates)
+
+votes = pl.concat(tmp, how=&quot;diagonal_relaxed&quot;)
+votes.head(2), votes.tail(2)
+</code></pre>
+<pre><code class="language-python">tmp = []
+for legislature_id in legislature_ids:
+    p = get_mandates_parquet_path(legislature_id, paths.preprocessed_abgeordnetenwatch)
+    if not p.exists():
+        continue
+    _mandates = pl.read_parquet(p)
+    print(len(_mandates))
+    _mandates = _mandates.with_columns(**{&quot;legislature_id&quot;: legislature_id})
+    tmp.append(_mandates)
+
+mandates = pl.concat(tmp, how=&quot;diagonal_relaxed&quot;)
+mandates.head(2), mandates.tail(2)
+</code></pre>
+<pre><code class="language-python">data_abgeordnetenwatch = polls.join(
+    votes, on=[&quot;legislature_id&quot;, &quot;poll_id&quot;], how=&quot;left&quot;
+).join(mandates, on=[&quot;legislature_id&quot;, &quot;mandate_id&quot;], how=&quot;left&quot;)
+</code></pre>
+<pre><code class="language-python">data_abgeordnetenwatch = data_abgeordnetenwatch.with_columns(
+    **{&quot;date&quot;: pl.col(&quot;poll_date&quot;).str.to_date(format=&quot;%Y-%m-%d&quot;)}
+)
+</code></pre>
+<pre><code class="language-python">with pl.Config(tbl_rows=15):
+    display(data_abgeordnetenwatch[&quot;party&quot;].value_counts(sort=True))
+</code></pre>
+<h3 id="clean-the-data_1">Clean the data</h3>
+<pre><code class="language-python">data_abgeordnetenwatch = data_abgeordnetenwatch.with_columns(
+    **{
+        &quot;party&quot;: pl.when(
+            pl.col(&quot;party&quot;).is_in(pl.lit([&quot;DIE LINKE&quot;, &quot;Die Linke. (Gruppe)&quot;]))
+        )
+        .then(pl.lit(&quot;Die Linke&quot;))
+        .otherwise(pl.col(&quot;party&quot;))
+    }
+).with_columns(
+    **{
+        &quot;party&quot;: pl.when(pl.col(&quot;party&quot;).is_in(pl.lit([&quot;DIE GRÜNEN&quot;])))
+        .then(pl.lit(&quot;BÜNDNIS 90/DIE GRÜNEN&quot;))
+        .otherwise(pl.col(&quot;party&quot;))
+    }
+)
+</code></pre>
+<pre><code class="language-python">with pl.Config(tbl_rows=15):
+    display(data_abgeordnetenwatch[&quot;party&quot;].value_counts(sort=True))
+</code></pre>
+<pre><code class="language-python">data_abgeordnetenwatch.filter(pl.col(&quot;party&quot;).is_null()).group_by(&quot;legislature_id&quot;).agg(
+    **{&quot;mandates&quot;: pl.col(&quot;mandate_id&quot;).n_unique()}
+)
+</code></pre>
+<h3 id="plot-metrics-over-time_1">Plot metrics over time</h3>
+<pre><code class="language-python">things_per_day_over_time = data_abgeordnetenwatch.group_by(&quot;date&quot;).agg(
+    pl.col(&quot;poll_id&quot;).n_unique().alias(&quot;n&quot;)
+)
+things_per_day_over_time.head()
+</code></pre>
+<pre><code class="language-python">p = plot_poll_counts_over_time(things_per_day_over_time, &quot;date&quot;, &quot;n&quot;)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;abgeordnetenwatch_polls_over_time.png&quot;)
+</code></pre>
+<pre><code class="language-python">p = plot_voting_members_per_poll_over_time(
+    data_abgeordnetenwatch, &quot;date&quot;, &quot;poll_id&quot;, &quot;mandate_id&quot;
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;abgeordnetenwatch_members_per_poll_over_time.png&quot;)
+</code></pre>
+<pre><code class="language-python">member_votes_per_faction_per_poll_per_day_over_time = compute_vote_shares(
+    data_abgeordnetenwatch, &quot;date&quot;, &quot;poll_id&quot;, &quot;party&quot;, &quot;vote&quot;, &quot;mandate_id&quot;
+)
+</code></pre>
+<pre><code class="language-python">colors = scale_color_manual(
+    breaks=[&quot;yes&quot;, &quot;no&quot;, &quot;no_show&quot;, &quot;abstain&quot;],
+    values=[&quot;green&quot;, &quot;red&quot;, &quot;grey&quot;, &quot;orange&quot;],
+)
+p = plot_voting_shares_over_time(
+    member_votes_per_faction_per_poll_per_day_over_time, &quot;date&quot;, &quot;party&quot;, colors
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;abgeordnetenwatch_voting_shares_over_time.png&quot;)
+</code></pre>
+<pre><code class="language-python">entropy_per_poll_faction = compute_entropies(
+    member_votes_per_faction_per_poll_per_day_over_time,
+    &quot;date&quot;,
+    &quot;poll_id&quot;,
+    &quot;party&quot;,
+    &quot;vote&quot;,
+)
+entropy_per_poll_faction.head()
+</code></pre>
+<pre><code class="language-python">party_colors = scale_color_manual(
+    breaks=[
+        &quot;AfD&quot;,
+        &quot;BSW (Gruppe)&quot;,
+        &quot;BÜNDNIS 90/DIE GRÜNEN&quot;,
+        &quot;CDU/CSU&quot;,
+        &quot;Die Linke&quot;,
+        &quot;FDP&quot;,
+        &quot;fraktionslos&quot;,
+        &quot;SPD&quot;,
+    ],
+    values=[&quot;blue&quot;, &quot;purple&quot;, &quot;green&quot;, &quot;black&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;grey&quot;, &quot;salmon&quot;],
+)
+p = plot_entropy_over_time(entropy_per_poll_faction, party_colors)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;abgeordnetenwatch_voting_entropy_over_time.png&quot;)
+</code></pre>
+<pre><code class="language-python">n_polls_to_average = 30
+entropy_per_poll_faction = compute_rolling_median(
+    entropy_per_poll_faction,
+    n_polls_to_average,
+    &quot;date&quot;,
+    &quot;party&quot;,
+    y=&quot;share of max shannon entropy [%]&quot;,
+)
+</code></pre>
+<pre><code class="language-python">p = plot_rolling_entropy_over_time(
+    entropy_per_poll_faction.filter(pl.col(&quot;party&quot;).is_not_null()),
+    party_colors,
+    n_polls_to_average,
+)
+p.show()
+if makedocs:
+    p.save(_fig_path / &quot;abgeordnetenwatch_rolling_voting_entropy_over_time.png&quot;)
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../analysis-highlights/" class="btn btn-neutral float-left" title="Embeddings"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../bundestag/cli/__main__/" class="btn btn-neutral float-right" title="__main__">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../analysis-highlights/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../bundestag/cli/__main__/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

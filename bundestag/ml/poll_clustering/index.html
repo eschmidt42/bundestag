@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/ml/poll_clustering/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>poll_clustering - bundestag</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "poll_clustering";
+        var mkdocs_page_input_path = "bundestag/ml/poll_clustering.md";
+        var mkdocs_page_url = "/bundestag/bundestag/ml/poll_clustering/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >ml</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">poll_clustering</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+          <li class="breadcrumb-item">ml</li>
+      <li class="breadcrumb-item active">poll_clustering</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/ml/poll_clustering.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.ml.poll_clustering"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bundestag.ml.poll_clustering.SpacyTransformer" class="doc doc-heading">
+            <code>SpacyTransformer</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>A transformer class for cleaning text and fitting/applying a gensim LDA model.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SpacyTransformer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A transformer class for cleaning text and fitting/applying a gensim LDA model.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;de_core_news_sm&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the transformer by loading a spaCy language model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            language (str, optional): The name of the spaCy language model to load. Defaults to &quot;de_core_news_sm&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">model_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs basic preprocessing required for gensim models.</span>
+
+<span class="sd">        This method creates a gensim dictionary and a bag-of-words corpus from the documents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            documents (list[list[str]]): A list of documents, where each document is a list of tokens.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Performing basic model preprocessing steps&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">corpora</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_lda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">num_topics</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fits a Latent Dirichlet Allocation (LDA) model to the documents.</span>
+
+<span class="sd">        This method first performs preprocessing and then fits the LDA model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            documents (list[list[str]]): A list of documents, where each document is a list of tokens.</span>
+<span class="sd">            num_topics (int, optional): The number of topics for the LDA model. Defaults to 10.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_preprocessing</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fitting LDA topics for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">LdaMulticore</span><span class="p">(</span>
+            <span class="n">corpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="n">id2word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lda_topics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">i</span><span class="p">:</span> <span class="n">descr</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">descr</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span><span class="o">.</span><span class="n">print_topics</span><span class="p">(</span><span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform_documents</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms documents into a dense matrix of LDA topic scores.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            documents (pl.DataFrame): A DataFrame containing the documents to be transformed.</span>
+<span class="sd">            col (str): The name of the column containing the tokenized documents.</span>
+<span class="sd">            label (str, optional): A prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame: A new DataFrame with columns for each topic&#39;s score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transforming `documents` to a dense real matrix&quot;</span><span class="p">)</span>
+        <span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span><span class="p">[</span><span class="n">corpus</span><span class="p">])</span>
+        <span class="n">dense</span> <span class="o">=</span> <span class="n">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">return</span> <span class="n">documents</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_dim</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dense</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;poll_title_nlp_processed&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span><span class="p">,</span>
+        <span class="n">return_new_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies the fitted LDA model to a DataFrame to get topic scores.</span>
+
+<span class="sd">        This method joins the topic scores back to the original DataFrame.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pl.DataFrame): The DataFrame to transform.</span>
+<span class="sd">            col (str, optional): The column containing the tokenized documents. Defaults to &quot;poll_title_nlp_processed&quot;.</span>
+<span class="sd">            label (str, optional): The prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+<span class="sd">            return_new_cols (bool, optional): If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame | tuple[pl.DataFrame, list[str]]: The transformed DataFrame, or a tuple of the DataFrame and new column names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_row_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+        <span class="n">df_lda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_documents</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">]),</span> <span class="n">col</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_lda</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+
+        <span class="n">new_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_lda</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding nlp features: </span><span class="si">{</span><span class="n">new_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_new_cols</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">new_cols</span>
+        <span class="k">return</span> <span class="n">tmp</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.ml.poll_clustering.SpacyTransformer.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s1">&#39;de_core_news_sm&#39;</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes the transformer by loading a spaCy language model.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>language</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;de_core_news_sm&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The name of the spaCy language model to load. Defaults to "de_core_news_sm".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;de_core_news_sm&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes the transformer by loading a spaCy language model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        language (str, optional): The name of the spaCy language model to load. Defaults to &quot;de_core_news_sm&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.ml.poll_clustering.SpacyTransformer.fit_lda" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fit_lda</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Fits a Latent Dirichlet Allocation (LDA) model to the documents.</p>
+<p>This method first performs preprocessing and then fits the LDA model.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>documents</code></b>
+                  (<code><span title="list">list</span>[<span title="list">list</span>[<span title="str">str</span>]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>A list of documents, where each document is a list of tokens.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>num_topics</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>10</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The number of topics for the LDA model. Defaults to 10.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fit_lda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">num_topics</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fits a Latent Dirichlet Allocation (LDA) model to the documents.</span>
+
+<span class="sd">    This method first performs preprocessing and then fits the LDA model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        documents (list[list[str]]): A list of documents, where each document is a list of tokens.</span>
+<span class="sd">        num_topics (int, optional): The number of topics for the LDA model. Defaults to 10.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">model_preprocessing</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fitting LDA topics for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">LdaMulticore</span><span class="p">(</span>
+        <span class="n">corpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="n">id2word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">lda_topics</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">i</span><span class="p">:</span> <span class="n">descr</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">descr</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span><span class="o">.</span><span class="n">print_topics</span><span class="p">(</span><span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.ml.poll_clustering.SpacyTransformer.model_preprocessing" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">model_preprocessing</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Performs basic preprocessing required for gensim models.</p>
+<p>This method creates a gensim dictionary and a bag-of-words corpus from the documents.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>documents</code></b>
+                  (<code><span title="list">list</span>[<span title="list">list</span>[<span title="str">str</span>]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>A list of documents, where each document is a list of tokens.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">model_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs basic preprocessing required for gensim models.</span>
+
+<span class="sd">    This method creates a gensim dictionary and a bag-of-words corpus from the documents.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        documents (list[list[str]]): A list of documents, where each document is a list of tokens.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Performing basic model preprocessing steps&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">corpora</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.ml.poll_clustering.SpacyTransformer.transform" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">transform</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;poll_title_nlp_processed&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;nlp&#39;</span><span class="p">,</span> <span class="n">return_new_cols</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Applies the fitted LDA model to a DataFrame to get topic scores.</p>
+<p>This method joins the topic scores back to the original DataFrame.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame to transform.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;poll_title_nlp_processed&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The column containing the tokenized documents. Defaults to "poll_title_nlp_processed".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>label</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;nlp&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The prefix for the new topic score columns. Defaults to "nlp".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>return_new_cols</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame | tuple[pl.DataFrame, list[str]]: The transformed DataFrame, or a tuple of the DataFrame and new column names.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;poll_title_nlp_processed&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span><span class="p">,</span>
+    <span class="n">return_new_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies the fitted LDA model to a DataFrame to get topic scores.</span>
+
+<span class="sd">    This method joins the topic scores back to the original DataFrame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame to transform.</span>
+<span class="sd">        col (str, optional): The column containing the tokenized documents. Defaults to &quot;poll_title_nlp_processed&quot;.</span>
+<span class="sd">        label (str, optional): The prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+<span class="sd">        return_new_cols (bool, optional): If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame | tuple[pl.DataFrame, list[str]]: The transformed DataFrame, or a tuple of the DataFrame and new column names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_row_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+    <span class="n">df_lda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_documents</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">]),</span> <span class="n">col</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_lda</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+
+    <span class="n">new_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_lda</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding nlp features: </span><span class="si">{</span><span class="n">new_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_new_cols</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">new_cols</span>
+    <span class="k">return</span> <span class="n">tmp</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.ml.poll_clustering.SpacyTransformer.transform_documents" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">transform_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;nlp&#39;</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Transforms documents into a dense matrix of LDA topic scores.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>documents</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A DataFrame containing the documents to be transformed.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the column containing the tokenized documents.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>label</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;nlp&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A prefix for the new topic score columns. Defaults to "nlp".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A new DataFrame with columns for each topic's score.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_documents</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms documents into a dense matrix of LDA topic scores.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        documents (pl.DataFrame): A DataFrame containing the documents to be transformed.</span>
+<span class="sd">        col (str): The name of the column containing the tokenized documents.</span>
+<span class="sd">        label (str, optional): A prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A new DataFrame with columns for each topic&#39;s score.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transforming `documents` to a dense real matrix&quot;</span><span class="p">)</span>
+    <span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span><span class="p">[</span><span class="n">corpus</span><span class="p">])</span>
+    <span class="n">dense</span> <span class="o">=</span> <span class="n">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="k">return</span> <span class="n">documents</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_dim</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dense</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.poll_clustering.clean_text" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">clean_text</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">nlp</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Performs a series of cleaning steps on a raw text string.</p>
+<p>The cleaning process includes:
+1. Replacing newlines and non-breaking spaces.
+2. Removing stopwords and punctuation using a spaCy model.
+3. Removing numeric and empty/whitespace-only tokens.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>s</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The raw input string.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>nlp</code></b>
+                  (<code><span title="spacy.language.Language">Language</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The spaCy language model to use for cleaning.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>list[str]: A list of cleaned tokens.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_text</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs a series of cleaning steps on a raw text string.</span>
+
+<span class="sd">    The cleaning process includes:</span>
+<span class="sd">    1. Replacing newlines and non-breaking spaces.</span>
+<span class="sd">    2. Removing stopwords and punctuation using a spaCy model.</span>
+<span class="sd">    3. Removing numeric and empty/whitespace-only tokens.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (str): The raw input string.</span>
+<span class="sd">        nlp (spacy.language.Language): The spaCy language model to use for cleaning.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: A list of cleaned tokens.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cleaning texts&quot;</span><span class="p">)</span>
+    <span class="n">_s</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">_texts</span> <span class="o">=</span> <span class="n">remove_stopwords_and_punctuation</span><span class="p">(</span><span class="n">_s</span><span class="p">,</span> <span class="n">nlp</span><span class="p">)</span>
+    <span class="n">_texts</span> <span class="o">=</span> <span class="n">remove_numeric_and_empty</span><span class="p">(</span><span class="n">_texts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_texts</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.poll_clustering.compare_word_frequencies" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">compare_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col0</span><span class="p">,</span> <span class="n">col1</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">label0</span><span class="o">=</span><span class="s1">&#39;before spacy&#39;</span><span class="p">,</span> <span class="n">label1</span><span class="o">=</span><span class="s1">&#39;after spacy&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Word counts before and after spacy processing&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Compares and visualizes word frequencies and counts before and after text processing.</p>
+<p>This function prints the top N most frequent words for two different text columns
+(e.g., raw text and cleaned text) and plots histograms of the word counts per document
+for both columns.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing the text columns.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col0</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the first column (e.g., raw text).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col1</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the second column (e.g., cleaned text).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>topn</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>20</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The number of top words to print. Defaults to 20.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>label0</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;before spacy&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The label for the first column in the plot. Defaults to "before spacy".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>label1</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;after spacy&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The label for the second column in the plot. Defaults to "after spacy".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>title</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;Word counts before and after spacy processing&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The title of the plot. Defaults to "Word counts before and after spacy processing".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>matplotlib.axes.Axes: The Axes object of the generated plot.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compare_word_frequencies</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">col0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">col1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">topn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="n">label0</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;before spacy&quot;</span><span class="p">,</span>
+    <span class="n">label1</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;after spacy&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Word counts before and after spacy processing&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compares and visualizes word frequencies and counts before and after text processing.</span>
+
+<span class="sd">    This function prints the top N most frequent words for two different text columns</span>
+<span class="sd">    (e.g., raw text and cleaned text) and plots histograms of the word counts per document</span>
+<span class="sd">    for both columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): The DataFrame containing the text columns.</span>
+<span class="sd">        col0 (str): The name of the first column (e.g., raw text).</span>
+<span class="sd">        col1 (str): The name of the second column (e.g., cleaned text).</span>
+<span class="sd">        topn (int, optional): The number of top words to print. Defaults to 20.</span>
+<span class="sd">        label0 (str, optional): The label for the first column in the plot. Defaults to &quot;before spacy&quot;.</span>
+<span class="sd">        label1 (str, optional): The label for the second column in the plot. Defaults to &quot;after spacy&quot;.</span>
+<span class="sd">        title (str, optional): The title of the plot. Defaults to &quot;Word counts before and after spacy processing&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        matplotlib.axes.Axes: The Axes object of the generated plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">_col0</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col0</span><span class="si">}</span><span class="s2">_split&quot;</span>
+    <span class="n">tmp</span><span class="p">[</span><span class="n">_col0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">col0</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Top </span><span class="si">{</span><span class="n">topn</span><span class="si">}</span><span class="s2"> word frequencies for </span><span class="si">{</span><span class="n">col0</span><span class="si">}</span><span class="s2">: </span><span class="se">\n</span><span class="si">{</span><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">_col0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">topn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top </span><span class="si">{</span><span class="n">topn</span><span class="si">}</span><span class="s2"> word frequencies for </span><span class="si">{</span><span class="n">col1</span><span class="si">}</span><span class="s2">: </span><span class="se">\n</span><span class="si">{</span><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">col1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">topn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">wc_col0</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_col0</span><span class="si">}</span><span class="s2">_word_count&quot;</span>
+    <span class="n">wc_col1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col1</span><span class="si">}</span><span class="s2">_word_count&quot;</span>
+    <span class="n">tmp</span><span class="p">[</span><span class="n">wc_col0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">_col0</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
+    <span class="n">tmp</span><span class="p">[</span><span class="n">wc_col1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">col1</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">wc_col0</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">label0</span><span class="p">,</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">wc_col1</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">label1</span><span class="p">,</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ax</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.poll_clustering.get_word_frequencies" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculates word frequencies across a column of tokenized documents.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A DataFrame containing the documents.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the column that holds the lists of tokens.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="pandas.Series">Series</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pd.Series: A Series with words as the index and their frequencies as values, sorted in descending order.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates word frequencies across a column of tokenized documents.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): A DataFrame containing the documents.</span>
+<span class="sd">        col (str): The name of the column that holds the lists of tokens.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.Series: A Series with words as the index and their frequencies as values, sorted in descending order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">_w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">_w</span> <span class="ow">in</span> <span class="n">w</span><span class="p">])</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.poll_clustering.make_topic_scores_dense" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Transforms a sparse list of topic scores into a dense numpy array.</p>
+<p>The input is typically the output of a gensim LDA model, which is a list of lists of (topic_id, score) tuples.
+This function converts it into a 2D numpy array of shape (num_documents, num_topics).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>scores</code></b>
+                  (<code><span title="list">list</span>[<span title="list">list</span>[<span title="tuple">tuple</span>[<span title="int">int</span>, <span title="typing.Any">Any</span>]]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>A list of documents, where each document is a list of (topic_id, score) tuples.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If any topic ID is not an integer.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+              –
+              <div class="doc-md-description">
+                <p>np.ndarray: A dense numpy array of topic scores.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms a sparse list of topic scores into a dense numpy array.</span>
+
+<span class="sd">    The input is typically the output of a gensim LDA model, which is a list of lists of (topic_id, score) tuples.</span>
+<span class="sd">    This function converts it into a 2D numpy array of shape (num_documents, num_topics).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scores (list[list[tuple[int, Any]]]): A list of documents, where each document is a list of (topic_id, score) tuples.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If any topic ID is not an integer.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: A dense numpy array of topic scores.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">topic_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">scores</span><span class="p">)]</span>
+    <span class="n">non_int_topic_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">topic_ids</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_int_topic_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unexpectedly received non-int topic ids: </span><span class="si">{</span><span class="n">non_int_topic_ids</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">ntopic</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">topic_ids</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+    <span class="n">ndoc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Densifying list of </span><span class="si">{</span><span class="n">ntopic</span><span class="si">}</span><span class="s2"> topic scores to </span><span class="si">{</span><span class="n">ndoc</span><span class="si">}</span><span class="s2">-by-</span><span class="si">{</span><span class="n">ntopic</span><span class="si">}</span><span class="s2"> array&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">dense</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">ndoc</span><span class="p">,</span> <span class="n">ntopic</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">topic_id</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+            <span class="n">dense</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">topic_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+    <span class="k">return</span> <span class="n">dense</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.poll_clustering.remove_numeric_and_empty" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">remove_numeric_and_empty</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Removes numeric and empty/whitespace-only strings from a list of strings.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>text</code></b>
+                  (<code><span title="list">list</span>[<span title="str">str</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>A list of tokens.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>list[str]: The list of tokens with numeric and empty strings removed.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_numeric_and_empty</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes numeric and empty/whitespace-only strings from a list of strings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (list[str]): A list of tokens.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: The list of tokens with numeric and empty strings removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">()</span> <span class="ow">or</span> <span class="n">w</span><span class="o">.</span><span class="n">isspace</span><span class="p">())]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.poll_clustering.remove_stopwords_and_punctuation" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">remove_stopwords_and_punctuation</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">nlp</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Removes stopwords and punctuation from a text using a spaCy model.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>text</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input string to be cleaned.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>nlp</code></b>
+                  (<code><span title="spacy.language.Language">Language</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The spaCy language model to use for tokenization and identifying stopwords/punctuation.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>list[str]: A list of tokens with stopwords and punctuation removed.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_stopwords_and_punctuation</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes stopwords and punctuation from a text using a spaCy model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): The input string to be cleaned.</span>
+<span class="sd">        nlp (spacy.language.Language): The spaCy language model to use for tokenization and identifying stopwords/punctuation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: A list of tokens with stopwords and punctuation removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">is_stop</span> <span class="ow">or</span> <span class="n">w</span><span class="o">.</span><span class="n">is_punct</span><span class="p">)]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../data/utils/" class="btn btn-neutral float-left" title="utils"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../similarity/" class="btn btn-neutral float-right" title="similarity">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../../data/utils/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../similarity/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

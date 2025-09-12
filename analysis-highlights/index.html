@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/analysis-highlights/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Embeddings - bundestag</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Embeddings";
+        var mkdocs_page_input_path = "analysis-highlights.md";
+        var mkdocs_page_url = "/bundestag/analysis-highlights/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Embeddings</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#data-sources">Data sources</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#part-1-who-is-similar-to-whom">Part 1 - Who is similar to whom?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#part-2-how-will-a-politician-cast-his-or-her-vote">Part 2 - How will a politician cast his or her vote?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#clustering-polls-using-latent-dirichlet-allocation-lda">Clustering polls using Latent Dirichlet Allocation (LDA)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#predicting-votes">Predicting votes</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Analysis</li>
+      <li class="breadcrumb-item active">Embeddings</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/analysis-highlights.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="analysing-namentliche-abstimmungen-in-the-bundestag">Analysing "Namentliche Abstimmungen" in the Bundestag</h1>
+<blockquote>
+<p>How close, in terms of roll call votes, are members of the parliament to the present parties? How predictable are individual votes for given polls? Answers to these questions can be found here.</p>
+</blockquote>
+<h3 id="data-sources">Data sources</h3>
+<p>Bundestag page <code>https://www.bundestag.de/parlament/plenum/abstimmung/liste</code>. Contains roll call votes with information on presence / absence and vote (yes/no/abstain) for each member of the Bundestag over a longer time period.</p>
+<p><code>abgeordnetenwatch.de</code> API <code>https://www.abgeordnetenwatch.de/api</code> (they also have a GUI <a href="https://www.abgeordnetenwatch.de">here</a>). Contains information on politicians, parliaments, legislative periods and mandates including and beyond the Bundestag.</p>
+<pre><code class="language-python">%load_ext autoreload
+%autoreload 2
+</code></pre>
+<pre><code class="language-python">import os
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+from fastai.tabular.all import (
+    Categorify,
+    CategoryBlock,
+    RandomSplitter,
+    TabularPandas,
+    tabular_learner,
+)
+from functools import partial
+from rich import print as pprint
+
+from bundestag.fine_logging import setup_logging
+from bundestag.paths import get_paths
+from bundestag.ml.similarity import (
+    get_votes_by_party,
+    pivot_party_votes_df,
+    prepare_votes_of_mdb,
+    align_mdb_with_parties,
+    compute_similarity,
+    plot,
+    align_party_with_all_parties,
+)
+from bundestag.ml.poll_clustering import SpacyTransformer, clean_text
+from bundestag.ml.vote_prediction import (
+    plot_predictions,
+    get_embeddings,
+    plot_politician_embeddings,
+    plot_poll_embeddings,
+)
+from bundestag.gui import MdBGUI, PartyGUI
+import logging
+from plotnine import (
+    scale_color_manual,
+)
+</code></pre>
+<pre><code class="language-python">logger = logging.getLogger(__name__)
+setup_logging()
+</code></pre>
+<pre><code class="language-python"># if this notebook is run via `make docs` then the environment variable is set
+makedocs = os.getenv(&quot;MAKEDOCS&quot;) is not None
+logger.info(f&quot;Running nb with {makedocs=}&quot;)
+</code></pre>
+<p>Comment-in the below cell to download prepared data</p>
+<pre><code class="language-python"># import bundestag.data.download.huggingface as download_hf
+# download_hf.run(Path(&quot;../data&quot;))
+</code></pre>
+<h3 id="part-1-who-is-similar-to-whom">Part 1 - Who is similar to whom?</h3>
+<blockquote>
+<p>Which party does a politicians voting behavior align the most with? Which parties are closest in terms of cast votes?</p>
+</blockquote>
+<p><strong>Loading the data</strong></p>
+<p>If you have cloned the repo you should already have a <code>bundestag.de_votes.parquet</code> file in the root directory of the repo. If not feel free to download that file directly.</p>
+<p>If you want to have a closer look at the preprocessing please check out <code>nbs/00_html_parsing.ipynb</code>.</p>
+<pre><code class="language-python">_paths = get_paths(Path(&quot;../data&quot;))
+_fig_path = Path(&quot;./images&quot;)
+</code></pre>
+<pre><code class="language-python">file = _paths.preprocessed_bundestag / &quot;bundestag.de_votes.parquet&quot;
+</code></pre>
+<pre><code class="language-python">df = pl.read_parquet(file)
+df.head(3)
+</code></pre>
+<p>Votes by party</p>
+<pre><code class="language-python">party_votes = get_votes_by_party(df)
+</code></pre>
+<pre><code class="language-python">party_votes.head()
+</code></pre>
+<p>Re-arranging <code>party_votes</code></p>
+<pre><code class="language-python">party_votes_pivoted = pivot_party_votes_df(party_votes)
+party_votes_pivoted.head()
+</code></pre>
+<p><strong>Which party does a politicians voting behavior align the most with?</strong></p>
+<p>Collecting the politicians votes</p>
+<pre><code class="language-python">mdb = &quot;Peter Altmaier&quot;
+mdb_votes = prepare_votes_of_mdb(df, mdb)
+mdb_votes.head()
+</code></pre>
+<p>Comparing the politician against the parties</p>
+<pre><code class="language-python">mdb_and_parties = align_mdb_with_parties(mdb_votes, party_votes_pivoted)
+mdb_and_parties.head()
+</code></pre>
+<pre><code class="language-python">mdb_vs_parties = compute_similarity(mdb_and_parties, &quot;_party&quot;)
+mdb_vs_parties.head(3)
+</code></pre>
+<pre><code class="language-python">mdb_vs_parties[&quot;Fraktion/Gruppe_party&quot;].value_counts()
+</code></pre>
+<p>Plotting</p>
+<pre><code class="language-python">plot(
+    mdb_vs_parties,
+    title_overall=f&quot;Overall similarity of {mdb} with all parties&quot;,
+    title_over_time=f&quot;{mdb} vs time&quot;,
+)
+plt.tight_layout()
+if makedocs:
+    plt.savefig(_fig_path / &quot;mdb_similarity_vs_time.png&quot;)
+plt.show()
+</code></pre>
+<p><img alt="" src="../images/mdb_similarity_vs_time.png" /></p>
+<p><strong>Which parties are closest in terms of cast votes?</strong></p>
+<p>Collecting party votes</p>
+<pre><code class="language-python">party_votes_pivoted.head()
+</code></pre>
+<pre><code class="language-python">party = &quot;SPD&quot;
+partyA_vs_rest = align_party_with_all_parties(party_votes_pivoted, party)
+partyA_vs_rest.head(3)
+</code></pre>
+<pre><code class="language-python">partyA_vs_rest = compute_similarity(partyA_vs_rest, suffix=&quot;_b&quot;)
+
+partyA_vs_rest.head(3)
+</code></pre>
+<p>Plotting</p>
+<pre><code class="language-python">plot(
+    partyA_vs_rest,
+    title_overall=f&quot;Overall similarity of {party} with all parties&quot;,
+    title_over_time=f&quot;{party} vs time&quot;,
+    party_col=&quot;Fraktion/Gruppe_b&quot;,
+)
+plt.tight_layout()
+if makedocs:
+    plt.savefig(_fig_path / &quot;party_similarity_vs_time.png&quot;)
+plt.show()
+</code></pre>
+<p><img alt="" src="../images/party_similarity_vs_time.png" /></p>
+<p><strong>GUI to inspect similarities</strong></p>
+<p>To make the above exploration more interactive, the class <code>MdBGUI</code> and <code>PartyGUI</code> was implemented to quickly go through the different parties and politicians</p>
+<pre><code class="language-python">mdb = MdBGUI(df)
+</code></pre>
+<pre><code class="language-python">if not makedocs:
+    display(mdb.render())
+</code></pre>
+<pre><code class="language-python">party = PartyGUI(df)
+</code></pre>
+<pre><code class="language-python">if not makedocs:
+    display(party.render())
+</code></pre>
+<h3 id="part-2-how-will-a-politician-cast-his-or-her-vote">Part 2 - How will a politician cast his or her vote?</h3>
+<p>The data used below was processed using <code>nbs/03_abgeordnetenwatch.ipynb</code>.</p>
+<pre><code class="language-python">path = _paths.preprocessed_abgeordnetenwatch
+legislature_id = 111
+file = path / f&quot;polls_{legislature_id}.parquet&quot;
+</code></pre>
+<pre><code class="language-python">df_polls = pl.read_parquet(file)
+</code></pre>
+<h4 id="clustering-polls-using-latent-dirichlet-allocation-lda">Clustering polls using Latent Dirichlet Allocation (LDA)</h4>
+<pre><code class="language-python">source_col = &quot;poll_title&quot;
+nlp_col = f&quot;{source_col}_nlp_processed&quot;
+num_topics = 5  # number of topics / clusters to identify
+
+st = SpacyTransformer()
+</code></pre>
+<pre><code class="language-python">df_polls.head()[source_col].map_elements(
+    partial(clean_text, nlp=st.nlp), return_dtype=pl.List(pl.String)
+)
+</code></pre>
+<pre><code class="language-python"># load data and prepare text for modelling
+df_polls_lda = df_polls.with_columns(
+    **{
+        nlp_col: pl.col(source_col).map_elements(
+            partial(clean_text, nlp=st.nlp), return_dtype=pl.List(pl.String)
+        )
+    }
+)
+df_polls_lda.head()
+</code></pre>
+<pre><code class="language-python"># modelling clusters
+st.fit_lda(df_polls_lda[nlp_col].to_list(), num_topics=num_topics)
+</code></pre>
+<pre><code class="language-python"># creating text features using fitted model
+df_polls_lda, nlp_feature_cols = st.transform(
+    df_polls_lda, col=nlp_col, return_new_cols=True
+)
+
+# inspecting clusters
+display(df_polls_lda.head(3))
+</code></pre>
+<pre><code class="language-python">st.lda_topics
+</code></pre>
+<h4 id="predicting-votes">Predicting votes</h4>
+<p>Loading data</p>
+<pre><code class="language-python">df_all_votes = pl.read_parquet(path / f&quot;votes_{legislature_id}.parquet&quot;)
+</code></pre>
+<pre><code class="language-python">df_mandates = pl.read_parquet(path / f&quot;mandates_{legislature_id}.parquet&quot;)
+</code></pre>
+<p>Splitting data set into training and validation set. Splitting randomly here because it leads to an interesting result, albeit not very realistic for production.</p>
+<pre><code class="language-python">splits = RandomSplitter(valid_pct=0.2)(df_all_votes)
+splits
+</code></pre>
+<pre><code class="language-python">y_col = &quot;vote&quot;
+</code></pre>
+<p>Training a neural net to predict <code>vote</code> based on embeddings for <code>poll_id</code> and <code>politician name</code></p>
+<pre><code class="language-python">df_all_votes.head()
+</code></pre>
+<pre><code class="language-python">to = TabularPandas(
+    df_all_votes.to_pandas(),
+    cat_names=[
+        &quot;politician name&quot;,
+        &quot;poll_id&quot;,
+    ],  # columns in `df_all_votes` to treat as categorical
+    y_names=[y_col],  # column to use as a target for the model in `learn`
+    procs=[Categorify],  # processing of features
+    y_block=CategoryBlock,  # how to treat `y_names`, here as categories
+    splits=splits,
+)  # how to split the data
+
+dls = to.dataloaders(bs=512)
+learn = tabular_learner(dls)  # fastai function to set up a neural net for tabular data
+</code></pre>
+<pre><code class="language-python">lrs = learn.lr_find()  # searches the learning rate
+pprint(lrs)
+</code></pre>
+<pre><code class="language-python">learn.fit_one_cycle(
+    5, lrs.valley
+)  # performs training using one-cycle hyperparameter schedule
+</code></pre>
+<p><strong>Predictions over unseen data</strong></p>
+<p>Inspecting the predictions of the neural net over the validation set. </p>
+<pre><code class="language-python">df_mandates.head()
+</code></pre>
+<pre><code class="language-python">df_all_votes.head()
+</code></pre>
+<pre><code class="language-python">plot_predictions(
+    learn, df_all_votes, df_mandates, df_polls, splits, n_worst_politicians=5
+)
+</code></pre>
+<p>Splitting our dataset randomly leads to a surprisingly good accuracy of ~88% over the validation set. The most reasonable explanation is that the model encountered polls and how most politicians voted for them already during training. </p>
+<p>This can be interpreted as, if it is known how most politicians will vote during a poll, then the vote of the remaining politicians is highly predictable. Splitting the data set by <code>poll_id</code>, as can be done using <code>vp.poll_splitter</code> leads to random chance predictions. Anything else would be surprising as well since the only available information provided to the model is who is voting.</p>
+<p><strong>Visualising learned embeddings</strong></p>
+<p>Besides the actual prediction it also is interesting to inspect what the model actually learned. This can sometimes lead to <a href="https://github.com/entron/entity-embedding-rossmann">surprises</a>.</p>
+<p>So let's look at the learned embeddings</p>
+<pre><code class="language-python">learn.model.cpu()
+embeddings = get_embeddings(learn)
+</code></pre>
+<p>To make sense of the embeddings for <code>poll_id</code> as well as <code>politician name</code> we apply Principal Component Analysis (so one still kind of understands what distances mean) and project down to 2d. </p>
+<p>Using the information which party was most strongly (% of their votes being "yes"), so its strongest proponent, we color code the individual polls.</p>
+<pre><code class="language-python">embeddings_pl = {
+    &quot;politician name&quot;: pl.DataFrame(
+        {
+            &quot;politician name__emb_component_0&quot;: embeddings[&quot;politician name&quot;][
+                &quot;politician name__emb_component_0&quot;
+            ],
+            &quot;politician name__emb_component_1&quot;: embeddings[&quot;politician name&quot;][
+                &quot;politician name__emb_component_1&quot;
+            ],
+            &quot;politician name&quot;: embeddings[&quot;politician name&quot;][&quot;politician name&quot;],
+        }
+    ),
+    &quot;poll_id&quot;: pl.DataFrame(
+        {
+            &quot;poll_id__emb_component_0&quot;: embeddings[&quot;poll_id&quot;][
+                &quot;poll_id__emb_component_0&quot;
+            ].values[1:],
+            &quot;poll_id__emb_component_1&quot;: embeddings[&quot;poll_id&quot;][
+                &quot;poll_id__emb_component_1&quot;
+            ].values[1:],
+            &quot;poll_id&quot;: [int(v) for v in embeddings[&quot;poll_id&quot;][&quot;poll_id&quot;].values[1:]],
+        }
+    ),
+}
+</code></pre>
+<pre><code class="language-python">df_mandates[&quot;party&quot;].value_counts()
+</code></pre>
+<pre><code class="language-python">party_colors = scale_color_manual(
+    breaks=[
+        &quot;AfD&quot;,
+        &quot;BSW&quot;,
+        &quot;DIE GRÜNEN&quot;,
+        &quot;CDU/CSU&quot;,
+        &quot;DIE LINKE&quot;,
+        &quot;FDP&quot;,
+        &quot;fraktionslos&quot;,
+        &quot;SPD&quot;,
+    ],
+    values=[&quot;blue&quot;, &quot;purple&quot;, &quot;green&quot;, &quot;black&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;grey&quot;, &quot;salmon&quot;],
+)
+
+fig = plot_poll_embeddings(
+    df_all_votes, df_polls, embeddings_pl, df_mandates=df_mandates, colors=party_colors
+)
+fig.show()
+if makedocs:
+    fig.save(_fig_path / &quot;poll_embeddings.png&quot;)
+</code></pre>
+<p><img alt="" src="../images/poll_embeddings.png" /></p>
+<p>The politician embeddings are color coded using the politician's party membership</p>
+<pre><code class="language-python">fig = plot_politician_embeddings(df_all_votes, df_mandates, embeddings_pl, party_colors)
+fig.show()
+if makedocs:
+    fig.save(_fig_path / &quot;mandate_embeddings.png&quot;)
+</code></pre>
+<p><img alt="" src="../images/mandate_embeddings.png" /></p>
+<p>The politician embeddings may be the most surprising finding in its clarity. It seems we find for polls and politicians 2-3 clusters, but for politicians with a significant grouping of mandates associated with the government coalition. It seems we find one cluster for the government parties and one for the government opposition. </p>
+<pre><code class="language-python">
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../how-to-use/" class="btn btn-neutral float-left" title="How to use"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../fraktionszwang/" class="btn btn-neutral float-right" title="Fraktionszwang">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../how-to-use/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../fraktionszwang/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

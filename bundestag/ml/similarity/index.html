@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/ml/similarity/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>similarity - bundestag</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "similarity";
+        var mkdocs_page_input_path = "bundestag/ml/similarity.md";
+        var mkdocs_page_url = "/bundestag/bundestag/ml/similarity/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >ml</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">similarity</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+          <li class="breadcrumb-item">ml</li>
+      <li class="breadcrumb-item active">similarity</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/ml/similarity.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.ml.similarity"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.align_mdb_with_parties" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">align_mdb_with_parties</span><span class="p">(</span><span class="n">mdb_votes</span><span class="p">,</span> <span class="n">party_votes_pivoted</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Aligns the votes of an MdB with the aggregated votes of parties.</p>
+<p>This function joins the MdB's voting record with the pivoted party voting records
+on the date and title of the poll, allowing for direct comparison.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>mdb_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The prepared voting data for the MdB.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_votes_pivoted</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The pivoted, wide-format party voting data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A DataFrame with the MdB's and parties' votes aligned for each poll.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">align_mdb_with_parties</span><span class="p">(</span>
+    <span class="n">mdb_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">party_votes_pivoted</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aligns the votes of an MdB with the aggregated votes of parties.</span>
+
+<span class="sd">    This function joins the MdB&#39;s voting record with the pivoted party voting records</span>
+<span class="sd">    on the date and title of the poll, allowing for direct comparison.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mdb_votes (pl.DataFrame): The prepared voting data for the MdB.</span>
+<span class="sd">        party_votes_pivoted (pl.DataFrame): The pivoted, wide-format party voting data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A DataFrame with the MdB&#39;s and parties&#39; votes aligned for each poll.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">mdb_votes</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">party_votes_pivoted</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">],</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_party&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.align_party_with_all_parties" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">align_party_with_all_parties</span><span class="p">(</span><span class="n">party_votes</span><span class="p">,</span> <span class="n">party_a</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Aligns the voting record of one party with all other parties.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>party_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing pivoted party votes.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_a</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the party to compare against all others.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A concatenated DataFrame containing the alignment of <code>party_a</code> with every other party.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">align_party_with_all_parties</span><span class="p">(</span>
+    <span class="n">party_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">party_a</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aligns the voting record of one party with all other parties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        party_votes (pl.DataFrame): The DataFrame containing pivoted party votes.</span>
+<span class="sd">        party_a (str): The name of the party to compare against all others.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A concatenated DataFrame containing the alignment of `party_a` with every other party.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">partyA_vs_rest</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">parties</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">party_votes</span><span class="p">[</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span> <span class="o">!=</span> <span class="n">party_a</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">party_b</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">align_party_with_party</span><span class="p">(</span><span class="n">party_votes</span><span class="p">,</span> <span class="n">party_a</span><span class="o">=</span><span class="n">party_a</span><span class="p">,</span> <span class="n">party_b</span><span class="o">=</span><span class="n">party_b</span><span class="p">)</span>
+        <span class="n">partyA_vs_rest</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+    <span class="n">partyA_vs_rest</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">partyA_vs_rest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">partyA_vs_rest</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.align_party_with_party" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">align_party_with_party</span><span class="p">(</span><span class="n">party_votes</span><span class="p">,</span> <span class="n">party_a</span><span class="p">,</span> <span class="n">party_b</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Aligns the voting records of two parties for comparison.</p>
+<p>This function filters the party votes DataFrame for two specified parties
+and joins their records on the poll's date and title.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>party_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing pivoted party votes.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_a</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the first party.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_b</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the second party.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A DataFrame with the voting records of the two parties aligned.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">align_party_with_party</span><span class="p">(</span>
+    <span class="n">party_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">party_a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">party_b</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aligns the voting records of two parties for comparison.</span>
+
+<span class="sd">    This function filters the party votes DataFrame for two specified parties</span>
+<span class="sd">    and joins their records on the poll&#39;s date and title.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        party_votes (pl.DataFrame): The DataFrame containing pivoted party votes.</span>
+<span class="sd">        party_a (str): The name of the first party.</span>
+<span class="sd">        party_b (str): The name of the second party.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A DataFrame with the voting records of the two parties aligned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;Fraktion/Gruppe&quot;</span>
+    <span class="n">votes_party_a</span> <span class="o">=</span> <span class="n">party_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">party_a</span><span class="p">))</span>
+    <span class="n">votes_party_b</span> <span class="o">=</span> <span class="n">party_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">party_b</span><span class="p">))</span>
+
+    <span class="n">aligned_parties</span> <span class="o">=</span> <span class="n">votes_party_a</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">votes_party_b</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">],</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_b&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">aligned_parties</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.assign_missing_vote_columns" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">assign_missing_vote_columns</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ensures that all standard vote columns exist in the DataFrame.</p>
+<p>This function checks if any of the standard vote columns (from <code>transform_bs.VOTE_COLS</code>)
+are missing from the DataFrame and adds them with <code>None</code> as the value if they are.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame to check and modify.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: The DataFrame with all standard vote columns present.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_missing_vote_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures that all standard vote columns exist in the DataFrame.</span>
+
+<span class="sd">    This function checks if any of the standard vote columns (from `transform_bs.VOTE_COLS`)</span>
+<span class="sd">    are missing from the DataFrame and adds them with `None` as the value if they are.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame to check and modify.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: The DataFrame with all standard vote columns present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">missing_vote_outcomes</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">transform_bs</span><span class="o">.</span><span class="n">VOTE_COLS</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_vote_outcomes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">missing_vote_outcomes</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.compute_similarity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">compute_similarity</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">similarity_metric</span><span class="o">=</span><span class="n">cosine_similarity</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Computes the similarity between two sets of vote vectors in a DataFrame.</p>
+<p>This function treats the vote outcomes for each poll as vectors. It compares the vectors
+from the base columns (<code>transform_bs.VOTE_COLS</code>) with the vectors from the columns
+identified by a suffix (e.g., 'ja_party', 'nein_party').</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing the aligned vote vectors.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>suffix</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The suffix used to identify the second set of vote columns (e.g., '_party').</p>
+              </div>
+            </li>
+            <li>
+              <b><code>similarity_metric</code></b>
+                  (<code><span title="typing.Callable">Callable</span></code>, default:
+                      <code><a class="autorefs autorefs-internal" title="cosine_similarity(a, b) (bundestag.ml.similarity.cosine_similarity)" href="#bundestag.ml.similarity.cosine_similarity">cosine_similarity</a></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The function to use for calculating similarity. Defaults to <code>cosine_similarity</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: The input DataFrame with an added 'similarity' column.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_similarity</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">similarity_metric</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the similarity between two sets of vote vectors in a DataFrame.</span>
+
+<span class="sd">    This function treats the vote outcomes for each poll as vectors. It compares the vectors</span>
+<span class="sd">    from the base columns (`transform_bs.VOTE_COLS`) with the vectors from the columns</span>
+<span class="sd">    identified by a suffix (e.g., &#39;ja_party&#39;, &#39;nein_party&#39;).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame containing the aligned vote vectors.</span>
+<span class="sd">        suffix (str): The suffix used to identify the second set of vote columns (e.g., &#39;_party&#39;).</span>
+<span class="sd">        similarity_metric (Callable, optional): The function to use for calculating similarity. Defaults to `cosine_similarity`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: The input DataFrame with an added &#39;similarity&#39; column.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Computing similarities using metric = </span><span class="si">{</span><span class="n">similarity_metric</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">lcols</span> <span class="o">=</span> <span class="n">transform_bs</span><span class="o">.</span><span class="n">VOTE_COLS</span>
+    <span class="n">rcols</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">transform_bs</span><span class="o">.</span><span class="n">VOTE_COLS</span><span class="p">]</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">lcols</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">rcols</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">similarity_metric</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;similarity&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">s</span><span class="p">)})</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.cosine_similarity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Computes the cosine similarity between two vectors.</p>
+<p>Perpendicular vectors will have a similarity of 0, and parallel vectors will have a similarity of 1.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>a</code></b>
+                  (<code><span title="numpy.ndarray">ndarray</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The first vector.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>b</code></b>
+                  (<code><span title="numpy.ndarray">ndarray</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The second vector.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>float</code></b>(                  <code><span title="float">float</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The cosine similarity between the two vectors.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cosine_similarity</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the cosine similarity between two vectors.</span>
+
+<span class="sd">    Perpendicular vectors will have a similarity of 0, and parallel vectors will have a similarity of 1.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a (np.ndarray): The first vector.</span>
+<span class="sd">        b (np.ndarray): The second vector.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The cosine similarity between the two vectors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.fill_vote_columns" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fill_vote_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Fills null values in the standard vote columns with a specified value.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing vote columns.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>fill_value</code></b>
+                  (<code><span title="float">float</span> | <span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The value to use for filling nulls.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: The DataFrame with nulls in vote columns filled.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fill_vote_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fills null values in the standard vote columns with a specified value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame containing vote columns.</span>
+<span class="sd">        fill_value (float | int): The value to use for filling nulls.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: The DataFrame with nulls in vote columns filled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">fill_null</span><span class="p">(</span><span class="n">fill_value</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">transform_bs</span><span class="o">.</span><span class="n">VOTE_COLS</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.get_party_party_similarity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_party_party_similarity</span><span class="p">(</span><span class="n">similarity_party_party</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculates descriptive statistics for party-party similarity scores.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>similarity_party_party</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A DataFrame containing similarity scores between pairs of parties.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pd.DataFrame: A DataFrame with summary statistics (mean, std, etc.) of the similarity scores, grouped by the second party.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_party_party_similarity</span><span class="p">(</span>
+    <span class="n">similarity_party_party</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates descriptive statistics for party-party similarity scores.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        similarity_party_party (pd.DataFrame): A DataFrame containing similarity scores between pairs of parties.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: A DataFrame with summary statistics (mean, std, etc.) of the similarity scores, grouped by the second party.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">similarity_party_party</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Fraktion/Gruppe_b&quot;</span><span class="p">)[</span><span class="s2">&quot;similarity&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.get_votes_by_party" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_votes_by_party</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Computes the total and relative votes by party for each poll.</p>
+<p>This function groups the input DataFrame by party, date, and poll title,
+and then calculates both the absolute count and the fraction of each vote type
+('ja', 'nein', etc.) within each group.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input DataFrame containing individual vote records.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A DataFrame with vote counts and fractions for each party and poll.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_votes_by_party</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the total and relative votes by party for each poll.</span>
+
+<span class="sd">    This function groups the input DataFrame by party, date, and poll title,</span>
+<span class="sd">    and then calculates both the absolute count and the fraction of each vote type</span>
+<span class="sd">    (&#39;ja&#39;, &#39;nein&#39;, etc.) within each group.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The input DataFrame containing individual vote records.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A DataFrame with vote counts and fractions for each party and poll.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing votes by party and poll&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="s2">&quot;vote&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="n">transform_bs</span><span class="o">.</span><span class="n">VOTE_COLS</span><span class="p">))}</span>
+    <span class="p">)</span>
+
+    <span class="n">vote_fraction</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fraction&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">vote_count</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;# votes&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">votes</span> <span class="o">=</span> <span class="n">vote_fraction</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">vote_count</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;vote&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">votes</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.pivot_party_votes_df" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pivot_party_votes_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Pivots the party votes DataFrame to a wide format.</p>
+<p>This function transforms a long-format DataFrame of party votes into a wide format,
+where each vote type becomes a separate column. It also ensures all vote columns
+exist and fills any null values with 0.0.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The long-format DataFrame of party votes.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: The pivoted, wide-format DataFrame.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pivot_party_votes_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pivots the party votes DataFrame to a wide format.</span>
+
+<span class="sd">    This function transforms a long-format DataFrame of party votes into a wide format,</span>
+<span class="sd">    where each vote type becomes a separate column. It also ensures all vote columns</span>
+<span class="sd">    exist and fills any null values with 0.0.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The long-format DataFrame of party votes.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: The pivoted, wide-format DataFrame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pivoted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">],</span>
+        <span class="n">on</span><span class="o">=</span><span class="s2">&quot;vote&quot;</span><span class="p">,</span>
+        <span class="n">values</span><span class="o">=</span><span class="s2">&quot;fraction&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">pivoted</span> <span class="o">=</span> <span class="n">assign_missing_vote_columns</span><span class="p">(</span><span class="n">pivoted</span><span class="p">)</span>
+    <span class="n">pivoted</span> <span class="o">=</span> <span class="n">fill_vote_columns</span><span class="p">(</span><span class="n">pivoted</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pivoted</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.plot" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title_overall</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">title_over_time</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">party_col</span><span class="o">=</span><span class="s1">&#39;Fraktion/Gruppe_party&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates a combined plot showing both overall similarity and similarity over time.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing the similarity data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>title_overall</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The title for the overall similarity plot. Defaults to "".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>title_over_time</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The title for the similarity over time plot. Defaults to "".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_col</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;Fraktion/Gruppe_party&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The column containing the party names. Defaults to "Fraktion/Gruppe_party".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+              –
+              <div class="doc-md-description">
+                <p>np.ndarray: An array of the matplotlib axes objects for the two subplots.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">title_overall</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">title_over_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">party_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Fraktion/Gruppe_party&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a combined plot showing both overall similarity and similarity over time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame containing the similarity data.</span>
+<span class="sd">        title_overall (str, optional): The title for the overall similarity plot. Defaults to &quot;&quot;.</span>
+<span class="sd">        title_over_time (str, optional): The title for the similarity over time plot. Defaults to &quot;&quot;.</span>
+<span class="sd">        party_col (str, optional): The column containing the party names. Defaults to &quot;Fraktion/Gruppe_party&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: An array of the matplotlib axes objects for the two subplots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plot_overall_similarity</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">party_col</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title_overall</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">plot_similarity_over_time</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">party_col</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title_over_time</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">axs</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.plot_overall_similarity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">plot_overall_similarity</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates a strip plot to visualize the overall distribution of similarity scores.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing the similarity data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>x</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The column to be used for the x-axis (typically the party name).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>title</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The title of the plot. Defaults to "".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ax</code></b>
+                  (<code><span title="matplotlib.axes.Axes">Axes</span></code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The matplotlib axes object to plot on. If None, a new figure and axes are created. Defaults to None.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>palette</code></b>
+                  (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>] | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A color palette for the plot. Defaults to a predefined palette.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.Any">Any</span></code>
+              –
+              <div class="doc-md-description">
+                <p>matplotlib.axes.Axes: The axes object with the plot.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_overall_similarity</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">palette</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a strip plot to visualize the overall distribution of similarity scores.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame containing the similarity data.</span>
+<span class="sd">        x (str): The column to be used for the x-axis (typically the party name).</span>
+<span class="sd">        title (str, optional): The title of the plot. Defaults to &quot;&quot;.</span>
+<span class="sd">        ax (matplotlib.axes.Axes, optional): The matplotlib axes object to plot on. If None, a new figure and axes are created. Defaults to None.</span>
+<span class="sd">        palette (dict[str, str] | None, optional): A color palette for the plot. Defaults to a predefined palette.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        matplotlib.axes.Axes: The axes object with the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+    <span class="n">palette</span> <span class="o">=</span> <span class="n">PALETTE</span> <span class="k">if</span> <span class="n">palette</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">palette</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;similarity&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Similarity (1 = identical, 0 = dissimilar)&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.plot_similarity_over_time" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">plot_similarity_over_time</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">party_col</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates a line plot to visualize how similarity scores change over time.</p>
+<p>This function aggregates the similarity scores by year and party and plots the average similarity.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The DataFrame containing the similarity data with a 'date' column.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_col</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The column containing the party names.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>title</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The title of the plot.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ax</code></b>
+                  (<code><span title="matplotlib.axes.Axes">Axes</span></code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The matplotlib axes object to plot on. If None, a new figure and axes are created. Defaults to None.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>palette</code></b>
+                  (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>] | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A color palette for the plot. Defaults to a predefined palette.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.Any">Any</span></code>
+              –
+              <div class="doc-md-description">
+                <p>matplotlib.axes.Axes: The axes object with the plot.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_similarity_over_time</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">party_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">palette</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a line plot to visualize how similarity scores change over time.</span>
+
+<span class="sd">    This function aggregates the similarity scores by year and party and plots the average similarity.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The DataFrame containing the similarity data with a &#39;date&#39; column.</span>
+<span class="sd">        party_col (str): The column containing the party names.</span>
+<span class="sd">        title (str): The title of the plot.</span>
+<span class="sd">        ax (matplotlib.axes.Axes, optional): The matplotlib axes object to plot on. If None, a new figure and axes are created. Defaults to None.</span>
+<span class="sd">        palette (dict[str, str] | None, optional): A color palette for the plot. Defaults to a predefined palette.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        matplotlib.axes.Axes: The axes object with the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;avg. similarity&quot;</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="p">()})</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">group_by</span><span class="p">([</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="n">party_col</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">y</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;similarity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()})</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="n">PALETTE</span> <span class="k">if</span> <span class="n">palette</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">palette</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">party_col</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2"> (0 = dissimilar, 1 = identical)&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.ml.similarity.prepare_votes_of_mdb" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">prepare_votes_of_mdb</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">mdb</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Prepares the voting data for a single Member of Parliament (MdB).</p>
+<p>This function filters the main votes DataFrame for a specific MdB,
+converts their single 'vote' column into a one-hot encoded format (dummy variables),
+and ensures all standard vote columns are present and filled.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The main DataFrame containing all votes.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mdb</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The identifier for the Member of Parliament.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the specified <code>mdb</code> is not found in the DataFrame.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: A DataFrame containing the one-hot encoded votes for the specified MdB.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/ml/similarity.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prepare_votes_of_mdb</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">mdb</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepares the voting data for a single Member of Parliament (MdB).</span>
+
+<span class="sd">    This function filters the main votes DataFrame for a specific MdB,</span>
+<span class="sd">    converts their single &#39;vote&#39; column into a one-hot encoded format (dummy variables),</span>
+<span class="sd">    and ensures all standard vote columns are present and filled.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The main DataFrame containing all votes.</span>
+<span class="sd">        mdb (str): The identifier for the Member of Parliament.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the specified `mdb` is not found in the DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: A DataFrame containing the one-hot encoded votes for the specified MdB.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mdbs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Bezeichnung&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mdb</span> <span class="ow">in</span> <span class="n">mdbs</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2"> not found in column &#39;Bezeichnung&#39;&quot;</span><span class="p">)</span>
+
+    <span class="n">mdb_votes</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;Bezeichnung&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="n">mdb</span><span class="p">)))</span>
+        <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;vote&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vote&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="n">transform_bs</span><span class="o">.</span><span class="n">VOTE_COLS</span><span class="p">))})</span>
+        <span class="o">.</span><span class="n">to_dummies</span><span class="p">([</span><span class="s2">&quot;vote&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="n">cols_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mdb_votes</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;vote_&quot;</span><span class="p">)}</span>
+
+    <span class="n">mdb_votes</span> <span class="o">=</span> <span class="n">mdb_votes</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">cols_map</span><span class="p">)</span>
+
+    <span class="n">mdb_votes</span> <span class="o">=</span> <span class="n">assign_missing_vote_columns</span><span class="p">(</span><span class="n">mdb_votes</span><span class="p">)</span>
+    <span class="n">mdb_votes</span> <span class="o">=</span> <span class="n">fill_vote_columns</span><span class="p">(</span><span class="n">mdb_votes</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mdb_votes</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../poll_clustering/" class="btn btn-neutral float-left" title="poll_clustering"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vote_prediction/" class="btn btn-neutral float-right" title="vote_prediction">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../poll_clustering/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../vote_prediction/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

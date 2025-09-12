@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/how-to-use/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>How to use - bundestag</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "How to use";
+        var mkdocs_page_input_path = "how-to-use.md";
+        var mkdocs_page_url = "/bundestag/how-to-use/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">How to use</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#the-bundestag-cli">The bundestag cli</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-get_xlsx_uris-cli">The get_xlsx_uris cli</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#notebooks">Notebooks</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../bundestag/data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../bundestag/data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bundestag/ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bundestag/schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">How to use</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/how-to-use.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="how-to-use">How to use</h2>
+<h3 id="the-bundestag-cli">The <code>bundestag</code> cli</h3>
+<p>A tool to assist with the data processing.</p>
+<p>For an overview over commands run</p>
+<pre><code class="language-shell">bundestag --help
+</code></pre>
+<p>To get preprocessed data simply run</p>
+<pre><code class="language-shell">bundestag download huggingface
+</code></pre>
+<p>To download data from abgeordnetenwatch, for a specific legislature id</p>
+<pre><code class="language-shell">bundestag download abgeordnetenwatch 132
+</code></pre>
+<p>To transform the downloaded data run</p>
+<pre><code class="language-shell">bundestag transform abgeordnetenwatch 132
+</code></pre>
+<p>To find out the legislature id for the current Bundestag, visit <a href="https://www.abgeordnetenwatch.de/bundestag">abgeordnetenwatch.de</a> and click on the "Open Data" button at the bottom of the page.</p>
+<p>To download data from <a href="https://www.bundestag.de/parlament/plenum/abstimmung/liste">bundestag.de</a></p>
+<pre><code class="language-shell">bundestag download bundestag-sheets --do-create-xlsx-uris-json
+</code></pre>
+<p>Note that this is using selenium and is therefore starting a browser. Currently this is not using a headless browser so it is easy to see when the scraping should be broken.</p>
+<p>To transform the downloaded data run</p>
+<pre><code class="language-shell">bundestag transform bundestag-sheet --sheet-source=json_file
+</code></pre>
+<p>Note: If you run the extraction for the legislature with <a href="https://www.abgeordnetenwatch.de/bundestag/20">id 132</a>, i.e.</p>
+<pre><code class="language-shell">bundestag transform abgeordnetenwatch 132
+</code></pre>
+<p>the data is damaged for some reason. To fix it run</p>
+<pre><code class="language-shell">uv run python scripts/fix_empty_fraction.py
+</code></pre>
+<p><code>download</code> commands will store artefacts in <code>./data/raw</code> and <code>transform</code> commands will transform that data and store artefacts in <code>./data/preprocessed</code>.</p>
+<h3 id="the-get_xlsx_uris-cli">The <code>get_xlsx_uris</code> cli</h3>
+<p>Pre-processing cli for <code>bundestag</code> cli.</p>
+<pre><code class="language-shell">uv run get_xlsx_uris run --help
+</code></pre>
+<p>Module for collecting and storing XLSX URIs from Bundestag data sources. Also done with</p>
+<pre><code class="language-shell">bundestag download bundestag_sheet --do-create-xlsx-uris-json
+</code></pre>
+<h3 id="notebooks">Notebooks</h3>
+<ul>
+<li><a href="(https://github.com/eschmidt42/bundestag/blob/main/docs/fraktionszwang.ipynb)">fraktionszwang</a></li>
+<li><a href="https://github.com/eschmidt42/bundestag/blob/main/docs/analysis-highlights.ipynb">embedded members of parliament</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../analysis-highlights/" class="btn btn-neutral float-right" title="Embeddings">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../analysis-highlights/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

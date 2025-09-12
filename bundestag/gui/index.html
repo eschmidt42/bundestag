@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/gui/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>gui - bundestag</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "gui";
+        var mkdocs_page_input_path = "bundestag/gui.md";
+        var mkdocs_page_url = "/bundestag/bundestag/gui/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">gui</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+      <li class="breadcrumb-item active">gui</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/gui.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.gui"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bundestag.gui.GUI" class="doc doc-heading">
+            <code>GUI</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Base class for creating interactive GUIs in a Jupyter environment
+to explore voting similarity.</p>
+<p>This class provides the basic structure for a GUI, including widget
+initialization, rendering, and data filtering. It is meant to be
+subclassed to create specific GUIs (e.g., for analyzing an MdB or a party).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>name_widget</code></b>
+                  (<code><span title="ipywidgets.Combobox">Combobox</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Widget to select an entity (e.g., MdB or party).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>start_widget</code></b>
+                  (<code><span title="ipywidgets.DatePicker">DatePicker</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Widget to select the start date for filtering.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>end_widget</code></b>
+                  (<code><span title="ipywidgets.DatePicker">DatePicker</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Widget to select the end date for filtering.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>submit_widget</code></b>
+                  (<code><span title="ipywidgets.Button">Button</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Button to trigger the analysis.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>selection_widget</code></b>
+                  (<code><span title="ipywidgets.Label">Label</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Label to display the current selection.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>display_widget</code></b>
+                  (<code><span title="ipywidgets.Output">Output</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Widget to display plots and other output.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The main DataFrame with voting data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mdbs</code></b>
+                  (<code><span title="polars.Series">Series</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A Series of unique MdB names.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>parties</code></b>
+                  (<code><span title="polars.Series">Series</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A Series of unique party names.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>party_votes</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A pre-processed DataFrame with votes aggregated by party.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GUI</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for creating interactive GUIs in a Jupyter environment</span>
+<span class="sd">    to explore voting similarity.</span>
+
+<span class="sd">    This class provides the basic structure for a GUI, including widget</span>
+<span class="sd">    initialization, rendering, and data filtering. It is meant to be</span>
+<span class="sd">    subclassed to create specific GUIs (e.g., for analyzing an MdB or a party).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name_widget (widgets.Combobox): Widget to select an entity (e.g., MdB or party).</span>
+<span class="sd">        start_widget (widgets.DatePicker): Widget to select the start date for filtering.</span>
+<span class="sd">        end_widget (widgets.DatePicker): Widget to select the end date for filtering.</span>
+<span class="sd">        submit_widget (widgets.Button): Button to trigger the analysis.</span>
+<span class="sd">        selection_widget (widgets.Label): Label to display the current selection.</span>
+<span class="sd">        display_widget (widgets.Output): Widget to display plots and other output.</span>
+<span class="sd">        df (pl.DataFrame): The main DataFrame with voting data.</span>
+<span class="sd">        mdbs (pl.Series): A Series of unique MdB names.</span>
+<span class="sd">        parties (pl.Series): A Series of unique party names.</span>
+<span class="sd">        party_votes (pl.DataFrame): A pre-processed DataFrame with votes aggregated by party.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name_widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Combobox</span>
+    <span class="n">start_widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span>
+    <span class="n">end_widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span>
+    <span class="n">submit_widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span>
+    <span class="n">selection_widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span>
+    <span class="n">display_widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="n">mdbs</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">parties</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">party_votes</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the GUI with the voting data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pl.DataFrame): The main DataFrame containing detailed voting records.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mdbs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Bezeichnung&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parties</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">party_votes</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_votes_by_party</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_widgets</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the widgets for the GUI.</span>
+
+<span class="sd">        This method must be implemented by a subclass. It is responsible for</span>
+<span class="sd">        creating and configuring all the ipywidgets that make up the GUI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Not implemented in GUI, needs to be specified by child class&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Renders the GUI widgets in a vertical box layout.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            widgets.VBox: A VBox container with all the GUI widgets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_dfs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters the main and party vote DataFrames based on a date range.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            start_date (datetime.date | None): The start date for the filter.</span>
+<span class="sd">            end_date (datetime.date | None): The end date for the filter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[pl.DataFrame, pl.DataFrame]: A tuple containing the filtered</span>
+<span class="sd">                                               main DataFrame and the filtered</span>
+<span class="sd">                                               party votes DataFrame. If dates are</span>
+<span class="sd">                                               None, original dfs are returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start_date</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">party_votes</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_between</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">))</span>
+        <span class="n">party_votes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">party_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_between</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">party_votes</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.GUI.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes the GUI with the voting data.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The main DataFrame containing detailed voting records.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes the GUI with the voting data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The main DataFrame containing detailed voting records.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mdbs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Bezeichnung&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parties</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Fraktion/Gruppe&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">party_votes</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_votes_by_party</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">init_widgets</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.GUI.filter_dfs" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">filter_dfs</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Filters the main and party vote DataFrames based on a date range.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>start_date</code></b>
+                  (<code><span title="datetime.date">date</span> | None</code>)
+              –
+              <div class="doc-md-description">
+                <p>The start date for the filter.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>end_date</code></b>
+                  (<code><span title="datetime.date">date</span> | None</code>)
+              –
+              <div class="doc-md-description">
+                <p>The end date for the filter.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="tuple">tuple</span>[<span title="polars.DataFrame">DataFrame</span>, <span title="polars.DataFrame">DataFrame</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>tuple[pl.DataFrame, pl.DataFrame]: A tuple containing the filtered
+                               main DataFrame and the filtered
+                               party votes DataFrame. If dates are
+                               None, original dfs are returned.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">filter_dfs</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filters the main and party vote DataFrames based on a date range.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        start_date (datetime.date | None): The start date for the filter.</span>
+<span class="sd">        end_date (datetime.date | None): The end date for the filter.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[pl.DataFrame, pl.DataFrame]: A tuple containing the filtered</span>
+<span class="sd">                                           main DataFrame and the filtered</span>
+<span class="sd">                                           party votes DataFrame. If dates are</span>
+<span class="sd">                                           None, original dfs are returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">start_date</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">party_votes</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_between</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">))</span>
+    <span class="n">party_votes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">party_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_between</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">party_votes</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.GUI.init_widgets" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">init_widgets</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes the widgets for the GUI.</p>
+<p>This method must be implemented by a subclass. It is responsible for
+creating and configuring all the ipywidgets that make up the GUI.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">init_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes the widgets for the GUI.</span>
+
+<span class="sd">    This method must be implemented by a subclass. It is responsible for</span>
+<span class="sd">    creating and configuring all the ipywidgets that make up the GUI.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s2">&quot;Not implemented in GUI, needs to be specified by child class&quot;</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.GUI.render" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">render</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Renders the GUI widgets in a vertical box layout.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>widgets.VBox: A VBox container with all the GUI widgets.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders the GUI widgets in a vertical box layout.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        widgets.VBox: A VBox container with all the GUI widgets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bundestag.gui.MdBGUI" class="doc doc-heading">
+            <code>MdBGUI</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="GUI (bundestag.gui.GUI)" href="#bundestag.gui.GUI">GUI</a></code></p>
+
+
+        <p>A GUI for analyzing the voting similarity of a single MdB (Member of Parliament)
+against all political parties.</p>
+<p>This class extends the base <code>GUI</code> to provide an interface for selecting an MdB
+and a date range, then plotting their voting similarity compared to each party.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MdBGUI</span><span class="p">(</span><span class="n">GUI</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A GUI for analyzing the voting similarity of a single MdB (Member of Parliament)</span>
+<span class="sd">    against all political parties.</span>
+
+<span class="sd">    This class extends the base `GUI` to provide an interface for selecting an MdB</span>
+<span class="sd">    and a date range, then plotting their voting similarity compared to each party.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the specific widgets for the MdB analysis GUI.&quot;&quot;&quot;</span>
+        <span class="c1"># prints out the current selection of MdB, party and timespan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">()</span>
+
+        <span class="c1"># widget to render figures in</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+
+        <span class="c1"># submit button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Submit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_click</span><span class="p">)</span>
+
+        <span class="c1"># widgets to set MdB, party, timespan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Combobox</span><span class="p">(</span>
+            <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Choose an MdB&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdbs</span><span class="p">),</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;MdB:&quot;</span><span class="p">,</span>
+            <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Start date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;End date&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback function for the submit button click event.</span>
+
+<span class="sd">        This function retrieves the selected MdB and date range, filters the data,</span>
+<span class="sd">        computes the voting similarity between the MdB and all parties, and</span>
+<span class="sd">        displays the resulting plots.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            change: The event object from the button click.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mdb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">assert</span> <span class="n">mdb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please choose an MdB&quot;</span>
+
+        <span class="n">start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Selected: MdB = </span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2">, date range = </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">df</span><span class="p">,</span> <span class="n">party_votes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_dfs</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+        <span class="n">party_votes_pivoted</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">pivot_party_votes_df</span><span class="p">(</span><span class="n">party_votes</span><span class="p">)</span>
+
+        <span class="n">mdb_votes</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">prepare_votes_of_mdb</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">mdb</span><span class="p">)</span>
+
+        <span class="n">mdb_vs_parties</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">align_mdb_with_parties</span><span class="p">(</span><span class="n">mdb_votes</span><span class="p">,</span> <span class="n">party_votes_pivoted</span><span class="p">)</span>
+        <span class="n">mdb_vs_parties</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">compute_similarity</span><span class="p">(</span><span class="n">mdb_vs_parties</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_party&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="p">:</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">mdb_vs_parties</span><span class="p">,</span>
+                <span class="n">title_overall</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Overall similarity of </span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2"> with all parties&quot;</span><span class="p">,</span>
+                <span class="n">title_over_time</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2"> vs time&quot;</span><span class="p">,</span>
+                <span class="n">party_col</span><span class="o">=</span><span class="s2">&quot;Fraktion/Gruppe_party&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.MdBGUI.init_widgets" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">init_widgets</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes the specific widgets for the MdB analysis GUI.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">init_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes the specific widgets for the MdB analysis GUI.&quot;&quot;&quot;</span>
+    <span class="c1"># prints out the current selection of MdB, party and timespan</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">()</span>
+
+    <span class="c1"># widget to render figures in</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+
+    <span class="c1"># submit button</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Submit&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_click</span><span class="p">)</span>
+
+    <span class="c1"># widgets to set MdB, party, timespan</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Combobox</span><span class="p">(</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Choose an MdB&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdbs</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;MdB:&quot;</span><span class="p">,</span>
+        <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Start date&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;End date&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.MdBGUI.on_click" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">on_click</span><span class="p">(</span><span class="n">change</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Callback function for the submit button click event.</p>
+<p>This function retrieves the selected MdB and date range, filters the data,
+computes the voting similarity between the MdB and all parties, and
+displays the resulting plots.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>change</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The event object from the button click.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callback function for the submit button click event.</span>
+
+<span class="sd">    This function retrieves the selected MdB and date range, filters the data,</span>
+<span class="sd">    computes the voting similarity between the MdB and all parties, and</span>
+<span class="sd">    displays the resulting plots.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        change: The event object from the button click.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mdb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">assert</span> <span class="n">mdb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please choose an MdB&quot;</span>
+
+    <span class="n">start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span><span class="o">.</span><span class="n">value</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Selected: MdB = </span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2">, date range = </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">df</span><span class="p">,</span> <span class="n">party_votes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_dfs</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+    <span class="n">party_votes_pivoted</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">pivot_party_votes_df</span><span class="p">(</span><span class="n">party_votes</span><span class="p">)</span>
+
+    <span class="n">mdb_votes</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">prepare_votes_of_mdb</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">mdb</span><span class="p">)</span>
+
+    <span class="n">mdb_vs_parties</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">align_mdb_with_parties</span><span class="p">(</span><span class="n">mdb_votes</span><span class="p">,</span> <span class="n">party_votes_pivoted</span><span class="p">)</span>
+    <span class="n">mdb_vs_parties</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">compute_similarity</span><span class="p">(</span><span class="n">mdb_vs_parties</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_party&quot;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="p">:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">mdb_vs_parties</span><span class="p">,</span>
+            <span class="n">title_overall</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Overall similarity of </span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2"> with all parties&quot;</span><span class="p">,</span>
+            <span class="n">title_over_time</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mdb</span><span class="si">}</span><span class="s2"> vs time&quot;</span><span class="p">,</span>
+            <span class="n">party_col</span><span class="o">=</span><span class="s2">&quot;Fraktion/Gruppe_party&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bundestag.gui.PartyGUI" class="doc doc-heading">
+            <code>PartyGUI</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="GUI (bundestag.gui.GUI)" href="#bundestag.gui.GUI">GUI</a></code></p>
+
+
+        <p>A GUI for analyzing the voting similarity of a single political party
+against all other parties.</p>
+<p>This class extends the base <code>GUI</code> to provide an interface for selecting a party
+and a date range, then plotting its voting similarity compared to the other parties.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PartyGUI</span><span class="p">(</span><span class="n">GUI</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A GUI for analyzing the voting similarity of a single political party</span>
+<span class="sd">    against all other parties.</span>
+
+<span class="sd">    This class extends the base `GUI` to provide an interface for selecting a party</span>
+<span class="sd">    and a date range, then plotting its voting similarity compared to the other parties.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the specific widgets for the party analysis GUI.&quot;&quot;&quot;</span>
+        <span class="c1"># prints out the current selection of MdB, party and timespan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">()</span>
+
+        <span class="c1"># widget to render figures in</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+
+        <span class="c1"># submit button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Submit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_click</span><span class="p">)</span>
+
+        <span class="c1"># widgets to set MdB, party, timespan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Combobox</span><span class="p">(</span>
+            <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Choose a Party&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parties</span><span class="p">),</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Party:&quot;</span><span class="p">,</span>
+            <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Start date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;End date&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback function for the submit button click event.</span>
+
+<span class="sd">        This function retrieves the selected party and date range, filters the data,</span>
+<span class="sd">        computes the voting similarity between the selected party and all others,</span>
+<span class="sd">        and displays the resulting plots.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            change: The event object from the button click.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">party</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">assert</span> <span class="n">party</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please choose a Party&quot;</span>
+
+        <span class="n">start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Selected: Party = </span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s2">, date range = </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">party_votes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_dfs</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+        <span class="n">party_votes_pivoted</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">pivot_party_votes_df</span><span class="p">(</span><span class="n">party_votes</span><span class="p">)</span>
+
+        <span class="n">partyA_vs_rest</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">align_party_with_all_parties</span><span class="p">(</span>
+            <span class="n">party_votes_pivoted</span><span class="p">,</span> <span class="n">party</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">compute_similarity</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_b&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="p">:</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">partyA_vs_rest</span><span class="p">,</span>
+                <span class="n">title_overall</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Overall similarity of </span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s2"> with all other parties&quot;</span><span class="p">,</span>
+                <span class="n">title_over_time</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s2"> vs time&quot;</span><span class="p">,</span>
+                <span class="n">party_col</span><span class="o">=</span><span class="s2">&quot;Fraktion/Gruppe_b&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.PartyGUI.init_widgets" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">init_widgets</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes the specific widgets for the party analysis GUI.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">init_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes the specific widgets for the party analysis GUI.&quot;&quot;&quot;</span>
+    <span class="c1"># prints out the current selection of MdB, party and timespan</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">()</span>
+
+    <span class="c1"># widget to render figures in</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+
+    <span class="c1"># submit button</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Submit&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">submit_widget</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_click</span><span class="p">)</span>
+
+    <span class="c1"># widgets to set MdB, party, timespan</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Combobox</span><span class="p">(</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Choose a Party&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parties</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Party:&quot;</span><span class="p">,</span>
+        <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Start date&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;End date&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.gui.PartyGUI.on_click" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">on_click</span><span class="p">(</span><span class="n">change</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Callback function for the submit button click event.</p>
+<p>This function retrieves the selected party and date range, filters the data,
+computes the voting similarity between the selected party and all others,
+and displays the resulting plots.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>change</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The event object from the button click.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/gui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callback function for the submit button click event.</span>
+
+<span class="sd">    This function retrieves the selected party and date range, filters the data,</span>
+<span class="sd">    computes the voting similarity between the selected party and all others,</span>
+<span class="sd">    and displays the resulting plots.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        change: The event object from the button click.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">party</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_widget</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">assert</span> <span class="n">party</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please choose a Party&quot;</span>
+
+    <span class="n">start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_widget</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_widget</span><span class="o">.</span><span class="n">value</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">selection_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Selected: Party = </span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s2">, date range = </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">party_votes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_dfs</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+    <span class="n">party_votes_pivoted</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">pivot_party_votes_df</span><span class="p">(</span><span class="n">party_votes</span><span class="p">)</span>
+
+    <span class="n">partyA_vs_rest</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">align_party_with_all_parties</span><span class="p">(</span>
+        <span class="n">party_votes_pivoted</span><span class="p">,</span> <span class="n">party</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">compute_similarity</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_b&quot;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_widget</span><span class="p">:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">partyA_vs_rest</span><span class="p">,</span>
+            <span class="n">title_overall</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Overall similarity of </span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s2"> with all other parties&quot;</span><span class="p">,</span>
+            <span class="n">title_over_time</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">party</span><span class="si">}</span><span class="s2"> vs time&quot;</span><span class="p">,</span>
+            <span class="n">party_col</span><span class="o">=</span><span class="s2">&quot;Fraktion/Gruppe_b&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../ml/vote_prediction/" class="btn btn-neutral float-left" title="vote_prediction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../fine_logging/" class="btn btn-neutral float-right" title="fine_logging">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../ml/vote_prediction/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../fine_logging/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

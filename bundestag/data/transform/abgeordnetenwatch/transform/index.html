@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/data/transform/abgeordnetenwatch/transform/" />
+      <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
+    <title>transform - bundestag</title>
+    <link rel="stylesheet" href="../../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "transform";
+        var mkdocs_page_input_path = "bundestag/data/transform/abgeordnetenwatch/transform.md";
+        var mkdocs_page_url = "/bundestag/bundestag/data/transform/abgeordnetenwatch/transform/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >data</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../../">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >transform</a>
+    <ul class="current">
+                <li class="toctree-l3 current"><a class="reference internal current" >abgeordnetenwatch</a>
+    <ul class="current">
+                <li class="toctree-l4"><a class="reference internal" href="../helper/">helper</a>
+                </li>
+                <li class="toctree-l4 current"><a class="reference internal current" href="#">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../paths/">paths</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+          <li class="breadcrumb-item">data</li>
+          <li class="breadcrumb-item">transform</li>
+          <li class="breadcrumb-item">abgeordnetenwatch</li>
+      <li class="breadcrumb-item active">transform</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/data/transform/abgeordnetenwatch/transform.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.data.transform.abgeordnetenwatch.transform"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.get_mandates_parquet_path" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_mandates_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Constructs the file path for the mandates Parquet file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>legislature_id</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The ID of the legislature.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path to the directory for preprocessed data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Path</code></b>(                  <code><span title="pathlib.Path">Path</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The full path to the mandates Parquet file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_mandates_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs the file path for the mandates Parquet file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        legislature_id (int): The ID of the legislature.</span>
+<span class="sd">        preprocessed_path (Path): The path to the directory for preprocessed data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path: The full path to the mandates Parquet file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">preprocessed_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;mandates_</span><span class="si">{</span><span class="n">legislature_id</span><span class="si">}</span><span class="s2">.parquet&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.get_polls_parquet_path" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_polls_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Constructs the file path for the polls Parquet file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>legislature_id</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The ID of the legislature.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path to the directory for preprocessed data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Path</code></b>(                  <code><span title="pathlib.Path">Path</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The full path to the polls Parquet file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_polls_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs the file path for the polls Parquet file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        legislature_id (int): The ID of the legislature.</span>
+<span class="sd">        preprocessed_path (Path): The path to the directory for preprocessed data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path: The full path to the polls Parquet file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">preprocessed_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;polls_</span><span class="si">{</span><span class="n">legislature_id</span><span class="si">}</span><span class="s2">.parquet&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.get_votes_csv_path" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_votes_csv_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Constructs the file path for the votes CSV file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>legislature_id</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The ID of the legislature.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path to the directory for preprocessed data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Path</code></b>(                  <code><span title="pathlib.Path">Path</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The full path to the votes CSV file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_votes_csv_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs the file path for the votes CSV file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        legislature_id (int): The ID of the legislature.</span>
+<span class="sd">        preprocessed_path (Path): The path to the directory for preprocessed data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path: The full path to the votes CSV file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">preprocessed_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;votes_</span><span class="si">{</span><span class="n">legislature_id</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.get_votes_parquet_path" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_votes_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Constructs the file path for the votes Parquet file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>legislature_id</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The ID of the legislature.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path to the directory for preprocessed data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Path</code></b>(                  <code><span title="pathlib.Path">Path</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The full path to the votes Parquet file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_votes_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs the file path for the votes Parquet file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        legislature_id (int): The ID of the legislature.</span>
+<span class="sd">        preprocessed_path (Path): The path to the directory for preprocessed data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path: The full path to the votes Parquet file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">preprocessed_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;votes_</span><span class="si">{</span><span class="n">legislature_id</span><span class="si">}</span><span class="s2">.parquet&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.run" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">raw_path</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">,</span> <span class="n">dry</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">assume_yes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Runs the full data transformation pipeline for abgeordnetenwatch data for a given legislature.</p>
+<p>This function performs the following steps:
+1. Loads and processes polls data, then saves it as a Parquet file.
+2. Loads, transforms, and processes mandates data, then saves it as a Parquet file.
+3. Compiles and transforms votes data, then saves it as both CSV and Parquet files.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>legislature_id</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The ID of the legislature to process.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path to the directory containing the raw data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path to the directory where the preprocessed data will be saved.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dry</code></b>
+                  (<code><span title="bool">bool</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>If True, the function will only log the actions it would take without writing any files.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>validate</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A flag for validation during vote compilation. Defaults to False.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>assume_yes</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, it will automatically create the preprocessed path if it doesn't exist. Defaults to False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If <code>dry</code> is False and either <code>raw_path</code> or <code>preprocessed_path</code> is not provided.</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If <code>raw_path</code> does not exist.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+    <span class="n">legislature_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">raw_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">preprocessed_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">dry</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">assume_yes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs the full data transformation pipeline for abgeordnetenwatch data for a given legislature.</span>
+
+<span class="sd">    This function performs the following steps:</span>
+<span class="sd">    1. Loads and processes polls data, then saves it as a Parquet file.</span>
+<span class="sd">    2. Loads, transforms, and processes mandates data, then saves it as a Parquet file.</span>
+<span class="sd">    3. Compiles and transforms votes data, then saves it as both CSV and Parquet files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        legislature_id (int): The ID of the legislature to process.</span>
+<span class="sd">        raw_path (Path): The path to the directory containing the raw data.</span>
+<span class="sd">        preprocessed_path (Path): The path to the directory where the preprocessed data will be saved.</span>
+<span class="sd">        dry (bool): If True, the function will only log the actions it would take without writing any files.</span>
+<span class="sd">        validate (bool, optional): A flag for validation during vote compilation. Defaults to False.</span>
+<span class="sd">        assume_yes (bool, optional): If True, it will automatically create the preprocessed path if it doesn&#39;t exist. Defaults to False.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If `dry` is False and either `raw_path` or `preprocessed_path` is not provided.</span>
+<span class="sd">        ValueError: If `raw_path` does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start transforming abgeordnetenwatch data for </span><span class="si">{</span><span class="n">legislature_id</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dry</span> <span class="ow">and</span> <span class="p">(</span><span class="n">raw_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">preprocessed_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;When </span><span class="si">{</span><span class="n">dry</span><span class="si">=}</span><span class="s2"> `raw_path` and or `preprocessed_path` cannot be None.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ensure paths exist</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dry</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">raw_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">raw_path</span><span class="si">=}</span><span class="s2"> doesn&#39;t exist, terminating transformation.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dry</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">preprocessed_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">ensure_path_exists</span><span class="p">(</span><span class="n">preprocessed_path</span><span class="p">,</span> <span class="n">assume_yes</span><span class="o">=</span><span class="n">assume_yes</span><span class="p">)</span>
+
+    <span class="c1"># polls</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">get_polls_data</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">raw_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dry</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">get_polls_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;writing to </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">write_parquet</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="c1"># mandates</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">get_mandates_data</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">raw_path</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">transform_mandates_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dry</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">get_mandates_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing to </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">write_parquet</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="c1"># votes</span>
+    <span class="n">df_all_votes</span> <span class="o">=</span> <span class="n">compile_votes_data</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">raw_path</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+    <span class="n">df_all_votes</span> <span class="o">=</span> <span class="n">transform_votes_data</span><span class="p">(</span><span class="n">df_all_votes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dry</span><span class="p">:</span>
+        <span class="n">all_votes_path</span> <span class="o">=</span> <span class="n">get_votes_csv_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing to </span><span class="si">{</span><span class="n">all_votes_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">df_all_votes</span><span class="o">.</span><span class="n">write_csv</span><span class="p">(</span><span class="n">all_votes_path</span><span class="p">)</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">get_votes_parquet_path</span><span class="p">(</span><span class="n">legislature_id</span><span class="p">,</span> <span class="n">preprocessed_path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing to </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">df_all_votes</span><span class="o">.</span><span class="n">write_parquet</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Done transforming abgeordnetenwatch data for </span><span class="si">{</span><span class="n">legislature_id</span><span class="si">=}</span><span class="s2"> after </span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.transform_mandates_data" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">transform_mandates_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Transforms mandates data by extracting party information.</p>
+<p>This function adds two new columns to the DataFrame:
+- 'all_parties': A list of all parties a politician has been a member of, extracted from the 'fraction_names' column.
+- 'party': The most recent party of the politician, taken as the last element from the 'all_parties' list.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input DataFrame containing mandates data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: The transformed DataFrame with added party information.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_mandates_data</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms mandates data by extracting party information.</span>
+
+<span class="sd">    This function adds two new columns to the DataFrame:</span>
+<span class="sd">    - &#39;all_parties&#39;: A list of all parties a politician has been a member of, extracted from the &#39;fraction_names&#39; column.</span>
+<span class="sd">    - &#39;party&#39;: The most recent party of the politician, taken as the last element from the &#39;all_parties&#39; list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The input DataFrame containing mandates data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: The transformed DataFrame with added party information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="s2">&quot;all_parties&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;fraction_names&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map_elements</span><span class="p">(</span><span class="n">get_parties_from_col</span><span class="p">)}</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;party&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;all_parties&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">last</span><span class="p">()})</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.data.transform.abgeordnetenwatch.transform.transform_votes_data" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">transform_votes_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Transforms votes data by extracting the politician's name.</p>
+<p>This function adds a 'politician name' column to the DataFrame by extracting the name
+from the 'mandate' column, which typically has the format "Politician Name (Party)".</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input DataFrame containing votes data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>pl.DataFrame: The transformed DataFrame with the added 'politician name' column.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/data/transform/abgeordnetenwatch/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_votes_data</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms votes data by extracting the politician&#39;s name.</span>
+
+<span class="sd">    This function adds a &#39;politician name&#39; column to the DataFrame by extracting the name</span>
+<span class="sd">    from the &#39;mandate&#39; column, which typically has the format &quot;Politician Name (Party)&quot;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pl.DataFrame): The input DataFrame containing votes data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pl.DataFrame: The transformed DataFrame with the added &#39;politician name&#39; column.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="s2">&quot;politician name&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mandate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(.*?) \s*\(&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../helper/" class="btn btn-neutral float-left" title="helper"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../process/mandates/" class="btn btn-neutral float-right" title="mandates">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../helper/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../process/mandates/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../../..";</script>
+    <script src="../../../../../js/theme_extra.js"></script>
+    <script src="../../../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

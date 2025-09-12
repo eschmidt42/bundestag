@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://eschmidt42.github.io/bundestag/bundestag/paths/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>paths - bundestag</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "paths";
+        var mkdocs_page_input_path = "bundestag/paths.md";
+        var mkdocs_page_url = "/bundestag/bundestag/paths/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> bundestag
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../how-to-use/">How to use</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Analysis</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../analysis-highlights/">Embeddings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fraktionszwang/">Fraktionszwang</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >cli</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/__main__/">__main__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/download/">download</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/transform/">transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../cli/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >data</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../data/">__init__</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >download</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/cli/">cli</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/download/">download</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/request/">request</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/download/abgeordnetenwatch/store/">store</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/download/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/download/huggingface/">huggingface</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >transform</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >abgeordnetenwatch</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../data/transform/abgeordnetenwatch/helper/">helper</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../data/transform/abgeordnetenwatch/transform/">transform</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >process</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../data/transform/bundestag_sheets/">bundestag_sheets</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >ml</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/poll_clustering/">poll_clustering</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/similarity/">similarity</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../ml/vote_prediction/">vote_prediction</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gui/">gui</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fine_logging/">fine_logging</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">paths</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../schemas/">schemas</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">bundestag</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation</li>
+      <li class="breadcrumb-item active">paths</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/eschmidt42/bundestag/edit/master/docs/bundestag/paths.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="bundestag.paths"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bundestag.paths.Paths" class="doc doc-heading">
+            <code>Paths</code>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>A dataclass to manage all relevant paths for the project's data directory.</p>
+<p>This class centralizes the definition of the directory structure for raw and
+preprocessed data, making it easier to manage and access files throughout
+the project. Upon initialization, it constructs <code>pathlib.Path</code> objects for
+various subdirectories.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>root_path</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The root directory for the data (e.g., 'data/').</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the raw data directory.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the preprocessed data directory.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>abgeordnetenwatch</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The subdirectory name for Abgeordnetenwatch data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>bundestag</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The subdirectory name for Bundestag data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw_base</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The full path to the raw data directory.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw_abgeordnetenwatch</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to raw Abgeordnetenwatch data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw_bundestag</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to raw Bundestag data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw_bundestag_html</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to raw Bundestag HTML files.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>raw_bundestag_sheets</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to raw Bundestag Excel sheets.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_base</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The full path to the preprocessed data directory.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_abgeordnetenwatch</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to preprocessed Abgeordnetenwatch data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>preprocessed_bundestag</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to preprocessed Bundestag data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/bundestag/paths.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Paths</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dataclass to manage all relevant paths for the project&#39;s data directory.</span>
+
+<span class="sd">    This class centralizes the definition of the directory structure for raw and</span>
+<span class="sd">    preprocessed data, making it easier to manage and access files throughout</span>
+<span class="sd">    the project. Upon initialization, it constructs `pathlib.Path` objects for</span>
+<span class="sd">    various subdirectories.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        root_path (Path): The root directory for the data (e.g., &#39;data/&#39;).</span>
+<span class="sd">        raw (str): The name of the raw data directory.</span>
+<span class="sd">        preprocessed (str): The name of the preprocessed data directory.</span>
+<span class="sd">        abgeordnetenwatch (str): The subdirectory name for Abgeordnetenwatch data.</span>
+<span class="sd">        bundestag (str): The subdirectory name for Bundestag data.</span>
+<span class="sd">        raw_base (Path): The full path to the raw data directory.</span>
+<span class="sd">        raw_abgeordnetenwatch (Path): Path to raw Abgeordnetenwatch data.</span>
+<span class="sd">        raw_bundestag (Path): Path to raw Bundestag data.</span>
+<span class="sd">        raw_bundestag_html (Path): Path to raw Bundestag HTML files.</span>
+<span class="sd">        raw_bundestag_sheets (Path): Path to raw Bundestag Excel sheets.</span>
+<span class="sd">        preprocessed_base (Path): The full path to the preprocessed data directory.</span>
+<span class="sd">        preprocessed_abgeordnetenwatch (Path): Path to preprocessed Abgeordnetenwatch data.</span>
+<span class="sd">        preprocessed_bundestag (Path): Path to preprocessed Bundestag data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">root_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;raw&quot;</span>
+    <span class="n">preprocessed</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;preprocessed&quot;</span>
+    <span class="n">abgeordnetenwatch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;abgeordnetenwatch&quot;</span>
+    <span class="n">bundestag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bundestag&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs the full paths to subdirectories after the dataclass is initialized.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_abgeordnetenwatch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">abgeordnetenwatch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bundestag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag</span> <span class="o">/</span> <span class="s2">&quot;htm_files&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_sheets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag</span> <span class="o">/</span> <span class="s2">&quot;sheets&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_abgeordnetenwatch</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">abgeordnetenwatch</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_bundestag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bundestag</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_raw_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the directory structure for raw data.</span>
+
+<span class="sd">        This method iterates through the defined raw data paths and creates the</span>
+<span class="sd">        corresponding directories on the filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dry (bool, optional): If True, the method will only log the paths</span>
+<span class="sd">                                  that would be created without actually creating</span>
+<span class="sd">                                  them. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating paths for raw data&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_html</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_sheets</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dry</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_preprocessed_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the directory structure for preprocessed data.</span>
+
+<span class="sd">        This method iterates through the defined preprocessed data paths and</span>
+<span class="sd">        creates the corresponding directories on the filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dry (bool, optional): If True, the method will only log the paths</span>
+<span class="sd">                                  that would be created without actually creating</span>
+<span class="sd">                                  them. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating paths for preprocessed data&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_abgeordnetenwatch</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_bundestag</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dry</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates all necessary directory structures for both raw and preprocessed data.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_raw_paths</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_preprocessed_paths</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.paths.Paths.__post_init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">__post_init__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Constructs the full paths to subdirectories after the dataclass is initialized.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/paths.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs the full paths to subdirectories after the dataclass is initialized.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">raw_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">raw_abgeordnetenwatch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">abgeordnetenwatch</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bundestag</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag</span> <span class="o">/</span> <span class="s2">&quot;htm_files&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_sheets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag</span> <span class="o">/</span> <span class="s2">&quot;sheets&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_abgeordnetenwatch</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">abgeordnetenwatch</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_bundestag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bundestag</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.paths.Paths.make_paths" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">make_paths</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates all necessary directory structures for both raw and preprocessed data.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/paths.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates all necessary directory structures for both raw and preprocessed data.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">make_raw_paths</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">make_preprocessed_paths</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.paths.Paths.make_preprocessed_paths" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">make_preprocessed_paths</span><span class="p">(</span><span class="n">dry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates the directory structure for preprocessed data.</p>
+<p>This method iterates through the defined preprocessed data paths and
+creates the corresponding directories on the filesystem.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dry</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, the method will only log the paths
+                  that would be created without actually creating
+                  them. Defaults to False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/paths.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_preprocessed_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the directory structure for preprocessed data.</span>
+
+<span class="sd">    This method iterates through the defined preprocessed data paths and</span>
+<span class="sd">    creates the corresponding directories on the filesystem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dry (bool, optional): If True, the method will only log the paths</span>
+<span class="sd">                              that would be created without actually creating</span>
+<span class="sd">                              them. Defaults to False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating paths for preprocessed data&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_abgeordnetenwatch</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessed_bundestag</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dry</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bundestag.paths.Paths.make_raw_paths" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">make_raw_paths</span><span class="p">(</span><span class="n">dry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates the directory structure for raw data.</p>
+<p>This method iterates through the defined raw data paths and creates the
+corresponding directories on the filesystem.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dry</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, the method will only log the paths
+                  that would be created without actually creating
+                  them. Defaults to False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/paths.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_raw_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the directory structure for raw data.</span>
+
+<span class="sd">    This method iterates through the defined raw data paths and creates the</span>
+<span class="sd">    corresponding directories on the filesystem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dry (bool, optional): If True, the method will only log the paths</span>
+<span class="sd">                              that would be created without actually creating</span>
+<span class="sd">                              them. Defaults to False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating paths for raw data&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_html</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_bundestag_sheets</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dry</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bundestag.paths.get_paths" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_paths</span><span class="p">(</span><span class="n">root_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>A factory function to create a Paths object.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>root_path</code></b>
+                  (<code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The root path for the data directory.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Paths</code></b>(                  <code><a class="autorefs autorefs-internal" title="Paths
+
+
+  
+      dataclass
+   (bundestag.paths.Paths)" href="#bundestag.paths.Paths">Paths</a></code>
+)              –
+              <div class="doc-md-description">
+                <p>An initialized Paths object.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bundestag/paths.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_paths</span><span class="p">(</span><span class="n">root_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Paths</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A factory function to create a Paths object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        root_path (str | Path): The root path for the data directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Paths: An initialized Paths object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Paths</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../fine_logging/" class="btn btn-neutral float-left" title="fine_logging"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../schemas/" class="btn btn-neutral float-right" title="schemas">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/eschmidt42/bundestag/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../fine_logging/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../schemas/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
