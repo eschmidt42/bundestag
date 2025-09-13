@@ -137,7 +137,7 @@ class TestSpacyTransformer:
     col = "poll_title"
     nlp_col = f"{col}_nlp_processed"
     num_topics = 7
-    expected_nlp_cols = [f"nlp_dim{i}" for i in range(num_topics)]
+    expected_nlp_cols = [f"topic_{i}" for i in range(num_topics)]
 
     def test_cleaned_text(
         self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer
@@ -187,20 +187,10 @@ class TestSpacyTransformer:
             num_topics=self.num_topics,
         )
 
-        if return_new_cols:
-            df_lda, new_cols = spacy_transformer.transform(
-                df_polls,
-                col=self.nlp_col,
-                return_new_cols=return_new_cols,
-            )
-
-        else:
-            df_lda = spacy_transformer.transform(
-                df_polls,
-                col=self.nlp_col,
-                return_new_cols=return_new_cols,
-            )
-            new_cols = None
+        df_lda = spacy_transformer.transform(
+            df_polls,
+            col=self.nlp_col,
+        )
 
         assert isinstance(df_lda, pl.DataFrame)
         assert df_lda.shape == (
@@ -208,10 +198,6 @@ class TestSpacyTransformer:
             self.num_topics + 1 + df_polls.shape[1],
         )
         assert all([c in df_lda.columns for c in self.expected_nlp_cols])
-
-        if return_new_cols:
-            assert isinstance(new_cols, list)
-            assert all([c in new_cols for c in self.expected_nlp_cols])
 
 
 def test_get_word_frequencies():

@@ -100,6 +100,8 @@ def clean_text(s: str, nlp: spacy.language.Language) -> list[str]:
 
 
 class SpacyTransformer:
+    nlp_cols: list[str]
+
     """A transformer class for cleaning text and fitting/applying a gensim LDA model."""
 
     def __init__(self, language: str = "de_core_news_sm"):
@@ -123,7 +125,9 @@ class SpacyTransformer:
         self.dictionary = corpora.Dictionary(documents)
         self.corpus = [self.dictionary.doc2bow(doc) for doc in documents]
 
-    def fit_lda(self, documents: list[list[str]], num_topics: int = 10):
+    def fit_lda(
+        self, documents: list[list[str]], num_topics: int = 10, random_state: int = 42
+    ):
         """Fits a Latent Dirichlet Allocation (LDA) model to the documents.
 
         This method first performs preprocessing and then fits the LDA model.
@@ -137,7 +141,10 @@ class SpacyTransformer:
 
         logger.debug(f"Fitting LDA topics for {len(documents)}")
         self.lda_model = gensim.models.LdaMulticore(
-            corpus=self.corpus, id2word=self.dictionary, num_topics=num_topics
+            corpus=self.corpus,
+            id2word=self.dictionary,
+            num_topics=num_topics,
+            random_state=random_state,
         )
         self.lda_topics = {
             i: descr
@@ -145,14 +152,14 @@ class SpacyTransformer:
         }
 
     def transform_documents(
-        self, documents: pl.DataFrame, col: str, label: str = "nlp"
+        self, documents: pl.DataFrame, col: str, label: str = "topic"
     ) -> pl.DataFrame:
         """Transforms documents into a dense matrix of LDA topic scores.
 
         Args:
             documents (pl.DataFrame): A DataFrame containing the documents to be transformed.
             col (str): The name of the column containing the tokenized documents.
-            label (str, optional): A prefix for the new topic score columns. Defaults to "nlp".
+            label (str, optional): A prefix for the new topic score columns. Defaults to "topic".
 
         Returns:
             pl.DataFrame: A new DataFrame with columns for each topic's score.
@@ -162,17 +169,17 @@ class SpacyTransformer:
         corpus = [self.dictionary.doc2bow(doc) for doc in documents[col]]
         scores = list(self.lda_model[corpus])
         dense = make_topic_scores_dense(scores)  # type: ignore
+        self.nlp_cols = [f"{label}_{i}" for i in range(dense.shape[1])]
         return documents.with_columns(
-            **{f"{label}_dim{i}": pl.Series(dense[:, i]) for i in range(dense.shape[1])}
+            **{c: pl.Series(dense[:, i]) for i, c in enumerate(self.nlp_cols)}
         ).drop(col)
 
     def transform(
         self,
         df: pl.DataFrame,
         col: str = "poll_title_nlp_processed",
-        label: str = "nlp",
-        return_new_cols: bool = False,
-    ):
+        label: str = "topic",
+    ) -> pl.DataFrame:
         """Applies the fitted LDA model to a DataFrame to get topic scores.
 
         This method joins the topic scores back to the original DataFrame.
@@ -180,7 +187,7 @@ class SpacyTransformer:
         Args:
             df (pl.DataFrame): The DataFrame to transform.
             col (str, optional): The column containing the tokenized documents. Defaults to "poll_title_nlp_processed".
-            label (str, optional): The prefix for the new topic score columns. Defaults to "nlp".
+            label (str, optional): The prefix for the new topic score columns. Defaults to "topic".
             return_new_cols (bool, optional): If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.
 
         Returns:
@@ -193,8 +200,6 @@ class SpacyTransformer:
         new_cols = [c for c in df_lda.columns if c.startswith(label)]
         logger.debug(f"Adding nlp features: {new_cols}")
 
-        if return_new_cols:
-            return tmp, new_cols
         return tmp
 
 
