@@ -1,18 +1,23 @@
+# Deploy MkDocs site via Upload/Deploy Pages actions (recommended)
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 name: documentation
 
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-
     strategy:
       matrix:
         python-version:
@@ -32,18 +37,21 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       run: uv python install ${{ matrix.python-version }}
 
-    - name: Create virtal environment
-      run: |-
-          make install-docs-env
+    - name: Create virtual environment
+      run: make install-docs-env
 
     - name: Download data
-      run: |-
-          uv run bundestag download huggingface --y
+      run: uv run bundestag download huggingface --y
 
-    - name: Build documentation
-      run: |-
-          make docs
+    - name: Build documentation (mkdocs)
+      # Ensure this produces the static site in the 'site' directory
+      run: |
+        uv run mkdocs build -d site
 
-    - name: Deploy documentation
-      run: |-
-          uv run mkdocs gh-deploy --force
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: site
+
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
