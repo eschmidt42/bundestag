@@ -9,9 +9,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -49,10 +46,11 @@ jobs:
       run: |
         uv run mkdocs build -d site
 
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
+    - name: Deploy to gh-pages branch
+      uses: peaceiris/actions-gh-pages@v4
       with:
-        path: site
-
-    - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v4
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site
+        publish_branch: gh-pages
+        # optional: set a deploy commit message
+        commit_message: "docs: deploy site from CI"
