@@ -1,18 +1,21 @@
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 name: documentation
 
 on:
   push:
     branches:
-    - main
-  pull_request:
-    branches:
-    - main
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
     timeout-minutes: 10
-
     strategy:
       matrix:
         python-version:
@@ -32,18 +35,22 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       run: uv python install ${{ matrix.python-version }}
 
-    - name: Create virtal environment
-      run: |-
-          make install-docs-env
+    - name: Create virtual environment
+      run: make install-docs-env
 
     - name: Download data
-      run: |-
-          uv run bundestag download huggingface --y
+      run: uv run bundestag download huggingface --y
 
-    - name: Build documentation
-      run: |-
-          make docs
+    - name: Build documentation (mkdocs)
+      # Ensure this produces the static site in the 'site' directory
+      run: |
+        uv run mkdocs build -d site
 
-    - name: Deploy documentation
-      run: |-
-          uv run mkdocs gh-deploy --force
+    - name: Deploy to gh-pages branch
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site
+        publish_branch: gh-pages
+        # optional: set a deploy commit message
+        commit_message: "docs: deploy site from CI"
