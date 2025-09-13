@@ -1,4 +1,3 @@
-# Deploy MkDocs site via Upload/Deploy Pages actions (recommended)
 permissions:
   contents: write
   pages: write
@@ -17,6 +16,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
     timeout-minutes: 10
     strategy:
       matrix:
