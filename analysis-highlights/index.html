@@ -399,7 +399,7 @@ pprint(lrs)
 )  # performs training using one-cycle hyperparameter schedule
 </code></pre>
 <p><strong>Predictions over unseen data</strong></p>
-<p>Inspecting the predictions of the neural net over the validation set. </p>
+<p>Inspecting the predictions of the neural net over the validation set.</p>
 <pre><code class="language-python">df_mandates.head()
 </code></pre>
 <pre><code class="language-python">df_all_votes.head()
@@ -408,7 +408,7 @@ pprint(lrs)
     learn, df_all_votes, df_mandates, df_polls, splits, n_worst_politicians=5
 )
 </code></pre>
-<p>Splitting our dataset randomly leads to a surprisingly good accuracy of ~88% over the validation set. The most reasonable explanation is that the model encountered polls and how most politicians voted for them already during training. </p>
+<p>Splitting our dataset randomly leads to a surprisingly good accuracy of ~88% over the validation set. The most reasonable explanation is that the model encountered polls and how most politicians voted for them already during training.</p>
 <p>This can be interpreted as, if it is known how most politicians will vote during a poll, then the vote of the remaining politicians is highly predictable. Splitting the data set by <code>poll_id</code>, as can be done using <code>vp.poll_splitter</code> leads to random chance predictions. Anything else would be surprising as well since the only available information provided to the model is who is voting.</p>
 <p><strong>Visualising learned embeddings</strong></p>
 <p>Besides the actual prediction it also is interesting to inspect what the model actually learned. This can sometimes lead to <a href="https://github.com/entron/entity-embedding-rossmann">surprises</a>.</p>
@@ -416,7 +416,7 @@ pprint(lrs)
 <pre><code class="language-python">learn.model.cpu()
 embeddings = get_embeddings(learn)
 </code></pre>
-<p>To make sense of the embeddings for <code>poll_id</code> as well as <code>politician name</code> we apply Principal Component Analysis (so one still kind of understands what distances mean) and project down to 2d. </p>
+<p>To make sense of the embeddings for <code>poll_id</code> as well as <code>politician name</code> we apply Principal Component Analysis (so one still kind of understands what distances mean) and project down to 2d.</p>
 <p>Using the information which party was most strongly (% of their votes being "yes"), so its strongest proponent, we color code the individual polls.</p>
 <pre><code class="language-python">embeddings_pl = {
     &quot;politician name&quot;: pl.DataFrame(
@@ -474,7 +474,7 @@ if makedocs:
     fig.save(_fig_path / &quot;mandate_embeddings.png&quot;)
 </code></pre>
 <p><img alt="" src="../images/mandate_embeddings.png" /></p>
-<p>The politician embeddings may be the most surprising finding in its clarity. It seems we find for polls and politicians 2-3 clusters, but for politicians with a significant grouping of mandates associated with the government coalition. It seems we find one cluster for the government parties and one for the government opposition. </p>
+<p>The politician embeddings may be the most surprising finding in its clarity. It seems we find for polls and politicians 2-3 clusters, but for politicians with a significant grouping of mandates associated with the government coalition. It seems we find one cluster for the government parties and one for the government opposition.</p>
 <pre><code class="language-python">
 </code></pre>
               
