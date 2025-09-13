@@ -4,12 +4,10 @@ from typing import Any
 
 import gensim
 import gensim.corpora as corpora
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import polars as pl
-import seaborn as sns
 import spacy
+from plotnine import aes, geom_histogram, ggplot, labs, scale_fill_manual
 
 logger = logging.getLogger(__name__)
 
@@ -200,85 +198,79 @@ class SpacyTransformer:
         return tmp
 
 
-def get_word_frequencies(df: pd.DataFrame, col: str) -> pd.Series:
+def get_word_frequencies(df: pl.DataFrame, col: str) -> pl.DataFrame:
     """Calculates word frequencies across a column of tokenized documents.
 
     Args:
-        df (pd.DataFrame): A DataFrame containing the documents.
+        df (pl.DataFrame): A DataFrame containing the documents.
         col (str): The name of the column that holds the lists of tokens.
 
     Returns:
-        pd.Series: A Series with words as the index and their frequencies as values, sorted in descending order.
+        pl.DataFrame: A DataFrame with words and their frequencies as columns, sorted in descending order.
     """
 
-    return pd.Series([_w for w in df[col].values for _w in w]).value_counts()
+    return df[col].list.explode().value_counts(sort=True)
 
 
 def compare_word_frequencies(
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     col0: str,
     col1: str,
-    topn: int = 20,
-    label0: str = "before spacy",
-    label1: str = "after spacy",
-    title="Word counts before and after spacy processing",
-):
-    """Compares and visualizes word frequencies and counts before and after text processing.
+    topn: int = 5,
+) -> ggplot:
+    """Compare word frequency distributions for two text columns and return a plot.
 
-    This function prints the top N most frequent words for two different text columns
-    (e.g., raw text and cleaned text) and plots histograms of the word counts per document
-    for both columns.
+    The function prints the top `topn` most frequent tokens for both `col0` and `col1`.
+    It then computes the per-document word counts for each column and returns a
+    histogram plot (as a plotnine `ggplot` object) showing the distribution of
+    word counts before and after processing.
+
+    Notes:
+    - `col0` is split on spaces to create token lists; `col1` is expected to already
+      contain token lists (for example, the output of a spaCy-based cleaning step).
+    - The function uses Polars expressions and returns a plotnine `ggplot` object.
 
     Args:
-        df (pd.DataFrame): The DataFrame containing the text columns.
-        col0 (str): The name of the first column (e.g., raw text).
-        col1 (str): The name of the second column (e.g., cleaned text).
-        topn (int, optional): The number of top words to print. Defaults to 20.
-        label0 (str, optional): The label for the first column in the plot. Defaults to "before spacy".
-        label1 (str, optional): The label for the second column in the plot. Defaults to "after spacy".
-        title (str, optional): The title of the plot. Defaults to "Word counts before and after spacy processing".
+        df (pl.DataFrame): Polars DataFrame containing the text columns.
+        col0 (str): Name of the original/raw text column (string) which will be split on spaces.
+        col1 (str): Name of the processed/tokenized column (list/array of tokens).
+        topn (int, optional): Number of top tokens to print for each column. Defaults to 5.
 
     Returns:
-        matplotlib.axes.Axes: The Axes object of the generated plot.
+        plotnine.ggplot: A ggplot object containing overlapping histograms of per-document
+        word counts for `col0` (before processing) and `col1` (after processing).
     """
 
-    tmp = df.copy()
-    _col0 = f"{col0}_split"
-    tmp[_col0] = tmp[col0].str.split(" ")
+    col0_split = f"{col0}_split"
+    df = df.with_columns(**{col0_split: pl.col(col0).str.split(" ")})
 
     print(
-        f"Top {topn} word frequencies for {col0}: \n{get_word_frequencies(tmp, _col0).head(topn)}"
+        f"Top {topn} word frequencies for {col0}: \n{get_word_frequencies(df, col0_split).head(topn)}"
     )
     print(
-        f"\nTop {topn} word frequencies for {col1}: \n{get_word_frequencies(tmp, col1).head(topn)}"
+        f"\nTop {topn} word frequencies for {col1}: \n{get_word_frequencies(df, col1).head(topn)}"
     )
 
-    wc_col0 = f"{_col0}_word_count"
-    wc_col1 = f"{col1}_word_count"
-    tmp[wc_col0] = tmp[_col0].str.len()
-    tmp[wc_col1] = tmp[col1].str.len()
+    wc_col0 = f"before spacy"
+    wc_col1 = f"after spacy"
+    df = df.with_columns(
+        **{
+            wc_col0: pl.col(col0_split).list.len(),
+            wc_col1: pl.col(col1).list.len(),
+        }
+    )
 
-    fig, ax = plt.subplots()
-    bins = np.arange(30)
-    sns.histplot(
-        data=tmp,
-        x=wc_col0,
-        alpha=0.4,
-        ax=ax,
-        color="blue",
-        label=label0,
-        bins=bins,
+    df = df.unpivot(
+        on=["before spacy", "after spacy"],
+        value_name="word count",
+        variable_name="processing",
     )
-    sns.histplot(
-        data=tmp,
-        x=wc_col1,
-        alpha=0.4,
-        ax=ax,
-        color="green",
-        label=label1,
-        bins=bins,
+
+    colors = {"before spacy": "blue", "after spacy": "green"}
+    p = (
+        ggplot(df, aes(x="word count", fill="processing"))
+        + geom_histogram(position="identity", alpha=0.4, binwidth=1)
+        + scale_fill_manual(values=colors)
+        + labs(title="Word count frequencies shift", x="word count", fill="")
     )
-    ax.legend()
-    ax.set(title=title)
-    plt.tight_layout()
-    return ax
+    return p

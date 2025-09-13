@@ -1,7 +1,6 @@
 from functools import partial
 
 import numpy as np
-import pandas as pd
 import polars as pl
 import pytest
 import spacy
@@ -216,14 +215,12 @@ class TestSpacyTransformer:
 
 
 def test_get_word_frequencies():
-    df = pd.DataFrame({"c": [["a", "b", "c"], ["a", "b"], ["a"]]})
+    df = pl.DataFrame({"c": [["a", "b", "c"], ["a", "b"], ["a"]]})
 
     # line to test
     res = get_word_frequencies(df, col="c")
-
-    assert res["a"] == 3
-    assert res["b"] == 2
-    assert res["c"] == 1
+    assert (res["c"] == pl.Series(["a", "b", "c"])).all()
+    assert (res["count"] == pl.Series([3, 2, 1])).all()
 
 
 @pytest.fixture(autouse=True)
@@ -246,9 +243,9 @@ def use_matplotlib_agg():
 
 
 def test_compare_word_frequencies():
-    df = pd.DataFrame(
+    df = pl.DataFrame(
         {"c": ["a b c", "a b", "a"], "d": [["a", "b", "c"], ["a", "b"], ["a"]]}
     )
 
     # line to test
-    ax = compare_word_frequencies(df, col0="c", col1="d")
+    p = compare_word_frequencies(df, col0="c", col1="d")
