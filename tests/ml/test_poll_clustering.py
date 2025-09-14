@@ -1,7 +1,6 @@
 from functools import partial
 
 import numpy as np
-import pandas as pd
 import polars as pl
 import pytest
 import spacy
@@ -138,7 +137,7 @@ class TestSpacyTransformer:
     col = "poll_title"
     nlp_col = f"{col}_nlp_processed"
     num_topics = 7
-    expected_nlp_cols = [f"nlp_dim{i}" for i in range(num_topics)]
+    expected_nlp_cols = [f"topic_{i}" for i in range(num_topics)]
 
     def test_cleaned_text(
         self, df_polls: pl.DataFrame, spacy_transformer: SpacyTransformer
@@ -188,20 +187,10 @@ class TestSpacyTransformer:
             num_topics=self.num_topics,
         )
 
-        if return_new_cols:
-            df_lda, new_cols = spacy_transformer.transform(
-                df_polls,
-                col=self.nlp_col,
-                return_new_cols=return_new_cols,
-            )
-
-        else:
-            df_lda = spacy_transformer.transform(
-                df_polls,
-                col=self.nlp_col,
-                return_new_cols=return_new_cols,
-            )
-            new_cols = None
+        df_lda = spacy_transformer.transform(
+            df_polls,
+            col=self.nlp_col,
+        )
 
         assert isinstance(df_lda, pl.DataFrame)
         assert df_lda.shape == (
@@ -210,20 +199,14 @@ class TestSpacyTransformer:
         )
         assert all([c in df_lda.columns for c in self.expected_nlp_cols])
 
-        if return_new_cols:
-            assert isinstance(new_cols, list)
-            assert all([c in new_cols for c in self.expected_nlp_cols])
-
 
 def test_get_word_frequencies():
-    df = pd.DataFrame({"c": [["a", "b", "c"], ["a", "b"], ["a"]]})
+    df = pl.DataFrame({"c": [["a", "b", "c"], ["a", "b"], ["a"]]})
 
     # line to test
     res = get_word_frequencies(df, col="c")
-
-    assert res["a"] == 3
-    assert res["b"] == 2
-    assert res["c"] == 1
+    assert (res["c"] == pl.Series(["a", "b", "c"])).all()
+    assert (res["count"] == pl.Series([3, 2, 1])).all()
 
 
 @pytest.fixture(autouse=True)
@@ -246,9 +229,9 @@ def use_matplotlib_agg():
 
 
 def test_compare_word_frequencies():
-    df = pd.DataFrame(
+    df = pl.DataFrame(
         {"c": ["a b c", "a b", "a"], "d": [["a", "b", "c"], ["a", "b"], ["a"]]}
     )
 
     # line to test
-    ax = compare_word_frequencies(df, col0="c", col1="d")
+    p = compare_word_frequencies(df, col0="c", col1="d")
