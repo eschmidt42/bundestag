@@ -198,8 +198,6 @@
     <div class="doc doc-contents ">
 
 
-        <p>A transformer class for cleaning text and fitting/applying a gensim LDA model.</p>
-
 
 
 
@@ -208,7 +206,9 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
@@ -304,7 +304,12 @@
 <span class="normal">197</span>
 <span class="normal">198</span>
 <span class="normal">199</span>
-<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SpacyTransformer</span><span class="p">:</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SpacyTransformer</span><span class="p">:</span>
+    <span class="n">nlp_cols</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A transformer class for cleaning text and fitting/applying a gensim LDA model.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;de_core_news_sm&quot;</span><span class="p">):</span>
@@ -328,7 +333,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">corpora</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">fit_lda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">num_topics</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_lda</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">num_topics</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fits a Latent Dirichlet Allocation (LDA) model to the documents.</span>
 
 <span class="sd">        This method first performs preprocessing and then fits the LDA model.</span>
@@ -342,7 +349,10 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fitting LDA topics for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">LdaMulticore</span><span class="p">(</span>
-            <span class="n">corpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="n">id2word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span>
+            <span class="n">corpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span>
+            <span class="n">id2word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">,</span>
+            <span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lda_topics</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">i</span><span class="p">:</span> <span class="n">descr</span>
@@ -350,14 +360,14 @@
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">transform_documents</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;topic&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms documents into a dense matrix of LDA topic scores.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            documents (pl.DataFrame): A DataFrame containing the documents to be transformed.</span>
 <span class="sd">            col (str): The name of the column containing the tokenized documents.</span>
-<span class="sd">            label (str, optional): A prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+<span class="sd">            label (str, optional): A prefix for the new topic score columns. Defaults to &quot;topic&quot;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pl.DataFrame: A new DataFrame with columns for each topic&#39;s score.</span>
@@ -367,17 +377,17 @@
         <span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span><span class="p">[</span><span class="n">corpus</span><span class="p">])</span>
         <span class="n">dense</span> <span class="o">=</span> <span class="n">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlp_cols</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
         <span class="k">return</span> <span class="n">documents</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
-            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_dim</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dense</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dense</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlp_cols</span><span class="p">)}</span>
         <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;poll_title_nlp_processed&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span><span class="p">,</span>
-        <span class="n">return_new_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;topic&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies the fitted LDA model to a DataFrame to get topic scores.</span>
 
 <span class="sd">        This method joins the topic scores back to the original DataFrame.</span>
@@ -385,7 +395,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            df (pl.DataFrame): The DataFrame to transform.</span>
 <span class="sd">            col (str, optional): The column containing the tokenized documents. Defaults to &quot;poll_title_nlp_processed&quot;.</span>
-<span class="sd">            label (str, optional): The prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+<span class="sd">            label (str, optional): The prefix for the new topic score columns. Defaults to &quot;topic&quot;.</span>
 <span class="sd">            return_new_cols (bool, optional): If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.</span>
 
 <span class="sd">        Returns:</span>
@@ -398,8 +408,6 @@
         <span class="n">new_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_lda</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding nlp features: </span><span class="si">{</span><span class="n">new_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">return_new_cols</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">new_cols</span>
         <span class="k">return</span> <span class="n">tmp</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -413,6 +421,28 @@
 
 
 
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="bundestag.ml.poll_clustering.SpacyTransformer.nlp_cols" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">nlp_cols</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>A transformer class for cleaning text and fitting/applying a gensim LDA model.</p>
+
+    </div>
+
+</div>
 
 
 
@@ -481,7 +511,7 @@
 
 
 <h3 id="bundestag.ml.poll_clustering.SpacyTransformer.fit_lda" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">fit_lda</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">fit_lda</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span></code>
 
 </h3>
 
@@ -547,7 +577,14 @@
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
-<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fit_lda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">num_topics</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fit_lda</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">num_topics</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fits a Latent Dirichlet Allocation (LDA) model to the documents.</span>
 
 <span class="sd">    This method first performs preprocessing and then fits the LDA model.</span>
@@ -561,7 +598,10 @@
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fitting LDA topics for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">LdaMulticore</span><span class="p">(</span>
-        <span class="n">corpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="n">id2word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span>
+        <span class="n">corpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span>
+        <span class="n">id2word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">,</span>
+        <span class="n">num_topics</span><span class="o">=</span><span class="n">num_topics</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">lda_topics</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">i</span><span class="p">:</span> <span class="n">descr</span>
@@ -647,7 +687,7 @@
 
 
 <h3 id="bundestag.ml.poll_clustering.SpacyTransformer.transform" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">transform</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;poll_title_nlp_processed&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;nlp&#39;</span><span class="p">,</span> <span class="n">return_new_cols</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">transform</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;poll_title_nlp_processed&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;topic&#39;</span><span class="p">)</span></code>
 
 </h3>
 
@@ -689,18 +729,16 @@
             <li>
               <b><code>label</code></b>
                   (<code><span title="str">str</span></code>, default:
-                      <code>&#39;nlp&#39;</code>
+                      <code>&#39;topic&#39;</code>
 )
               –
               <div class="doc-md-description">
-                <p>The prefix for the new topic score columns. Defaults to "nlp".</p>
+                <p>The prefix for the new topic score columns. Defaults to "topic".</p>
               </div>
             </li>
             <li>
               <b><code>return_new_cols</code></b>
-                  (<code><span title="bool">bool</span></code>, default:
-                      <code>False</code>
-)
+                  (<code><span title="bool">bool</span></code>)
               –
               <div class="doc-md-description">
                 <p>If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.</p>
@@ -723,6 +761,7 @@
       <td class="field-body">
         <ul class="first simple">
             <li>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
               –
               <div class="doc-md-description">
                 <p>pl.DataFrame | tuple[pl.DataFrame, list[str]]: The transformed DataFrame, or a tuple of the DataFrame and new column names.</p>
@@ -736,13 +775,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
@@ -765,13 +798,15 @@
 <span class="normal">197</span>
 <span class="normal">198</span>
 <span class="normal">199</span>
-<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;poll_title_nlp_processed&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span><span class="p">,</span>
-    <span class="n">return_new_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">):</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;topic&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies the fitted LDA model to a DataFrame to get topic scores.</span>
 
 <span class="sd">    This method joins the topic scores back to the original DataFrame.</span>
@@ -779,7 +814,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        df (pl.DataFrame): The DataFrame to transform.</span>
 <span class="sd">        col (str, optional): The column containing the tokenized documents. Defaults to &quot;poll_title_nlp_processed&quot;.</span>
-<span class="sd">        label (str, optional): The prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+<span class="sd">        label (str, optional): The prefix for the new topic score columns. Defaults to &quot;topic&quot;.</span>
 <span class="sd">        return_new_cols (bool, optional): If True, returns the transformed DataFrame and a list of the new column names. Defaults to False.</span>
 
 <span class="sd">    Returns:</span>
@@ -792,8 +827,6 @@
     <span class="n">new_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_lda</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding nlp features: </span><span class="si">{</span><span class="n">new_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">return_new_cols</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">new_cols</span>
     <span class="k">return</span> <span class="n">tmp</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -805,7 +838,7 @@
 
 
 <h3 id="bundestag.ml.poll_clustering.SpacyTransformer.transform_documents" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">transform_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;nlp&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">transform_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;topic&#39;</span><span class="p">)</span></code>
 
 </h3>
 
@@ -844,11 +877,11 @@
             <li>
               <b><code>label</code></b>
                   (<code><span title="str">str</span></code>, default:
-                      <code>&#39;nlp&#39;</code>
+                      <code>&#39;topic&#39;</code>
 )
               –
               <div class="doc-md-description">
-                <p>A prefix for the new topic score columns. Defaults to "nlp".</p>
+                <p>A prefix for the new topic score columns. Defaults to "topic".</p>
               </div>
             </li>
         </ul>
@@ -882,12 +915,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
@@ -902,15 +930,21 @@
 <span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_documents</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nlp&quot;</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_documents</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;topic&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms documents into a dense matrix of LDA topic scores.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        documents (pl.DataFrame): A DataFrame containing the documents to be transformed.</span>
 <span class="sd">        col (str): The name of the column containing the tokenized documents.</span>
-<span class="sd">        label (str, optional): A prefix for the new topic score columns. Defaults to &quot;nlp&quot;.</span>
+<span class="sd">        label (str, optional): A prefix for the new topic score columns. Defaults to &quot;topic&quot;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pl.DataFrame: A new DataFrame with columns for each topic&#39;s score.</span>
@@ -920,8 +954,9 @@
     <span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
     <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lda_model</span><span class="p">[</span><span class="n">corpus</span><span class="p">])</span>
     <span class="n">dense</span> <span class="o">=</span> <span class="n">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nlp_cols</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
     <span class="k">return</span> <span class="n">documents</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
-        <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_dim</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dense</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+        <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dense</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlp_cols</span><span class="p">)}</span>
     <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1013,26 +1048,26 @@
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_text</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span>
+<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_text</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs a series of cleaning steps on a raw text string.</span>
 
 <span class="sd">    The cleaning process includes:</span>
@@ -1062,17 +1097,22 @@
 
 
 <h2 id="bundestag.ml.poll_clustering.compare_word_frequencies" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">compare_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col0</span><span class="p">,</span> <span class="n">col1</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">label0</span><span class="o">=</span><span class="s1">&#39;before spacy&#39;</span><span class="p">,</span> <span class="n">label1</span><span class="o">=</span><span class="s1">&#39;after spacy&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Word counts before and after spacy processing&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">compare_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col0</span><span class="p">,</span> <span class="n">col1</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Compares and visualizes word frequencies and counts before and after text processing.</p>
-<p>This function prints the top N most frequent words for two different text columns
-(e.g., raw text and cleaned text) and plots histograms of the word counts per document
-for both columns.</p>
+        <p>Compare word frequency distributions for two text columns and return a plot.</p>
+<p>The function prints the top <code>topn</code> most frequent tokens for both <code>col0</code> and <code>col1</code>.
+It then computes the per-document word counts for each column and returns a
+histogram plot (as a plotnine <code>ggplot</code> object) showing the distribution of
+word counts before and after processing.</p>
+<p>Notes:
+- <code>col0</code> is split on spaces to create token lists; <code>col1</code> is expected to already
+  contain token lists (for example, the output of a spaCy-based cleaning step).
+- The function uses Polars expressions and returns a plotnine <code>ggplot</code> object.</p>
 
 
 <table class="field-list">
@@ -1087,10 +1127,10 @@ for both columns.</p>
         <ul class="first simple">
             <li>
               <b><code>df</code></b>
-                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
               –
               <div class="doc-md-description">
-                <p>The DataFrame containing the text columns.</p>
+                <p>Polars DataFrame containing the text columns.</p>
               </div>
             </li>
             <li>
@@ -1098,7 +1138,7 @@ for both columns.</p>
                   (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
-                <p>The name of the first column (e.g., raw text).</p>
+                <p>Name of the original/raw text column (string) which will be split on spaces.</p>
               </div>
             </li>
             <li>
@@ -1106,47 +1146,17 @@ for both columns.</p>
                   (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
-                <p>The name of the second column (e.g., cleaned text).</p>
+                <p>Name of the processed/tokenized column (list/array of tokens).</p>
               </div>
             </li>
             <li>
               <b><code>topn</code></b>
                   (<code><span title="int">int</span></code>, default:
-                      <code>20</code>
+                      <code>5</code>
 )
               –
               <div class="doc-md-description">
-                <p>The number of top words to print. Defaults to 20.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>label0</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code>&#39;before spacy&#39;</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>The label for the first column in the plot. Defaults to "before spacy".</p>
-              </div>
-            </li>
-            <li>
-              <b><code>label1</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code>&#39;after spacy&#39;</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>The label for the second column in the plot. Defaults to "after spacy".</p>
-              </div>
-            </li>
-            <li>
-              <b><code>title</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code>&#39;Word counts before and after spacy processing&#39;</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>The title of the plot. Defaults to "Word counts before and after spacy processing".</p>
+                <p>Number of top tokens to print for each column. Defaults to 5.</p>
               </div>
             </li>
         </ul>
@@ -1166,9 +1176,17 @@ for both columns.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
+                  <code><span title="plotnine.ggplot">ggplot</span></code>
               –
               <div class="doc-md-description">
-                <p>matplotlib.axes.Axes: The Axes object of the generated plot.</p>
+                <p>plotnine.ggplot: A ggplot object containing overlapping histograms of per-document</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="plotnine.ggplot">ggplot</span></code>
+              –
+              <div class="doc-md-description">
+                <p>word counts for <code>col0</code> (before processing) and <code>col1</code> (after processing).</p>
               </div>
             </li>
         </ul>
@@ -1179,10 +1197,7 @@ for both columns.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
@@ -1243,77 +1258,68 @@ for both columns.</p>
 <span class="normal">278</span>
 <span class="normal">279</span>
 <span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compare_word_frequencies</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+<span class="normal">281</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compare_word_frequencies</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">col0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">col1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">topn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="n">label0</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;before spacy&quot;</span><span class="p">,</span>
-    <span class="n">label1</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;after spacy&quot;</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Word counts before and after spacy processing&quot;</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compares and visualizes word frequencies and counts before and after text processing.</span>
+    <span class="n">topn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ggplot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare word frequency distributions for two text columns and return a plot.</span>
 
-<span class="sd">    This function prints the top N most frequent words for two different text columns</span>
-<span class="sd">    (e.g., raw text and cleaned text) and plots histograms of the word counts per document</span>
-<span class="sd">    for both columns.</span>
+<span class="sd">    The function prints the top `topn` most frequent tokens for both `col0` and `col1`.</span>
+<span class="sd">    It then computes the per-document word counts for each column and returns a</span>
+<span class="sd">    histogram plot (as a plotnine `ggplot` object) showing the distribution of</span>
+<span class="sd">    word counts before and after processing.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    - `col0` is split on spaces to create token lists; `col1` is expected to already</span>
+<span class="sd">      contain token lists (for example, the output of a spaCy-based cleaning step).</span>
+<span class="sd">    - The function uses Polars expressions and returns a plotnine `ggplot` object.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        df (pd.DataFrame): The DataFrame containing the text columns.</span>
-<span class="sd">        col0 (str): The name of the first column (e.g., raw text).</span>
-<span class="sd">        col1 (str): The name of the second column (e.g., cleaned text).</span>
-<span class="sd">        topn (int, optional): The number of top words to print. Defaults to 20.</span>
-<span class="sd">        label0 (str, optional): The label for the first column in the plot. Defaults to &quot;before spacy&quot;.</span>
-<span class="sd">        label1 (str, optional): The label for the second column in the plot. Defaults to &quot;after spacy&quot;.</span>
-<span class="sd">        title (str, optional): The title of the plot. Defaults to &quot;Word counts before and after spacy processing&quot;.</span>
+<span class="sd">        df (pl.DataFrame): Polars DataFrame containing the text columns.</span>
+<span class="sd">        col0 (str): Name of the original/raw text column (string) which will be split on spaces.</span>
+<span class="sd">        col1 (str): Name of the processed/tokenized column (list/array of tokens).</span>
+<span class="sd">        topn (int, optional): Number of top tokens to print for each column. Defaults to 5.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        matplotlib.axes.Axes: The Axes object of the generated plot.</span>
+<span class="sd">        plotnine.ggplot: A ggplot object containing overlapping histograms of per-document</span>
+<span class="sd">        word counts for `col0` (before processing) and `col1` (after processing).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">_col0</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col0</span><span class="si">}</span><span class="s2">_split&quot;</span>
-    <span class="n">tmp</span><span class="p">[</span><span class="n">_col0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">col0</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">col0_split</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col0</span><span class="si">}</span><span class="s2">_split&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">col0_split</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">col0</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)})</span>
 
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Top </span><span class="si">{</span><span class="n">topn</span><span class="si">}</span><span class="s2"> word frequencies for </span><span class="si">{</span><span class="n">col0</span><span class="si">}</span><span class="s2">: </span><span class="se">\n</span><span class="si">{</span><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">_col0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">topn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Top </span><span class="si">{</span><span class="n">topn</span><span class="si">}</span><span class="s2"> word frequencies for </span><span class="si">{</span><span class="n">col0</span><span class="si">}</span><span class="s2">: </span><span class="se">\n</span><span class="si">{</span><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">col0_split</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">topn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top </span><span class="si">{</span><span class="n">topn</span><span class="si">}</span><span class="s2"> word frequencies for </span><span class="si">{</span><span class="n">col1</span><span class="si">}</span><span class="s2">: </span><span class="se">\n</span><span class="si">{</span><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">col1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">topn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top </span><span class="si">{</span><span class="n">topn</span><span class="si">}</span><span class="s2"> word frequencies for </span><span class="si">{</span><span class="n">col1</span><span class="si">}</span><span class="s2">: </span><span class="se">\n</span><span class="si">{</span><span class="n">get_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">col1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">topn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
 
-    <span class="n">wc_col0</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_col0</span><span class="si">}</span><span class="s2">_word_count&quot;</span>
-    <span class="n">wc_col1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col1</span><span class="si">}</span><span class="s2">_word_count&quot;</span>
-    <span class="n">tmp</span><span class="p">[</span><span class="n">wc_col0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">_col0</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
-    <span class="n">tmp</span><span class="p">[</span><span class="n">wc_col1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">col1</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
+    <span class="n">wc_col0</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;before spacy&quot;</span>
+    <span class="n">wc_col1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;after spacy&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span>
+            <span class="n">wc_col0</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">col0_split</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">len</span><span class="p">(),</span>
+            <span class="n">wc_col1</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">col1</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">len</span><span class="p">(),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">wc_col0</span><span class="p">,</span>
-        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
-        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">label0</span><span class="p">,</span>
-        <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
+        <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;before spacy&quot;</span><span class="p">,</span> <span class="s2">&quot;after spacy&quot;</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;word count&quot;</span><span class="p">,</span>
+        <span class="n">variable_name</span><span class="o">=</span><span class="s2">&quot;processing&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">wc_col1</span><span class="p">,</span>
-        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
-        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">label1</span><span class="p">,</span>
-        <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;before spacy&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;after spacy&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">}</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ggplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;word count&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;processing&quot;</span><span class="p">))</span>
+        <span class="o">+</span> <span class="n">geom_histogram</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">labs</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Word count frequencies shift&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;word count&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">ax</span>
+    <span class="k">return</span> <span class="n">p</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1346,7 +1352,7 @@ for both columns.</p>
         <ul class="first simple">
             <li>
               <b><code>df</code></b>
-                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+                  (<code><span title="polars.DataFrame">DataFrame</span></code>)
               –
               <div class="doc-md-description">
                 <p>A DataFrame containing the documents.</p>
@@ -1377,10 +1383,10 @@ for both columns.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="pandas.Series">Series</span></code>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
               –
               <div class="doc-md-description">
-                <p>pd.Series: A Series with words as the index and their frequencies as values, sorted in descending order.</p>
+                <p>pl.DataFrame: A DataFrame with words and their frequencies as columns, sorted in descending order.</p>
               </div>
             </li>
         </ul>
@@ -1391,10 +1397,7 @@ for both columns.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
@@ -1402,18 +1405,21 @@ for both columns.</p>
 <span class="normal">211</span>
 <span class="normal">212</span>
 <span class="normal">213</span>
-<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_word_frequencies</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates word frequencies across a column of tokenized documents.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        df (pd.DataFrame): A DataFrame containing the documents.</span>
+<span class="sd">        df (pl.DataFrame): A DataFrame containing the documents.</span>
 <span class="sd">        col (str): The name of the column that holds the lists of tokens.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.Series: A Series with words as the index and their frequencies as values, sorted in descending order.</span>
+<span class="sd">        pl.DataFrame: A DataFrame with words and their frequencies as columns, sorted in descending order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">_w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">_w</span> <span class="ow">in</span> <span class="n">w</span><span class="p">])</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">explode</span><span class="p">()</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1508,7 +1514,9 @@ This function converts it into a 2D numpy array of shape (num_documents, num_top
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
@@ -1541,9 +1549,7 @@ This function converts it into a 2D numpy array of shape (num_documents, num_top
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_topic_scores_dense</span><span class="p">(</span><span class="n">scores</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms a sparse list of topic scores into a dense numpy array.</span>
 
 <span class="sd">    The input is typically the output of a gensim LDA model, which is a list of lists of (topic_id, score) tuples.</span>
@@ -1648,16 +1654,16 @@ This function converts it into a 2D numpy array of shape (num_documents, num_top
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_numeric_and_empty</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_numeric_and_empty</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes numeric and empty/whitespace-only strings from a list of strings.</span>
 
 <span class="sd">    Args:</span>
@@ -1744,7 +1750,9 @@ This function converts it into a 2D numpy array of shape (num_documents, num_top
 
             <details class="quote">
               <summary>Source code in <code>src/bundestag/ml/poll_clustering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
@@ -1754,9 +1762,7 @@ This function converts it into a 2D numpy array of shape (num_documents, num_top
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_stopwords_and_punctuation</span><span class="p">(</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_stopwords_and_punctuation</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nlp</span><span class="p">:</span> <span class="n">spacy</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">Language</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes stopwords and punctuation from a text using a spaCy model.</span>
