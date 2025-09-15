@@ -38,7 +38,7 @@ pip install bundestag
 or
 
 ```shell
-uv install bundestag
+uv add bundestag
 ```
 
 to get access to the cli to download and transform bundestag roll call votes data from bundestag.de or abgeordnetenwatch.de.
@@ -52,7 +52,7 @@ pip install bundestag[ml]
 or
 
 ```shell
-uv install bundestag[ml]
+uv add bundestag[ml]
 ```
 
 For development
